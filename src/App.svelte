@@ -205,15 +205,18 @@
 <WordPopup />
 
 <style>
-  main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+  main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }
+  main > * { min-width: 0; }
   header { display: flex; align-items: center; gap: var(--space-3); }
-  h1 { margin: 0; font-size: var(--text-xl); color: var(--accent-strong); }
+  header > :global(div) { min-width: 0; }
+  .grid > :global(*) { min-width: 0; }
+  h1 { margin: 0; font-size: var(--text-xl); font-weight: 800; color: var(--text); }
   h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
   .section-title { margin: 0 0 var(--space-2); font-size: var(--text-lg); color: var(--accent-strong); }
   .muted { color: var(--text-muted); margin: 0; }
   .hero { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; background: var(--surface-2); }
   .hero-text { flex: 1 1 14rem; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-3); }
   .kick { font-size: var(--text-sm); color: var(--text-muted); font-weight: 600; margin-right: var(--space-2); }
   /* flat, thin-bordered tiles with a big index number, as in docs/design/screens.html (home: "Lối tắt") */
   .tile { position: relative; display: grid; gap: var(--space-1); justify-items: start; text-align: left; min-height: 44px; padding: var(--space-4); background: var(--surface-2); color: var(--text); border: 1.5px solid var(--border-strong); border-radius: var(--radius); box-shadow: var(--shadow); }
