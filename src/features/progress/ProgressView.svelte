@@ -124,7 +124,7 @@
 
 <style>
   .stack { display: grid; gap: var(--space-4); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-3); }
   .stat { display: grid; gap: var(--space-1); align-content: start; background: var(--surface-2); }
   .num { font-size: var(--text-xl); color: var(--accent-strong); }
   .num.small { font-size: var(--text-lg); }
