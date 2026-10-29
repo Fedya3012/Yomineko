@@ -6,9 +6,12 @@
   import Badge from './lib/Badge.svelte';
   import DictionaryPanel from './features/dictionary/DictionaryPanel.svelte';
   import WordPopup from './features/dictionary/WordPopup.svelte';
+
+  import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
   import UpdateCenter from './features/updates/UpdateCenter.svelte';
   import Assistant from './features/assistant/Assistant.svelte';
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
+  import MangaReader from './features/manga/MangaReader.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import { recordSession } from './features/progress/store';
@@ -22,7 +25,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
@@ -74,7 +77,11 @@
 </script>
 
 <main>
-  {#if view === 'anime' && readyDb}
+  {#if view === 'kana'}
+    <KanaKanjiApp onback={() => (view = 'home')} />
+  {:else if view === 'manga' && readyDb}
+    <MangaReader db={readyDb} onBack={() => (view = 'home')} />
+  {:else if view === 'anime' && readyDb}
     <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
   {:else}
   <header>
@@ -95,6 +102,10 @@
         <strong>{f.name}</strong>
         {#if f.name === 'Xem anime'}
           <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
+        {:else if f.name === 'Đọc manga'}
+          <button class="btn" onclick={() => (view = 'manga')}>Mở</button>
+        {:else if f.name === 'Kana & Kanji'}
+          <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
         {:else}
           <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' || f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
         {/if}
