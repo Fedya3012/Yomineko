@@ -8,3 +8,4 @@ android
 *.jks
 public/ocr
 public/vendor
+dist-packs

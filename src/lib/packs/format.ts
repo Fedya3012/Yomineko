@@ -10,6 +10,8 @@
 // No copyrighted manga/anime/textbook content is ever shipped: packs hold only open data
 // (JMdict, KANJIDIC, ...) or things the user creates/imports themselves.
 
+import { isVersion } from '../version';
+
 export const PACK_FORMAT = 1;
 
 export type PackKind = 'dictionary' | 'kanji' | 'kana' | 'deck' | 'lesson' | 'subtitle' | 'other';
@@ -48,6 +50,7 @@ export interface CatalogEntry {
   sha256: string;          // hex digest of the pack file bytes
   size: number;            // bytes, for showing download size
   base?: number;           // for delta entries
+  minAppVersion?: string;  // copied from the pack, so old apps skip packs they cannot read
 }
 
 export interface Catalog {
@@ -70,6 +73,8 @@ export function validatePack(x: unknown): PackFile {
   if (!Number.isInteger(m.version) || (m.version as number) < 1) throw new PackError('version phải là số nguyên ≥ 1');
   if (m.base !== undefined && (!Number.isInteger(m.base) || (m.base as number) >= (m.version as number)))
     throw new PackError('base phải nhỏ hơn version');
+  if (m.minAppVersion !== undefined && (typeof m.minAppVersion !== 'string' || !isVersion(m.minAppVersion)))
+    throw new PackError('minAppVersion phải có dạng 1.2.3');
   if (!isObj(m.license) || typeof m.license.name !== 'string' || typeof m.license.url !== 'string')
     throw new PackError('Gói phải ghi rõ giấy phép (license)');
   for (const [field, kind] of [['upserts', 'array'], ['deletes', 'array']] as const) {
@@ -84,4 +89,17 @@ export function validatePack(x: unknown): PackFile {
   }
   if (x.deletes && m.base === undefined) throw new PackError('Gói đầy đủ không được có deletes');
   return x as unknown as PackFile;
+}
+
+/** Throws PackError if `x` is not a usable catalog. Bad entries are rejected up front so a typo cannot break a later update. */
+export function validateCatalog(x: unknown): Catalog {
+  if (!isObj(x) || x.format !== PACK_FORMAT || !Array.isArray(x.packs)) throw new PackError('Danh mục gói (catalog) không đúng định dạng');
+  for (const e of x.packs) {
+    if (!isObj(e) || typeof e.id !== 'string' || typeof e.url !== 'string' || typeof e.sha256 !== 'string'
+      || !Number.isInteger(e.version) || !Number.isFinite(e.size)
+      || (e.base !== undefined && !Number.isInteger(e.base))
+      || (e.minAppVersion !== undefined && (typeof e.minAppVersion !== 'string' || !isVersion(e.minAppVersion))))
+      throw new PackError('Danh mục gói có một mục không hợp lệ');
+  }
+  return x as unknown as Catalog;
 }

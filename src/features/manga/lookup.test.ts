@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { describe, expect, it } from 'vitest';
 import { openDatabase } from '../../lib/db';
 import { installPack } from '../../lib/packs/install';
-import demoPack from '../../../packs-example/demo-hiragana.pack.json';
+import demoPack from '../../../packs-src/demo-words/v1.json';
 import { buildWordIndex, loadWordIndex, lookupAt, type WordEntry } from './lookup';
 import type { OcrBlock } from './ocr/types';
 

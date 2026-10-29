@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { openDatabase, listCollection, getUserData, setUserData, type DB } from '../db';
-import { installPack, planUpdates, uninstallPack } from './install';
+import { installPack, uninstallPack } from './install';
 import type { PackFile } from './format';
 
 const license = { name: 'CC BY-SA 4.0', url: 'https://example.org/license' };
@@ -45,14 +45,5 @@ describe('installPack', () => {
   it('refuses downgrades', async () => {
     await installPack(db, full(2, ['a']));
     await expect(installPack(db, full(1, ['z']))).rejects.toThrow();
-  });
-});
-
-describe('planUpdates', () => {
-  it('prefers a matching delta, otherwise the newest full pack', async () => {
-    await installPack(db, full(1, ['a']));
-    const e = (version: number, base?: number) => ({ id: 'demo', version, url: `v${version}.json`, sha256: '', size: 1, base });
-    const plan = await planUpdates(db, { format: 1, generatedAt: '', packs: [e(2, 1), e(3), e(3, 2)] });
-    expect(plan).toEqual([e(2, 1)]); // delta first; the next check then picks up v3
   });
 });

@@ -30,15 +30,22 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 - `format.ts`: kiểu dữ liệu + `validatePack`. Một gói là một file JSON: `manifest` (id, kind, version, license, `base` nếu là gói delta) + `upserts` / `deletes` theo *collection*.
 - `install.ts`: `installPack` (một transaction, được-ăn-cả-ngã-về-không), `uninstallPack`, `planUpdates(catalog)`, `downloadAndInstall` (kiểm tra SHA-256).
 - Gói đầy đủ thay toàn bộ nội dung cũ của gói; gói delta chỉ áp dụng khi máy đang đúng phiên bản `base`.
-- `npm run catalog` tạo `catalog.json` (danh sách gói + mã kiểm tra) từ thư mục `packs-example/`. Mẫu: `packs-example/demo-hiragana.pack.json`.
+- Nguồn gói nằm ở `packs-src/<id>/v1.json, v2.json...` (mỗi file là bản ĐẦY ĐỦ). `npm run packs:build` (`scripts/packs-lib.ts`) tạo ra bản đầy đủ mới nhất, gói delta cho mỗi cặp phiên bản liền kề và `catalog.json` (SHA-256, size, `minAppVersion`). Pages workflow đăng tại `<site>/content/`. Hướng dẫn cho người không code: `docs/HUONG-DAN-XUAT-BAN-GOI.md`.
+- `install.ts` → `planUpdates(db, catalog, appVersion)` chọn cách rẻ nhất cho từng gói: chuỗi delta liên tiếp nếu nhỏ hơn gói đầy đủ, nếu không thì gói đầy đủ; không bao giờ hạ cấp; bỏ qua gói cần app mới hơn.
+- `updater.ts`: `checkContentUpdates` (chỉ tải catalog nhỏ) và `applyUpdates` (từng gói độc lập; delta hỏng thì thử gói đầy đủ; sai checksum thì giữ bản cũ). Chỉ chấp nhận https.
 - Mọi gói **bắt buộc** khai báo license; màn hình Credits (thread sau) sẽ liệt kê `attribution`.
+
+## Thông báo bản mới (`src/features/updates/UpdateCenter.svelte`)
+- Nội dung: kiểm tra tự động tối đa 12 giờ/lần khi có mạng, hoặc bấm *Kiểm tra cập nhật*.
+- App: Windows/Android hỏi GitHub Releases (`src/lib/appUpdate.ts`); web dùng service worker (`registerType: 'prompt'`, hiện nút tải lại). Phiên bản app = `package.json`, workflow release ghi đè bằng tên tag (`scripts/set-version.mjs`).
+- Địa chỉ catalog: `CATALOG_URL` trong `src/lib/appInfo.ts` (đổi bằng biến `VITE_CATALOG_URL`).
 
 ## Tên collection mỗi thread sở hữu (đề xuất)
 | Thread | Collection (content) | Khoá userdata |
 |---|---|---|
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
-| SRS | `cards`, `decks` | `srs.state:<cardId>`, `srs.settings` |
+| SRS | `cards` (`decks` chưa dùng) | `srs.state:<cardId>`, `srs.settings`, `srs.stats:<YYYY-MM-DD>` (số lượt ôn mỗi ngày, thread Tiến độ có thể đọc) |
 | Tiến độ | `lessons` | `progress.*` |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
@@ -76,3 +83,13 @@ Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ả
 | libarchive.js (bọc libarchive) | MIT (libarchive: BSD-2) | mở CBR/RAR/7z |
 | fflate | MIT | mở CBZ/ZIP |
 Màn hình Credits (thread sau) nên liệt kê các dòng này.
+## Trợ lý AI (`src/features/assistant/`)
+- `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
+- Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
+
+## Trình phát anime (`src/features/anime/`)
+- `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
+- Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
+- `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
+- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
+- `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
