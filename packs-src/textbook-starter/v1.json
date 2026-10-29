@@ -1,0 +1,82 @@
+{
+  "manifest": {
+    "format": 1, "id": "textbook-starter", "kind": "lesson", "title": "Giáo trình mẫu Yomineko (tự viết)", "version": 1,
+    "license": { "name": "CC0 1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/", "attribution": "Do đội Yomineko tự viết, để thử cách học theo bài." }
+  },
+  "upserts": {
+    "textbooks": [
+      { "id": "starter", "title": "Giáo trình mẫu Yomineko", "titleJa": "入門", "level": "N5", "description": "Hai bài đầu do Yomineko tự viết để thử app.", "lessonIds": ["starter-l01", "starter-l02"] }
+    ],
+    "tb-lessons": [
+      {
+        "id": "starter-l01", "textbookId": "starter", "order": 1, "source": { "type": "textbook", "title": "Giáo trình mẫu Yomineko", "note": "Do Yomineko tự viết" }, "title": "Chào hỏi và giới thiệu", "titleJa": "第1課",
+        "guide": [
+          "Nghe từ vựng 2 lần, nhại theo to tiếng. Phát âm quan trọng không kém nhớ nghĩa.",
+          "Đọc mẫu câu và tự đặt 1 câu về bản thân trước khi xem ví dụ.",
+          "Nghe hội thoại không nhìn chữ, rồi mới mở bản chữ và bản dịch.",
+          "Làm bài tập, rồi bấm “Đưa vào thẻ ôn” để ôn lại từ trong vài ngày tới."
+        ],
+        "vocab": [
+          { "id": "watashi", "word": "わたし", "meaning": "tôi" },
+          { "id": "gakusei", "word": "学生", "reading": "がくせい", "meaning": "học sinh, sinh viên" },
+          { "id": "sensei", "word": "先生", "reading": "せんせい", "meaning": "giáo viên" },
+          { "id": "nihonjin", "word": "日本人", "reading": "にほんじん", "meaning": "người Nhật" },
+          { "id": "hajimemashite", "word": "はじめまして", "meaning": "rất vui được gặp (lần đầu)" },
+          { "id": "yoroshiku", "word": "よろしくおねがいします", "meaning": "rất mong được giúp đỡ" }
+        ],
+        "kanji": [
+          { "id": "hito", "char": "人", "reading": "ひと・じん", "meaning": "người" },
+          { "id": "nichi", "char": "日", "reading": "にち・ひ", "meaning": "ngày, mặt trời" },
+          { "id": "gaku", "char": "学", "reading": "がく", "meaning": "học" }
+        ],
+        "grammar": [
+          { "id": "wa-desu", "title": "Khẳng định", "pattern": "N1 は N2 です", "explanation": "N1 là N2. は đọc là “wa”, đánh dấu chủ đề của câu.",
+            "examples": [ { "ja": "わたしは学生です。", "reading": "わたしはがくせいです。", "vi": "Tôi là sinh viên." } ] },
+          { "id": "ja-arimasen", "title": "Phủ định", "pattern": "N1 は N2 じゃありません", "explanation": "N1 không phải là N2.",
+            "examples": [ { "ja": "わたしは先生じゃありません。", "vi": "Tôi không phải giáo viên." } ] },
+          { "id": "ka", "title": "Câu hỏi", "pattern": "N1 は N2 ですか", "explanation": "Thêm か ở cuối câu để hỏi. Không cần dấu hỏi.",
+            "examples": [ { "ja": "あなたは日本人ですか。", "vi": "Bạn là người Nhật phải không?" } ] }
+        ],
+        "dialogues": [
+          { "id": "meeting", "title": "Lần đầu gặp nhau", "lines": [
+            { "speaker": "A", "ja": "はじめまして。わたしはミンです。", "vi": "Rất vui được gặp. Tôi là Minh." },
+            { "speaker": "B", "ja": "はじめまして。さくらです。わたしは学生です。", "vi": "Rất vui được gặp. Tôi là Sakura. Tôi là sinh viên." },
+            { "speaker": "A", "ja": "よろしくおねがいします。", "vi": "Rất mong được giúp đỡ." }
+          ] }
+        ],
+        "exercises": [
+          { "id": "e1", "type": "choice", "prompt": "わたし（　）学生です。", "choices": ["は", "を", "か"], "answer": "は", "explain": "Chủ đề của câu dùng は.", "ref": { "kind": "grammar", "id": "starter-l01:wa-desu", "label": "N1 は N2 です" } },
+          { "id": "e2", "type": "choice", "prompt": "あなたは先生です（　）。", "choices": ["は", "か", "です"], "answer": "か", "ref": { "kind": "grammar", "id": "starter-l01:ka", "label": "N1 は N2 ですか" } },
+          { "id": "e3", "type": "fill", "prompt": "「がくせい」を漢字で書きましょう。", "answer": "学生", "ref": { "kind": "word", "id": "starter-l01:gakusei", "label": "学生 (がくせい)" } },
+          { "id": "e4", "type": "fill", "prompt": "「Tôi không phải giáo viên」: わたしは先生（　　　）。", "answer": ["じゃありません", "ではありません"], "ref": { "kind": "grammar", "id": "starter-l01:ja-arimasen", "label": "N1 は N2 じゃありません" } }
+        ],
+        "videos": [ { "id": "v1", "title": "Video: cách phát âm は và を", "note": "Chỗ dành cho video ngắn. Sắp có: gắn video của bạn." } ]
+      },
+      {
+        "id": "starter-l02", "textbookId": "starter", "order": 2, "title": "Cái này là cái gì?", "titleJa": "第2課",
+        "guide": [ "Học これ・それ・あれ theo khoảng cách: gần tôi, gần bạn, xa cả hai.", "Chỉ vào đồ vật xung quanh và nói to câu hỏi, đừng chỉ đọc thầm." ],
+        "vocab": [
+          { "id": "kore", "word": "これ", "meaning": "cái này" },
+          { "id": "sore", "word": "それ", "meaning": "cái đó (gần người nghe)" },
+          { "id": "are", "word": "あれ", "meaning": "cái kia" },
+          { "id": "hon", "word": "本", "reading": "ほん", "meaning": "quyển sách" },
+          { "id": "neko", "word": "猫", "reading": "ねこ", "meaning": "con mèo", "source": { "type": "dictionary", "title": "JMdict", "note": "Nghĩa lấy từ từ điển mở" } }
+        ],
+        "grammar": [
+          { "id": "kore-wa", "title": "Chỉ đồ vật", "pattern": "これ／それ／あれ は N です", "explanation": "Chọn これ, それ hay あれ tuỳ khoảng cách giữa đồ vật với người nói và người nghe.",
+            "examples": [ { "ja": "これは本です。", "reading": "これはほんです。", "vi": "Đây là quyển sách." } ] }
+        ],
+        "dialogues": [
+          { "id": "what", "title": "Đó là gì?", "lines": [
+            { "speaker": "A", "ja": "それは何ですか。", "vi": "Đó là cái gì vậy?" },
+            { "speaker": "B", "ja": "これは猫のぬいぐるみです。", "vi": "Đây là thú nhồi bông hình mèo." }
+          ] }
+        ],
+        "exercises": [
+          { "id": "e1", "type": "choice", "prompt": "（　）は猫です。(vật ở xa cả hai người)", "choices": ["これ", "それ", "あれ"], "answer": "あれ", "ref": { "kind": "grammar", "id": "starter-l02:kore-wa", "label": "これ／それ／あれ は N です" } },
+          { "id": "e2", "type": "fill", "prompt": "「quyển sách」を日本語で:", "answer": ["本", "ほん"], "ref": { "kind": "word", "id": "starter-l02:hon", "label": "本 (ほん)" } }
+        ]
+      }
+    ]
+  }
+}
