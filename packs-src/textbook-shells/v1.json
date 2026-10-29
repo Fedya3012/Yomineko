@@ -1,0 +1,563 @@
+{
+ "manifest": {
+  "format": 1,
+  "id": "textbook-shells",
+  "kind": "lesson",
+  "title": "Khung giáo trình (Minna, Genki)",
+  "version": 1,
+  "license": {
+   "name": "CC0 1.0",
+   "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "attribution": "Chỉ gồm tên sách và số bài, do đội Yomineko viết. Không có nội dung của nhà xuất bản."
+  }
+ },
+ "upserts": {
+  "textbooks": [
+   {
+    "id": "mnn1",
+    "title": "Minna no Nihongo I",
+    "titleJa": "みんなの日本語 I",
+    "level": "N5",
+    "lessonIds": [
+     "mnn1-l01",
+     "mnn1-l02",
+     "mnn1-l03",
+     "mnn1-l04",
+     "mnn1-l05",
+     "mnn1-l06",
+     "mnn1-l07",
+     "mnn1-l08",
+     "mnn1-l09",
+     "mnn1-l10",
+     "mnn1-l11",
+     "mnn1-l12",
+     "mnn1-l13",
+     "mnn1-l14",
+     "mnn1-l15",
+     "mnn1-l16",
+     "mnn1-l17",
+     "mnn1-l18",
+     "mnn1-l19",
+     "mnn1-l20",
+     "mnn1-l21",
+     "mnn1-l22",
+     "mnn1-l23",
+     "mnn1-l24",
+     "mnn1-l25"
+    ]
+   },
+   {
+    "id": "mnn2",
+    "title": "Minna no Nihongo II",
+    "titleJa": "みんなの日本語 II",
+    "level": "N4",
+    "lessonIds": [
+     "mnn2-l01",
+     "mnn2-l02",
+     "mnn2-l03",
+     "mnn2-l04",
+     "mnn2-l05",
+     "mnn2-l06",
+     "mnn2-l07",
+     "mnn2-l08",
+     "mnn2-l09",
+     "mnn2-l10",
+     "mnn2-l11",
+     "mnn2-l12",
+     "mnn2-l13",
+     "mnn2-l14",
+     "mnn2-l15",
+     "mnn2-l16",
+     "mnn2-l17",
+     "mnn2-l18",
+     "mnn2-l19",
+     "mnn2-l20",
+     "mnn2-l21",
+     "mnn2-l22",
+     "mnn2-l23",
+     "mnn2-l24",
+     "mnn2-l25"
+    ]
+   },
+   {
+    "id": "genki1",
+    "title": "Genki I",
+    "titleJa": "げんき I",
+    "level": "N5",
+    "lessonIds": [
+     "genki1-l01",
+     "genki1-l02",
+     "genki1-l03",
+     "genki1-l04",
+     "genki1-l05",
+     "genki1-l06",
+     "genki1-l07",
+     "genki1-l08",
+     "genki1-l09",
+     "genki1-l10",
+     "genki1-l11",
+     "genki1-l12"
+    ]
+   },
+   {
+    "id": "genki2",
+    "title": "Genki II",
+    "titleJa": "げんき II",
+    "level": "N4",
+    "lessonIds": [
+     "genki2-l01",
+     "genki2-l02",
+     "genki2-l03",
+     "genki2-l04",
+     "genki2-l05",
+     "genki2-l06",
+     "genki2-l07",
+     "genki2-l08",
+     "genki2-l09",
+     "genki2-l10",
+     "genki2-l11"
+    ]
+   }
+  ],
+  "tb-lessons": [
+   {
+    "id": "mnn1-l01",
+    "textbookId": "mnn1",
+    "order": 1,
+    "title": "Bài 1"
+   },
+   {
+    "id": "mnn1-l02",
+    "textbookId": "mnn1",
+    "order": 2,
+    "title": "Bài 2"
+   },
+   {
+    "id": "mnn1-l03",
+    "textbookId": "mnn1",
+    "order": 3,
+    "title": "Bài 3"
+   },
+   {
+    "id": "mnn1-l04",
+    "textbookId": "mnn1",
+    "order": 4,
+    "title": "Bài 4"
+   },
+   {
+    "id": "mnn1-l05",
+    "textbookId": "mnn1",
+    "order": 5,
+    "title": "Bài 5"
+   },
+   {
+    "id": "mnn1-l06",
+    "textbookId": "mnn1",
+    "order": 6,
+    "title": "Bài 6"
+   },
+   {
+    "id": "mnn1-l07",
+    "textbookId": "mnn1",
+    "order": 7,
+    "title": "Bài 7"
+   },
+   {
+    "id": "mnn1-l08",
+    "textbookId": "mnn1",
+    "order": 8,
+    "title": "Bài 8"
+   },
+   {
+    "id": "mnn1-l09",
+    "textbookId": "mnn1",
+    "order": 9,
+    "title": "Bài 9"
+   },
+   {
+    "id": "mnn1-l10",
+    "textbookId": "mnn1",
+    "order": 10,
+    "title": "Bài 10"
+   },
+   {
+    "id": "mnn1-l11",
+    "textbookId": "mnn1",
+    "order": 11,
+    "title": "Bài 11"
+   },
+   {
+    "id": "mnn1-l12",
+    "textbookId": "mnn1",
+    "order": 12,
+    "title": "Bài 12"
+   },
+   {
+    "id": "mnn1-l13",
+    "textbookId": "mnn1",
+    "order": 13,
+    "title": "Bài 13"
+   },
+   {
+    "id": "mnn1-l14",
+    "textbookId": "mnn1",
+    "order": 14,
+    "title": "Bài 14"
+   },
+   {
+    "id": "mnn1-l15",
+    "textbookId": "mnn1",
+    "order": 15,
+    "title": "Bài 15"
+   },
+   {
+    "id": "mnn1-l16",
+    "textbookId": "mnn1",
+    "order": 16,
+    "title": "Bài 16"
+   },
+   {
+    "id": "mnn1-l17",
+    "textbookId": "mnn1",
+    "order": 17,
+    "title": "Bài 17"
+   },
+   {
+    "id": "mnn1-l18",
+    "textbookId": "mnn1",
+    "order": 18,
+    "title": "Bài 18"
+   },
+   {
+    "id": "mnn1-l19",
+    "textbookId": "mnn1",
+    "order": 19,
+    "title": "Bài 19"
+   },
+   {
+    "id": "mnn1-l20",
+    "textbookId": "mnn1",
+    "order": 20,
+    "title": "Bài 20"
+   },
+   {
+    "id": "mnn1-l21",
+    "textbookId": "mnn1",
+    "order": 21,
+    "title": "Bài 21"
+   },
+   {
+    "id": "mnn1-l22",
+    "textbookId": "mnn1",
+    "order": 22,
+    "title": "Bài 22"
+   },
+   {
+    "id": "mnn1-l23",
+    "textbookId": "mnn1",
+    "order": 23,
+    "title": "Bài 23"
+   },
+   {
+    "id": "mnn1-l24",
+    "textbookId": "mnn1",
+    "order": 24,
+    "title": "Bài 24"
+   },
+   {
+    "id": "mnn1-l25",
+    "textbookId": "mnn1",
+    "order": 25,
+    "title": "Bài 25"
+   },
+   {
+    "id": "mnn2-l01",
+    "textbookId": "mnn2",
+    "order": 1,
+    "title": "Bài 1"
+   },
+   {
+    "id": "mnn2-l02",
+    "textbookId": "mnn2",
+    "order": 2,
+    "title": "Bài 2"
+   },
+   {
+    "id": "mnn2-l03",
+    "textbookId": "mnn2",
+    "order": 3,
+    "title": "Bài 3"
+   },
+   {
+    "id": "mnn2-l04",
+    "textbookId": "mnn2",
+    "order": 4,
+    "title": "Bài 4"
+   },
+   {
+    "id": "mnn2-l05",
+    "textbookId": "mnn2",
+    "order": 5,
+    "title": "Bài 5"
+   },
+   {
+    "id": "mnn2-l06",
+    "textbookId": "mnn2",
+    "order": 6,
+    "title": "Bài 6"
+   },
+   {
+    "id": "mnn2-l07",
+    "textbookId": "mnn2",
+    "order": 7,
+    "title": "Bài 7"
+   },
+   {
+    "id": "mnn2-l08",
+    "textbookId": "mnn2",
+    "order": 8,
+    "title": "Bài 8"
+   },
+   {
+    "id": "mnn2-l09",
+    "textbookId": "mnn2",
+    "order": 9,
+    "title": "Bài 9"
+   },
+   {
+    "id": "mnn2-l10",
+    "textbookId": "mnn2",
+    "order": 10,
+    "title": "Bài 10"
+   },
+   {
+    "id": "mnn2-l11",
+    "textbookId": "mnn2",
+    "order": 11,
+    "title": "Bài 11"
+   },
+   {
+    "id": "mnn2-l12",
+    "textbookId": "mnn2",
+    "order": 12,
+    "title": "Bài 12"
+   },
+   {
+    "id": "mnn2-l13",
+    "textbookId": "mnn2",
+    "order": 13,
+    "title": "Bài 13"
+   },
+   {
+    "id": "mnn2-l14",
+    "textbookId": "mnn2",
+    "order": 14,
+    "title": "Bài 14"
+   },
+   {
+    "id": "mnn2-l15",
+    "textbookId": "mnn2",
+    "order": 15,
+    "title": "Bài 15"
+   },
+   {
+    "id": "mnn2-l16",
+    "textbookId": "mnn2",
+    "order": 16,
+    "title": "Bài 16"
+   },
+   {
+    "id": "mnn2-l17",
+    "textbookId": "mnn2",
+    "order": 17,
+    "title": "Bài 17"
+   },
+   {
+    "id": "mnn2-l18",
+    "textbookId": "mnn2",
+    "order": 18,
+    "title": "Bài 18"
+   },
+   {
+    "id": "mnn2-l19",
+    "textbookId": "mnn2",
+    "order": 19,
+    "title": "Bài 19"
+   },
+   {
+    "id": "mnn2-l20",
+    "textbookId": "mnn2",
+    "order": 20,
+    "title": "Bài 20"
+   },
+   {
+    "id": "mnn2-l21",
+    "textbookId": "mnn2",
+    "order": 21,
+    "title": "Bài 21"
+   },
+   {
+    "id": "mnn2-l22",
+    "textbookId": "mnn2",
+    "order": 22,
+    "title": "Bài 22"
+   },
+   {
+    "id": "mnn2-l23",
+    "textbookId": "mnn2",
+    "order": 23,
+    "title": "Bài 23"
+   },
+   {
+    "id": "mnn2-l24",
+    "textbookId": "mnn2",
+    "order": 24,
+    "title": "Bài 24"
+   },
+   {
+    "id": "mnn2-l25",
+    "textbookId": "mnn2",
+    "order": 25,
+    "title": "Bài 25"
+   },
+   {
+    "id": "genki1-l01",
+    "textbookId": "genki1",
+    "order": 1,
+    "title": "Bài 1"
+   },
+   {
+    "id": "genki1-l02",
+    "textbookId": "genki1",
+    "order": 2,
+    "title": "Bài 2"
+   },
+   {
+    "id": "genki1-l03",
+    "textbookId": "genki1",
+    "order": 3,
+    "title": "Bài 3"
+   },
+   {
+    "id": "genki1-l04",
+    "textbookId": "genki1",
+    "order": 4,
+    "title": "Bài 4"
+   },
+   {
+    "id": "genki1-l05",
+    "textbookId": "genki1",
+    "order": 5,
+    "title": "Bài 5"
+   },
+   {
+    "id": "genki1-l06",
+    "textbookId": "genki1",
+    "order": 6,
+    "title": "Bài 6"
+   },
+   {
+    "id": "genki1-l07",
+    "textbookId": "genki1",
+    "order": 7,
+    "title": "Bài 7"
+   },
+   {
+    "id": "genki1-l08",
+    "textbookId": "genki1",
+    "order": 8,
+    "title": "Bài 8"
+   },
+   {
+    "id": "genki1-l09",
+    "textbookId": "genki1",
+    "order": 9,
+    "title": "Bài 9"
+   },
+   {
+    "id": "genki1-l10",
+    "textbookId": "genki1",
+    "order": 10,
+    "title": "Bài 10"
+   },
+   {
+    "id": "genki1-l11",
+    "textbookId": "genki1",
+    "order": 11,
+    "title": "Bài 11"
+   },
+   {
+    "id": "genki1-l12",
+    "textbookId": "genki1",
+    "order": 12,
+    "title": "Bài 12"
+   },
+   {
+    "id": "genki2-l01",
+    "textbookId": "genki2",
+    "order": 1,
+    "title": "Bài 1"
+   },
+   {
+    "id": "genki2-l02",
+    "textbookId": "genki2",
+    "order": 2,
+    "title": "Bài 2"
+   },
+   {
+    "id": "genki2-l03",
+    "textbookId": "genki2",
+    "order": 3,
+    "title": "Bài 3"
+   },
+   {
+    "id": "genki2-l04",
+    "textbookId": "genki2",
+    "order": 4,
+    "title": "Bài 4"
+   },
+   {
+    "id": "genki2-l05",
+    "textbookId": "genki2",
+    "order": 5,
+    "title": "Bài 5"
+   },
+   {
+    "id": "genki2-l06",
+    "textbookId": "genki2",
+    "order": 6,
+    "title": "Bài 6"
+   },
+   {
+    "id": "genki2-l07",
+    "textbookId": "genki2",
+    "order": 7,
+    "title": "Bài 7"
+   },
+   {
+    "id": "genki2-l08",
+    "textbookId": "genki2",
+    "order": 8,
+    "title": "Bài 8"
+   },
+   {
+    "id": "genki2-l09",
+    "textbookId": "genki2",
+    "order": 9,
+    "title": "Bài 9"
+   },
+   {
+    "id": "genki2-l10",
+    "textbookId": "genki2",
+    "order": 10,
+    "title": "Bài 10"
+   },
+   {
+    "id": "genki2-l11",
+    "textbookId": "genki2",
+    "order": 11,
+    "title": "Bài 11"
+   }
+  ]
+ }
+}

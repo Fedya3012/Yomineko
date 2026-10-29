@@ -66,9 +66,9 @@ describe('links to the rest of the app', () => {
   it('reads installed lessons and links them from lesson tasks', async () => {
     await installPack(db, {
       manifest: { format: 1, id: 'lessons-test', kind: 'deck', title: 'Lessons', version: 1, license: { name: 'CC0', url: 'https://x.test' } },
-      upserts: { lessons: [{ id: 'l2', title: 'Bài 2', level: 'N5', order: 2 }, { id: 'l1', title: 'Bài 1', level: 'N5', order: 1 }] }
+      upserts: { textbooks: [{ id: 'mnn1', title: 'Minna 1', level: 'N5', lessonIds: ['l1', 'l2'] }], 'tb-lessons': [{ id: 'l2', textbookId: 'mnn1', title: 'Bài 2', order: 2 }, { id: 'l1', textbookId: 'mnn1', title: 'Bài 1', order: 1 }] }
     } as never);
-    expect((await loadLessons(db)).map((l) => l.id).sort()).toEqual(['l1', 'l2']);
+    expect((await loadLessons(db)).map((l) => [l.id, l.level, l.book]).sort()).toEqual([['l1', 'N5', 'minna'], ['l2', 'N5', 'minna']]);
     const r = await createRoadmap(db, { ...DEFAULT_ANSWERS, style: 'textbook', minutesPerDay: 45 }, { now, ...offline });
     expect(r.week.flatMap((d) => d.tasks).find((t) => t.kind === 'lesson')?.lessonId).toBe('l1');
   });

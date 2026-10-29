@@ -6,11 +6,15 @@
   import Badge from './lib/Badge.svelte';
   import DictionaryPanel from './features/dictionary/DictionaryPanel.svelte';
   import WordPopup from './features/dictionary/WordPopup.svelte';
+  import TextbookView from './features/textbook/TextbookView.svelte';
+  import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
   import UpdateCenter from './features/updates/UpdateCenter.svelte';
   import Assistant from './features/assistant/Assistant.svelte';
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
+  import MangaReader from './features/manga/MangaReader.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
+  import InsightsView from './features/insights/InsightsView.svelte';
   import { recordSession } from './features/progress/store';
   import Onboarding from './features/roadmap/Onboarding.svelte';
   import RoadmapView from './features/roadmap/RoadmapView.svelte';
@@ -27,7 +31,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime' | 'roadmap' | 'onboarding'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'roadmap' | 'onboarding'>('home');
   let roadmapKey = $state(0);
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
@@ -55,12 +59,14 @@
     if (!(await loadRoadmap(db)) && !(await isSkipped(db))) view = 'onboarding';
   });
 
-  // Roadmap tasks open the matching screen. Screens owned by threads that are not merged yet say so.
+  // Roadmap tasks open the matching screen.
   const homeAnchors: Partial<Record<LinkTarget, string>> = { srs: 'sec-srs', dictionary: 'sec-dictionary', assistant: 'sec-assistant', progress: 'sec-progress' };
   function openTarget(target: LinkTarget): string | void {
-    if (target === 'anime') { view = 'anime'; return; }
+    const screens: Partial<Record<LinkTarget, typeof view>> = { anime: 'anime', kanji: 'kana', manga: 'manga', lesson: 'textbooks' };
+    const screen = screens[target];
+    if (screen) { view = screen; return; }
     const anchor = homeAnchors[target];
-    if (!anchor) return 'Màn hình này sắp có trong bản cập nhật tới. Tạm thời hãy học phần này ở ứng dụng hoặc sách của bạn.';
+    if (!anchor) return 'Không mở được màn hình này.';
     view = 'home';
     setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' }), 50);
   }
@@ -93,7 +99,13 @@
 </script>
 
 <main>
-  {#if view === 'anime' && readyDb}
+  {#if view === 'textbooks'}
+    {#if readyDb}<TextbookView db={readyDb} onback={() => (view = 'home')} />{:else}<p class="muted">Đang mở kho dữ liệu…</p>{/if}
+  {:else if view === 'kana'}
+    <KanaKanjiApp onback={() => (view = 'home')} />
+  {:else if view === 'manga' && readyDb}
+    <MangaReader db={readyDb} onBack={() => (view = 'home')} />
+  {:else if view === 'anime' && readyDb}
     <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
   {:else if view === 'onboarding' && readyDb}
     <Onboarding db={readyDb} ondone={() => { roadmapKey++; view = 'roadmap'; }} oncancel={() => { roadmapKey++; view = 'home'; }} />
@@ -112,6 +124,15 @@
   {#if readyDb}<TodayCard db={readyDb} refreshKey={roadmapKey + progressKey} onview={() => (view = 'roadmap')} oncreate={() => (view = 'onboarding')} />{/if}
   <div id="sec-srs">{#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}</div>
 
+  <section class="card hero" aria-label="Học theo giáo trình">
+    <Badge tone="coral" size={72}><svg viewBox="0 0 100 100"><path d="M22 20h46a10 10 0 0 1 10 10v50H32a10 10 0 0 1-10-10zM22 70a10 10 0 0 1 10-10h46M38 36h26M38 48h18" /></svg></Badge>
+    <div class="hero-text">
+      <h2 class="section-title">Học theo giáo trình</h2>
+      <p class="muted">Minna no Nihongo, Genki… Học lần lượt từng bài: từ vựng, ngữ pháp, hội thoại, bài tập.</p>
+    </div>
+    <button class="btn" onclick={() => (view = 'textbooks')}>Mở giáo trình</button>
+  </section>
+
   <section class="grid" aria-label="Tính năng">
     {#each features as f}
       <div class="card feature">
@@ -121,6 +142,10 @@
           <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
         {:else if f.name === 'Lộ trình'}
           <button class="btn" onclick={() => (view = 'roadmap')}>Mở lộ trình</button>
+        {:else if f.name === 'Đọc manga'}
+          <button class="btn" onclick={() => (view = 'manga')}>Mở</button>
+        {:else if f.name === 'Kana & Kanji'}
+          <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
         {:else}
           <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' || f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
         {/if}
@@ -138,6 +163,7 @@
     <h2 class="section-title">Tiến độ học</h2>
     <p><button class="btn soft" onclick={demoSession} disabled={!readyDb}>Học thử 1 buổi (dữ liệu mẫu)</button></p>
     {#if readyDb}<ProgressView db={readyDb} summary={lastSummary} refreshKey={progressKey} />{/if}
+    {#if readyDb}<InsightsView db={readyDb} refreshKey={progressKey} />{/if}
   </section>
 
   <section class="card">
@@ -185,6 +211,8 @@
   h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
   .section-title { margin: 0 0 var(--space-2); font-size: var(--text-lg); color: var(--accent-strong); }
   .muted { color: var(--text-muted); margin: 0; }
+  .hero { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; background: var(--surface-2); }
+  .hero-text { flex: 1 1 14rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
   .feature { display: grid; gap: var(--space-2); justify-items: start; background: var(--surface-2); }
   .sample { font-size: var(--text-jp-reading); margin: 0; }

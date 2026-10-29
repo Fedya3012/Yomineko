@@ -32,16 +32,21 @@ export async function setTick(db: DB, date: string, taskId: string, on: boolean)
   return ticks;
 }
 
-/** Lessons already installed by content packs (the textbook thread owns them). Empty when none. */
+/** Lessons installed by textbook packs (`tb-lessons`; level and book come from the `textbooks` row). Empty when none. */
 export async function loadLessons(db: DB): Promise<LessonRef[]> {
-  const rows = (await listCollection(db, 'lessons')) as unknown as Record<string, unknown>[];
-  return rows.filter((r) => typeof r.id === 'string').map((r) => ({
-    id: r.id as string,
-    title: typeof r.title === 'string' ? r.title : undefined,
-    level: typeof r.level === 'string' ? r.level : undefined,
-    order: typeof r.order === 'number' ? r.order : undefined,
-    book: typeof r.book === 'string' ? r.book : undefined
-  }));
+  const [lessons, books] = await Promise.all([listCollection(db, 'tb-lessons'), listCollection(db, 'textbooks')]) as unknown as Record<string, unknown>[][];
+  const bookById = new Map(books.map((b) => [b.id, b]));
+  return lessons.filter((r) => typeof r.id === 'string').map((r) => {
+    const book = bookById.get(r.textbookId);
+    const bookId = typeof r.textbookId === 'string' ? r.textbookId : '';
+    return {
+      id: r.id as string,
+      title: typeof r.title === 'string' ? r.title : undefined,
+      level: typeof book?.level === 'string' ? book.level : undefined,
+      order: typeof r.order === 'number' ? r.order : undefined,
+      book: bookId.startsWith('mnn') ? 'minna' : bookId.startsWith('genki') ? 'genki' : undefined
+    };
+  });
 }
 
 /** What the app already knows about the learner: used to make regeneration smarter. */

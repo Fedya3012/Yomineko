@@ -46,7 +46,8 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
 | SRS | `cards` (`decks` chưa dùng) | `srs.state:<cardId>`, `srs.settings`, `srs.stats:<YYYY-MM-DD>` (số lượt ôn mỗi ngày, thread Tiến độ có thể đọc) |
-| Tiến độ | `lessons` | `progress.*` |
+| Tiến độ | (không có) | `progress.*` |
+| Giáo trình | `textbooks`, `tb-lessons` | `textbook.*` (xem mục Giáo trình) |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
 ## Quy ước
@@ -77,6 +78,26 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 - Tìm kiếm chung: `searchAll(query)` gộp từ điển + thẻ/ghi chú của người học. Thread khác gắn nguồn của mình bằng `registerSearchSource`. Nguồn có sẵn đọc userdata `card:<id>` / `note:<id>` (trường `front`, `back`, `reading`, `title`, `text`, `tags`) và collection `cards`.
 - Giấy phép: `licenses.ts` là danh sách hiển thị trong app. **Thêm nguồn dữ liệu mới thì phải thêm vào đây.**
 
+
+## Trình đọc manga + OCR (`src/features/manga/`)
+Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ảnh); app **không** kèm truyện nào và không tải file đi đâu.
+- `open.ts` nhận file, đoán định dạng theo **byte đầu** (`formats.ts`, vì nhiều file `.cbr` thực ra là ZIP), rồi gọi `sources/{cbz,cbr,pdf,folder}.ts`. Mỗi nguồn trả về danh sách `PageRef` (chỉ giải nén/vẽ trang khi cần). `pageCache.ts` chỉ giữ vài trang quanh trang đang đọc.
+- `spreads.ts` (1 trang / 2 trang, bìa riêng, trang ngang đứng riêng, chiều đọc phải→trái hoặc trái→phải), `zoom.ts` + `spreadMath.ts` (zoom, kéo, chạm đúp, pinch; đổi toạ độ màn hình → toạ độ trang). Toàn bộ là hàm thuần, có test.
+- OCR (`ocr/`): `engine.ts` chạy Tesseract.js trong Web Worker, **offline**. Chạy 2 model (`jpn` ngang, `jpn_vert` dọc), `normalize.ts` lọc nhiễu, nhận kiểu chữ theo hình dạng dòng, ghép kết quả và sắp thứ tự đọc manga (trên→dưới, phải→trái). Có thể quét cả trang hoặc chỉ một vùng người dùng kéo chọn (chính xác hơn).
+  - Ô của từng chữ được chia đều theo ô của **dòng**, vì ô theo từng ký tự của tesseract.js không đáng tin với chữ Nhật (chữ dọc trả về x = 0).
+- Tra nghĩa (`lookup.ts`): chạm chữ → `hit.ts` tìm ký tự → khớp từ dài nhất trong collection `words` (gói từ điển, xem bảng trên). Chưa có gói từ điển thì app báo rõ. **Thread Từ điển**: khi đổi cấu trúc bản ghi `words`, sửa `WordEntry`/`buildWordIndex` ở đây; chưa có tách đuôi động từ/tính từ (ví dụ 読んだ → 読む), nên là việc nên làm.
+- Vị trí đọc + tuỳ chọn hiển thị lưu ở `userdata` (`reader.position:<id>`, `reader.prefs`).
+- `scripts/copy-vendor-assets.mjs` (chạy tự động trước `dev`/`build`) chép engine OCR, model tiếng Nhật và bộ đọc RAR vào `public/ocr`, `public/vendor` (git bỏ qua). PWA chỉ cache chúng lần đầu dùng (khoảng 20 MB), bản .exe/APK thì có sẵn.
+
+### Giấy phép thành phần dùng cho manga/OCR (đều cho phép dùng thương mại)
+| Thành phần | Giấy phép | Dùng để |
+|---|---|---|
+| tesseract.js + tesseract.js-core | Apache-2.0 | OCR chạy trên máy |
+| Model Tesseract `jpn`, `jpn_vert` (gói `@tesseract.js-data/*`, bản best_int) | Apache-2.0 (dữ liệu Tesseract) | nhận dạng chữ Nhật ngang/dọc |
+| pdfjs-dist | Apache-2.0 | mở PDF |
+| libarchive.js (bọc libarchive) | MIT (libarchive: BSD-2) | mở CBR/RAR/7z |
+| fflate | MIT | mở CBZ/ZIP |
+Màn hình Credits (thread sau) nên liệt kê các dòng này.
 ## Trợ lý AI (`src/features/assistant/`)
 - `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
 - Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
@@ -92,5 +113,17 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 - Lần mở đầu tiên app hỏi 6 câu (trình độ, mục tiêu, phút/ngày, nội dung yêu thích, điểm yếu, kiểu học); có nút bỏ qua. Câu trả lời + đồng hồ + dữ liệu học thật sinh ra lộ trình bằng `generateRoadmap` (hàm thuần, theo luật, **chạy offline**, cùng đầu vào cho cùng kết quả).
 - AI chỉ là phần tuỳ chọn (`ai.ts`): viết lại lời tóm tắt và lời khuyên, **không đổi lịch**. Dùng chung cổng riêng tư của trợ lý (tắt mặc định, cần đồng ý đúng host); lỗi hoặc không mạng thì giữ bản theo luật.
 - userdata: `roadmap.answers`, `roadmap.plan`, `roadmap.skipped`, `roadmap.ticks:<ngày>`.
-- Nối với nơi khác: đọc `srs.stats`, `progress.*` (tiến độ giai đoạn, mục tiêu tuần, tự tick buổi SRS), collection `lessons` (trường `id,title,level,order,book`; có thì nhiệm vụ "bài giáo trình" trỏ tới bài thật). Chỉ **ghi** `srs.settings` / `progress.settings` khi người học bấm "Áp dụng".
-- Nhiệm vụ mở màn hình qua `LinkTarget`; `openTarget` trong `App.svelte` xử lý. Kanji, manga, bài học báo "sắp có" cho tới khi thread đó nối vào.
+- Nối với nơi khác: đọc `srs.stats`, `progress.*` (tiến độ giai đoạn, mục tiêu tuần, tự tick buổi SRS), collection `tb-lessons` + `textbooks` (đọc qua `loadLessons`; có thì nhiệm vụ "bài giáo trình" trỏ tới bài thật). Chỉ **ghi** `srs.settings` / `progress.settings` khi người học bấm "Áp dụng".
+- Nhiệm vụ mở màn hình qua `LinkTarget`; `openTarget` trong `App.svelte` xử lý. Kanji → Kana & Kanji, manga → trình đọc, bài học → Giáo trình.
+
+## Tổng kết & AI nâng cao (`src/features/insights/`)
+- `summary.ts`: tổng kết theo ngày/tuần/tháng từ `progress.day:*`, `progress.learned`, `srs.stats:*`; xuất text/Markdown. `weakness.ts`: phân loại lỗi (trợ từ, chia động từ, On/Kun, ...) bằng nhãn hoặc `tag` tuỳ chọn trong `StudiedItem`; điểm giảm một nửa sau 7 ngày. `adaptive.ts`: gợi ý độ khó từ 7 ngày gần nhất. Tất cả là hàm thuần, chạy offline.
+- `rewrite.ts`: viết lại tổng kết theo phong cách. Bản offline dùng mẫu câu; bản AI đi qua `aiBlockedReason` của trợ lý nên cần đúng sự đồng ý theo host, và chỉ gửi văn bản tổng kết (`aiPayload`).
+- SRS: `buildQueue` nhận `boost` (cardId → điểm yếu) để hỏi từ sai lặp lại trước; `SrsReview` lấy từ `loadBoost`.
+- Userdata: `insights.settings` (`adaptiveAuto` mặc định tắt, `lastAuto`). Hướng dẫn: `docs/HUONG-DAN-TONG-KET-AI.md`.
+
+## Giáo trình (`src/features/textbook/`)
+- Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
+- **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
+- **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
+- **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).
