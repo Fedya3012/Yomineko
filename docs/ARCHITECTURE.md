@@ -114,3 +114,8 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
 - **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
 - **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).
+
+## Cộng đồng (`src/features/community/`)
+- Opt-in, offline-first: không gì rời máy trừ khi người học bấm xuất file (`share.ts`, định dạng `yomineko-community` v1; nhập vào được kiểm tra chặt, không ghi đè dữ liệu của chính mình).
+- Userdata: `community.profile`, `community.group:<id>`, `community.challenge:<id>`, `community.person:<id>`, `community.post:<id>`. Số liệu của mình đọc từ `progress.*` (`buildMyPerson`).
+- Hàm thuần xếp hạng/khung thời gian: `logic.ts`. Hướng dẫn: `docs/CONG-DONG.md`.

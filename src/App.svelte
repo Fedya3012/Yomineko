@@ -13,6 +13,7 @@
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
   import MangaReader from './features/manga/MangaReader.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
+  import CommunityView from './features/community/CommunityView.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import { recordSession } from './features/progress/store';
   import type { SessionSummary } from './features/progress/types';
@@ -25,7 +26,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'community'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
@@ -34,7 +35,8 @@
     { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
     { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
     { tone: 'coral', name: 'Xem anime', note: 'Thread Anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
-    { tone: 'mint', name: 'Tiến độ', note: 'Thread Tiến độ', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' }
+    { tone: 'mint', name: 'Tiến độ', note: 'Thread Tiến độ', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' },
+    { tone: 'sky', name: 'Cộng đồng', note: 'Nhóm học', d: 'M35 40a12 12 0 1 0 0-.1M65 40a12 12 0 1 0 0-.1M15 78c0-14 9-22 20-22s20 8 20 22M45 78c0-14 9-22 20-22s20 8 20 22' }
   ] as const;
 
   $effect(() => { applySettings(settings); saveSettings(settings); });
@@ -79,6 +81,8 @@
 <main>
   {#if view === 'textbooks'}
     {#if readyDb}<TextbookView db={readyDb} onback={() => (view = 'home')} />{:else}<p class="muted">Đang mở kho dữ liệu…</p>{/if}
+  {:else if view === 'community' && readyDb}
+    <CommunityView db={readyDb} onback={() => (view = 'home')} />
   {:else if view === 'kana'}
     <KanaKanjiApp onback={() => (view = 'home')} />
   {:else if view === 'manga' && readyDb}
@@ -115,6 +119,8 @@
           <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
         {:else if f.name === 'Đọc manga'}
           <button class="btn" onclick={() => (view = 'manga')}>Mở</button>
+        {:else if f.name === 'Cộng đồng'}
+          <button class="btn" onclick={() => (view = 'community')}>Mở</button>
         {:else if f.name === 'Kana & Kanji'}
           <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
         {:else}
