@@ -1,7 +1,8 @@
 // Learner data for the anime feature. Lives in the `userdata` store, so updating content packs never touches it.
 //   anime.known   : string[]  keys of words the learner knows (see Token.key)
-//   anime.cards   : NewCard[] cards auto-created from subtitles; the SRS thread picks these up for review
+//   anime.cards   : NewCard[] cards auto-created from subtitles; copied into the SRS by `syncAnimeCards` (srs/bridge.ts)
 import { getUserData, setUserData, type DB } from '../../lib/db';
+import { syncAnimeCards } from '../srs/bridge';
 import type { Cue } from './subtitles';
 import type { DictIndex, Token } from './tokenizer';
 
@@ -72,6 +73,7 @@ export async function saveNewCards(db: DB, plan: CardPlan): Promise<number> {
   if (!plan.cards.length) return 0;
   const existing = await loadCards(db);
   await setUserData(db, CARDS_KEY, [...existing, ...plan.cards]);
+  await syncAnimeCards(db); // the SRS only reads the `cards` collection, so hand the new cards over
   return plan.cards.length;
 }
 
