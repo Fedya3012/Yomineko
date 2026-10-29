@@ -211,7 +211,7 @@
   form input { flex: 1; }
   label { display: grid; gap: 4px; }
   label:has(> input[type='checkbox']) { display: block; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-2); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-2); }
   .pick { display: grid; justify-items: start; text-align: left; }
   .pick small { opacity: 0.75; }
   .consent { background: var(--butter-100); color: var(--text); padding: var(--space-3); border-radius: 16px; display: grid; gap: var(--space-2); }
