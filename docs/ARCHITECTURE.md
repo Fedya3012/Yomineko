@@ -65,6 +65,20 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
 
+## UI dùng chung & trợ năng (thread UI/UX)
+- Thành phần: `src/lib/ui/` (Button, Toggle, Segmented, Slider, ProgressRing/Bar, KeyCap, Mochi, NavBar, JpText, EmptyState, ErrorState, Skeleton, SkipLink, Announcer). Import từ `src/lib/ui`. Xem thử: mở app với `?gallery`.
+- 15 màn hình thiết kế (sáng/tối, trống/tải/lỗi): `docs/design/screens.html` (mở bằng trình duyệt).
+- Quy tắc trợ năng bắt buộc cho mọi thread: `docs/ACCESSIBILITY.md`. Viền của thứ bấm được dùng `--border-strong`, màu vẽ dùng `--accent-gfx`.
+
+## Từ điển (`src/features/dictionary/`)
+- Dữ liệu: collection `words` (JMdict), `examples` (Tatoeba), `kanji` (KANJIDIC2). Kiểu dữ liệu ở `types.ts`.
+- Gói thật được tạo bằng `scripts/build-dict-pack.mjs` (hoặc workflow **Dictionary packs** trên GitHub Actions) từ dữ liệu mở của dự án jmdict-simplified + danh sách JLPT; gói mẫu CC0 để thử: `packs-src/dict-sample/v1.json`.
+- Tìm kiếm: `DictionaryIndex` (trong bộ nhớ, dựng từ `words`) tìm theo chữ Hán, kana, romaji và nghĩa tiếng Anh. `loadDictionary(db)` dựng lại index sau khi cài/gỡ gói.
+- Chạm từ: `lookupAt(index, text, pos)` tìm từ dài nhất tại vị trí đó, có xử lý chia động từ/tính từ -i. `LookupText.svelte` dùng được ở mọi nơi có chữ Nhật (manga, phụ đề, bài học): chạm là mở popup (`WordPopup.svelte`, gắn một lần trong `App.svelte`). Mã khác có thể gọi `openWord(id)`.
+- Tìm kiếm chung: `searchAll(query)` gộp từ điển + thẻ/ghi chú của người học. Thread khác gắn nguồn của mình bằng `registerSearchSource`. Nguồn có sẵn đọc userdata `card:<id>` / `note:<id>` (trường `front`, `back`, `reading`, `title`, `text`, `tags`) và collection `cards`.
+- Giấy phép: `licenses.ts` là danh sách hiển thị trong app. **Thêm nguồn dữ liệu mới thì phải thêm vào đây.**
+
+
 ## Trình đọc manga + OCR (`src/features/manga/`)
 Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ảnh); app **không** kèm truyện nào và không tải file đi đâu.
 - `open.ts` nhận file, đoán định dạng theo **byte đầu** (`formats.ts`, vì nhiều file `.cbr` thực ra là ZIP), rồi gọi `sources/{cbz,cbr,pdf,folder}.ts`. Mỗi nguồn trả về danh sách `PageRef` (chỉ giải nén/vẽ trang khi cần). `pageCache.ts` chỉ giữ vài trang quanh trang đang đọc.

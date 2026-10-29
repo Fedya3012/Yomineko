@@ -4,6 +4,8 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import DictionaryPanel from './features/dictionary/DictionaryPanel.svelte';
+  import WordPopup from './features/dictionary/WordPopup.svelte';
   import TextbookView from './features/textbook/TextbookView.svelte';
   import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
   import UpdateCenter from './features/updates/UpdateCenter.svelte';
@@ -28,7 +30,7 @@
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
     { tone: 'coral', name: 'Ôn tập SRS', note: 'Đã có', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
-    { tone: 'teal', name: 'Từ điển', note: 'Thread Từ điển', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
+    { tone: 'teal', name: 'Từ điển', note: 'Ở bên dưới ↓', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
     { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
     { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
     { tone: 'coral', name: 'Xem anime', note: 'Thread Anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
@@ -116,13 +118,17 @@
         {:else if f.name === 'Kana & Kanji'}
           <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
         {:else}
-          <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' ? 'Đã có' : `Sắp có · ${f.note}`}</span>
+          <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' || f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
         {/if}
       </div>
     {/each}
   </section>
 
   {#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}
+
+  {#if readyDb}
+    <section class="card" aria-label="Từ điển"><DictionaryPanel db={readyDb} /></section>
+  {/if}
 
   <section aria-label="Tiến độ học">
     <h2 class="section-title">Tiến độ học</h2>
@@ -149,7 +155,7 @@
       {/each}
     </div>
     <label><input type="checkbox" bind:checked={settings.furigana} /> Hiện furigana (ふりがな)</label>
-    <label><input type="checkbox" bind:checked={settings.largeText} /> Chữ lớn</label>
+    <label><input type="checkbox" checked={settings.fontScale > 1} onchange={(e) => (settings.fontScale = e.currentTarget.checked ? 1.25 : 1)} /> Chữ lớn</label>
     <label><input type="checkbox" bind:checked={settings.highContrast} /> Tương phản cao</label>
   </section>
 
@@ -166,6 +172,7 @@
   </section>
   {/if}
 </main>
+<WordPopup />
 
 <style>
   main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }

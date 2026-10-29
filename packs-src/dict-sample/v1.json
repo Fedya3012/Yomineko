@@ -1,0 +1,1038 @@
+{
+ "manifest": {
+  "format": 1,
+  "id": "dict-sample",
+  "kind": "dictionary",
+  "title": "Từ điển mẫu (CC0, ~30 từ để thử)",
+  "version": 1,
+  "license": {
+   "name": "CC0 1.0",
+   "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "attribution": "Do đội Yomineko tự viết, chỉ để thử tính năng. Gói thật: JMdict/KANJIDIC2 (xem Giấy phép & ghi công)."
+  }
+ },
+ "upserts": {
+  "words": [
+   {
+    "id": "s-neko",
+    "kanji": [
+     {
+      "text": "猫",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "ねこ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "cat"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5,
+    "ex": [
+     "s-e1"
+    ]
+   },
+   {
+    "id": "s-inu",
+    "kanji": [
+     {
+      "text": "犬",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "いぬ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "dog"
+      ],
+      "related": [
+       "猫"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-hon",
+    "kanji": [
+     {
+      "text": "本",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "ほん",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "book"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5,
+    "ex": [
+     "s-e2"
+    ]
+   },
+   {
+    "id": "s-honya",
+    "kanji": [
+     {
+      "text": "本屋",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "ほんや",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "bookshop",
+       "bookstore"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-yomu",
+    "kanji": [
+     {
+      "text": "読む",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "よむ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "v5m",
+       "vt"
+      ],
+      "gloss": [
+       "to read"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5,
+    "ex": [
+     "s-e2"
+    ]
+   },
+   {
+    "id": "s-dokusho",
+    "kanji": [
+     {
+      "text": "読書",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "どくしょ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n",
+       "vs"
+      ],
+      "gloss": [
+       "reading (books)"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 3
+   },
+   {
+    "id": "s-dokusha",
+    "kanji": [
+     {
+      "text": "読者",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "どくしゃ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "reader"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 2
+   },
+   {
+    "id": "s-taberu",
+    "kanji": [
+     {
+      "text": "食べる",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "たべる",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "v1",
+       "vt"
+      ],
+      "gloss": [
+       "to eat"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5,
+    "ex": [
+     "s-e3"
+    ]
+   },
+   {
+    "id": "s-nomu",
+    "kanji": [
+     {
+      "text": "飲む",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "のむ",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "v5m",
+       "vt"
+      ],
+      "gloss": [
+       "to drink"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-miru",
+    "kanji": [
+     {
+      "text": "見る",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "みる",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "v1",
+       "vt"
+      ],
+      "gloss": [
+       "to see",
+       "to look at",
+       "to watch"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-iku",
+    "kanji": [
+     {
+      "text": "行く",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "いく",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "v5k-s",
+       "vi"
+      ],
+      "gloss": [
+       "to go"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-kuru",
+    "kanji": [
+     {
+      "text": "来る",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "くる",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "vk",
+       "vi"
+      ],
+      "gloss": [
+       "to come"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-suru",
+    "kanji": [],
+    "kana": [
+     {
+      "text": "する",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "vs-i",
+       "vt"
+      ],
+      "gloss": [
+       "to do"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-ookii",
+    "kanji": [
+     {
+      "text": "大きい",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "おおきい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "adj-i"
+      ],
+      "gloss": [
+       "big",
+       "large"
+      ],
+      "antonym": [
+       "小さい"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-chiisai",
+    "kanji": [
+     {
+      "text": "小さい",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "ちいさい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "adj-i"
+      ],
+      "gloss": [
+       "small",
+       "little"
+      ],
+      "antonym": [
+       "大きい"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-takai",
+    "kanji": [
+     {
+      "text": "高い",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "たかい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "adj-i"
+      ],
+      "gloss": [
+       "high",
+       "tall",
+       "expensive"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-oishii",
+    "kanji": [
+     {
+      "text": "美味しい",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "おいしい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "adj-i"
+      ],
+      "gloss": [
+       "delicious",
+       "tasty"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5,
+    "ex": [
+     "s-e3"
+    ]
+   },
+   {
+    "id": "s-shizuka",
+    "kanji": [
+     {
+      "text": "静か",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "しずか",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "adj-na"
+      ],
+      "gloss": [
+       "quiet",
+       "peaceful"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 4,
+    "ex": [
+     "s-e1"
+    ]
+   },
+   {
+    "id": "s-gakusei",
+    "kanji": [
+     {
+      "text": "学生",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "がくせい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "student"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-sensei",
+    "kanji": [
+     {
+      "text": "先生",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "せんせい",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "teacher",
+       "master"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-gakkou",
+    "kanji": [
+     {
+      "text": "学校",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "がっこう",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "school"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-nihongo",
+    "kanji": [
+     {
+      "text": "日本語",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "にほんご",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "Japanese (language)"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-mizu",
+    "kanji": [
+     {
+      "text": "水",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "みず",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "water"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-hito",
+    "kanji": [
+     {
+      "text": "人",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "ひと",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n"
+      ],
+      "gloss": [
+       "person"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-kyou",
+    "kanji": [
+     {
+      "text": "今日",
+      "common": true
+     }
+    ],
+    "kana": [
+     {
+      "text": "きょう",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "n-adv",
+       "n-t"
+      ],
+      "gloss": [
+       "today"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-wa",
+    "kanji": [],
+    "kana": [
+     {
+      "text": "は",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "prt"
+      ],
+      "gloss": [
+       "topic marker (pronounced \"wa\")"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-wo",
+    "kanji": [],
+    "kana": [
+     {
+      "text": "を",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "prt"
+      ],
+      "gloss": [
+       "object marker"
+      ]
+     }
+    ],
+    "common": true,
+    "jlpt": 5
+   },
+   {
+    "id": "s-ni",
+    "kanji": [],
+    "kana": [
+     {
+      "text": "に",
+      "common": true
+     }
+    ],
+    "senses": [
+     {
+      "pos": [
+       "prt"
+      ],
+      "gloss": [
+       "indicates direction, location or time"
+      ]
+     }
+    ],
+    "common": true
+   }
+  ],
+  "examples": [
+   {
+    "id": "s-e1",
+    "ja": "猫は静かに寝ている。",
+    "en": "The cat is sleeping quietly.",
+    "words": [
+     "s-neko",
+     "s-shizuka"
+    ]
+   },
+   {
+    "id": "s-e2",
+    "ja": "私は毎日、本を読む。",
+    "en": "I read books every day.",
+    "words": [
+     "s-hon",
+     "s-yomu"
+    ]
+   },
+   {
+    "id": "s-e3",
+    "ja": "この料理はとても美味しいので、たくさん食べました。",
+    "en": "This dish is so delicious that I ate a lot.",
+    "words": [
+     "s-oishii",
+     "s-taberu"
+    ]
+   }
+  ],
+  "kanji": [
+   {
+    "id": "猫",
+    "on": [
+     "ビョウ"
+    ],
+    "kun": [
+     "ねこ"
+    ],
+    "meanings": [
+     "cat"
+    ],
+    "strokes": 11,
+    "grade": 8,
+    "freq": 1830
+   },
+   {
+    "id": "犬",
+    "on": [
+     "ケン"
+    ],
+    "kun": [
+     "いぬ"
+    ],
+    "meanings": [
+     "dog"
+    ],
+    "strokes": 4,
+    "grade": 1,
+    "freq": 1190
+   },
+   {
+    "id": "本",
+    "on": [
+     "ホン"
+    ],
+    "kun": [
+     "もと"
+    ],
+    "meanings": [
+     "book",
+     "present",
+     "main",
+     "true",
+     "real"
+    ],
+    "strokes": 5,
+    "grade": 1,
+    "freq": 10
+   },
+   {
+    "id": "読",
+    "on": [
+     "ドク",
+     "トク",
+     "トウ"
+    ],
+    "kun": [
+     "よ.む"
+    ],
+    "meanings": [
+     "read"
+    ],
+    "strokes": 14,
+    "grade": 2,
+    "freq": 361
+   },
+   {
+    "id": "食",
+    "on": [
+     "ショク",
+     "ジキ"
+    ],
+    "kun": [
+     "く.う",
+     "た.べる"
+    ],
+    "meanings": [
+     "eat",
+     "food"
+    ],
+    "strokes": 9,
+    "grade": 2,
+    "freq": 332
+   },
+   {
+    "id": "飲",
+    "on": [
+     "イン"
+    ],
+    "kun": [
+     "の.む"
+    ],
+    "meanings": [
+     "drink",
+     "smoke",
+     "take"
+    ],
+    "strokes": 12,
+    "grade": 3,
+    "freq": 800
+   },
+   {
+    "id": "見",
+    "on": [
+     "ケン"
+    ],
+    "kun": [
+     "み.る"
+    ],
+    "meanings": [
+     "see",
+     "hopes",
+     "chances",
+     "idea",
+     "opinion"
+    ],
+    "strokes": 7,
+    "grade": 1,
+    "freq": 40
+   },
+   {
+    "id": "学",
+    "on": [
+     "ガク"
+    ],
+    "kun": [
+     "まな.ぶ"
+    ],
+    "meanings": [
+     "study",
+     "learning",
+     "science"
+    ],
+    "strokes": 8,
+    "grade": 1,
+    "freq": 84
+   },
+   {
+    "id": "生",
+    "on": [
+     "セイ",
+     "ショウ"
+    ],
+    "kun": [
+     "い.きる",
+     "う.まれる",
+     "なま"
+    ],
+    "meanings": [
+     "life",
+     "genuine",
+     "birth"
+    ],
+    "strokes": 5,
+    "grade": 1,
+    "freq": 30
+   },
+   {
+    "id": "水",
+    "on": [
+     "スイ"
+    ],
+    "kun": [
+     "みず"
+    ],
+    "meanings": [
+     "water"
+    ],
+    "strokes": 4,
+    "grade": 1,
+    "freq": 450
+   },
+   {
+    "id": "人",
+    "on": [
+     "ジン",
+     "ニン"
+    ],
+    "kun": [
+     "ひと"
+    ],
+    "meanings": [
+     "person"
+    ],
+    "strokes": 2,
+    "grade": 1,
+    "freq": 6
+   },
+   {
+    "id": "日",
+    "on": [
+     "ニチ",
+     "ジツ"
+    ],
+    "kun": [
+     "ひ",
+     "か"
+    ],
+    "meanings": [
+     "day",
+     "sun",
+     "Japan",
+     "counter for days"
+    ],
+    "strokes": 4,
+    "grade": 1,
+    "freq": 1
+   }
+  ]
+ }
+}

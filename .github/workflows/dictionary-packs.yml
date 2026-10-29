@@ -1,0 +1,52 @@
+# Builds the real dictionary packs (JMdict + Tatoeba examples + KANJIDIC2 + JLPT levels) from open data
+# and publishes them, with catalog.json, as a GitHub Release the app can download from.
+# Run it by hand: Actions > "Dictionary packs" > Run workflow.
+name: Dictionary packs
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Pack version (whole number, higher than the previous one)'
+        required: true
+        default: '1'
+      all_words:
+        description: 'Include rare words too (much bigger download)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Download open data (JMdict + examples, KANJIDIC2, JLPT lists)
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          mkdir -p data/jlpt
+          gh release download -R scriptin/jmdict-simplified -p 'jmdict-examples-eng-*.json.zip' -D data
+          gh release download -R scriptin/jmdict-simplified -p 'kanjidic2-en-*.json.zip' -D data
+          (cd data && for z in *.zip; do unzip -o "$z"; done)
+          for n in 1 2 3 4 5; do
+            curl -fsSL "https://raw.githubusercontent.com/elzup/jlpt-word-list/master/src/n$n.csv" -o "data/jlpt/n$n.csv"
+          done
+          ls -la data
+      - name: Build packs
+        run: |
+          node scripts/build-dict-pack.mjs \
+            --jmdict "$(ls data/jmdict-examples-eng-*.json | head -1)" \
+            --kanjidic "$(ls data/kanjidic2-en-*.json | head -1)" \
+            --jlpt-dir data/jlpt \
+            --version '${{ inputs.version }}' --out packs-src ${{ inputs.all_words && '--all-words' || '' }}
+          npm ci
+          npm run packs:build -- packs-src dist-packs
+      - name: Publish release
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh release create "dict-packs-v${{ inputs.version }}" dist-packs/*.json \
+            --title "Dictionary packs v${{ inputs.version }}" \
+            --notes "JMdict/KANJIDIC2 (EDRDG, CC BY-SA 4.0), Tatoeba examples (CC BY 2.0 FR), JLPT lists (tanos.co.uk, CC BY). See the Licenses panel in the app."

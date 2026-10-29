@@ -1,0 +1,35 @@
+// Shared dictionary state: the search index (built from installed packs) and the word popup.
+import { getRecord, listCollection, type DB } from '../../lib/db';
+import { DictionaryIndex } from './index';
+import type { Example, KanjiEntry, Word } from './types';
+
+export const dict = $state({
+  index: undefined as DictionaryIndex | undefined,
+  count: 0,
+  popup: [] as string[] // stack of word ids; last = shown; lets "back" work after following a related word
+});
+
+let current: DB | undefined;
+
+/** (Re)build the index from whatever dictionary packs are installed. Call again after installing/removing a pack. */
+export async function loadDictionary(db: DB): Promise<void> {
+  current = db;
+  const words = (await listCollection(db, 'words')) as unknown as Word[];
+  dict.index = words.length ? new DictionaryIndex(words) : undefined;
+  dict.count = words.length;
+}
+
+export const openWord = (id: string) => { dict.popup = [...dict.popup, id]; };
+export const popupBack = () => { dict.popup = dict.popup.slice(0, -1); };
+export const closePopup = () => { dict.popup = []; };
+
+export async function loadExamples(ids: string[]): Promise<Example[]> {
+  if (!current) return [];
+  const rows = await Promise.all(ids.map((id) => getRecord(current!, 'examples', id)));
+  return rows.filter(Boolean) as unknown as Example[];
+}
+export async function loadKanji(chars: string[]): Promise<KanjiEntry[]> {
+  if (!current) return [];
+  const rows = await Promise.all([...new Set(chars)].map((c) => getRecord(current!, 'kanji', c)));
+  return rows.filter(Boolean) as unknown as KanjiEntry[];
+}

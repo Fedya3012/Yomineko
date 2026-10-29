@@ -17,16 +17,19 @@
   --surface-2: var(--sakura-50);
   --border: #f3dfe5;
   --text: #4a3548;
-  --text-muted: #85707f;
+  --text-muted: #6b5666;
   --accent: var(--sakura-500);
-  --accent-strong: var(--sakura-700);
+  --accent-strong: #9c3256;   /* AA text on pink tints */
+  --accent-gfx: #c94f77;       /* rings/bars/icons: >=3:1 on every surface (WCAG 1.4.11) */
   --accent-soft: var(--sakura-100);
-  --on-accent: #ffffff;
-  --success: var(--mint-700); --success-soft: var(--mint-100);
-  --info: var(--lavender-700); --info-soft: var(--lavender-100);
-  --warn: var(--peach-500); --warn-soft: var(--peach-100);
+  --on-accent: #3b1226;       /* dark plum on pink: 5.9:1 (white would be 2.7:1) */
+  --border-strong: #a58a98;    /* borders of inputs/switches: >=3:1 (WCAG 1.4.11); --border stays decorative */
+  --success: #1b6b4e; --success-soft: var(--mint-100);
+  --info: #5f49a8; --info-soft: var(--lavender-100);
+  --warn: #8a4a22; --warn-soft: var(--peach-100);
   --shadow: 0 6px 20px rgba(184, 69, 106, 0.10);
-  --focus: 0 0 0 3px rgba(154, 133, 216, 0.55);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 5px var(--focus-ring); /* two-tone ring: visible on any surface */
+  --focus-ring: #5f49a8;
 
   /* shape & spacing */
   --radius-sm: 10px; --radius: 18px; --radius-lg: 26px; --radius-pill: 999px;
@@ -34,6 +37,7 @@
 
   /* typography; --font-scale is changed by the "chữ lớn" setting */
   --font-scale: 1;
+  --line-scale: 1;
   --font-ui: "Nunito", "Noto Sans JP", "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
   --font-jp: "Zen Maru Gothic", "M PLUS Rounded 1c", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
   --font-jp-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
@@ -55,21 +59,23 @@
   --text-muted: #b5a5b8;
   --accent: #f08fae;
   --accent-strong: #ffb3c8;
+  --accent-gfx: #f08fae;
+  --border-strong: #9080a3;
   --accent-soft: #4a2f40;
   --on-accent: #2a1620;
   --success: #7fd9b3; --success-soft: #25392f;
   --info: #b8a6f0; --info-soft: #322b4d;
   --warn: #f6b394; --warn-soft: #43302a;
   --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-  --focus: 0 0 0 3px rgba(184, 166, 240, 0.7);
+  --focus-ring: #cdbcff;
 }
 
 /* High contrast mode: layered on top of either theme */
 :root[data-contrast="high"] {
-  --text: #1a0f18; --text-muted: #4a3548; --border: #7a5a6c; --accent-strong: #8f2149;
+  --text: #000000; --text-muted: #3a2736; --border: #5a3f50; --border-strong: #3a2736; --accent-strong: #7d1a3f; --accent-gfx: #a8325a;
 }
 :root[data-theme="dark"][data-contrast="high"] {
-  --text: #ffffff; --text-muted: #e6d9e4; --border: #9a86a8; --accent-strong: #ffd0de;
+  --text: #ffffff; --text-muted: #eadfe8; --border: #b8a8c6; --border-strong: #d6c8e2; --accent-strong: #ffd0de;
 }
 
 /* Illustration accents, from the "sticker badge" reference: flat fills + dark outlines + wobbly round frames.
