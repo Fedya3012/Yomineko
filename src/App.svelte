@@ -83,7 +83,7 @@
       {/each}
     </div>
     <label><input type="checkbox" bind:checked={settings.furigana} /> Hiện furigana (ふりがな)</label>
-    <label><input type="checkbox" bind:checked={settings.largeText} /> Chữ lớn</label>
+    <label><input type="checkbox" checked={settings.fontScale > 1} onchange={(e) => (settings.fontScale = e.currentTarget.checked ? 1.25 : 1)} /> Chữ lớn</label>
     <label><input type="checkbox" bind:checked={settings.highContrast} /> Tương phản cao</label>
   </section>
 

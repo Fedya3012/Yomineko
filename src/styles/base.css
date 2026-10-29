@@ -19,8 +19,13 @@ ruby rt { font-size: .5em; color: var(--text-muted); }
 
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
-:focus-visible { outline: none; box-shadow: var(--focus); }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+:focus-visible { outline: 3px solid transparent; /* keeps a visible ring in Windows forced-colors mode */ box-shadow: var(--focus); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: var(--space-2); top: -4rem; z-index: 100; padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill); background: var(--surface); color: var(--text); border: 2px solid var(--focus-ring); }
+.skip-link:focus { top: var(--space-2); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+:root[data-motion="reduce"] * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+@media (forced-colors: active) { .btn, .card, .chip { border: 1px solid CanvasText; } }
 
 /* Reusable pieces */
 .card {
@@ -30,20 +35,21 @@ button { cursor: pointer; }
 .btn {
   border: 0; border-radius: var(--radius-pill); padding: .6rem 1.2rem;
   background: var(--accent); color: var(--on-accent); font-weight: 700;
-  min-height: 44px; /* comfortable touch target */
+  min-height: 44px; /* WCAG 2.5.8 target size */
 }
 .btn.soft { background: var(--accent-soft); color: var(--accent-strong); }
+.btn.ghost { background: transparent; color: var(--text); border: 2px solid var(--border-strong); }
 .chip {
   display: inline-block; padding: .15rem .7rem; border-radius: var(--radius-pill);
-  background: var(--lavender-100); color: var(--lavender-700); font-size: var(--text-sm);
+  background: var(--lavender-100); color: var(--info); font-size: var(--text-sm);
 }
 :root[data-theme="dark"] .chip { background: var(--info-soft); color: var(--info); }
 
 /* Pastel tag variants (soft, pill-shaped) */
 .chip.butter { background: var(--butter-100); color: #7a5b00; }
 .chip.sky { background: var(--sky-100); color: #2c5d8f; }
-.chip.mint { background: var(--mint-100); color: var(--mint-700); }
-.chip.pink { background: var(--sakura-100); color: var(--sakura-700); }
+.chip.mint { background: var(--mint-100); color: var(--success); }
+.chip.pink { background: var(--sakura-100); color: var(--accent-strong); }
 :root[data-theme="dark"] .chip.butter { background: #4a4126; color: #f2d98a; }
 :root[data-theme="dark"] .chip.sky { background: #263a4f; color: #a9d0f5; }
 :root[data-theme="dark"] .chip.mint { background: var(--success-soft); color: var(--success); }

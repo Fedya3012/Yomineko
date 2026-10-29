@@ -56,3 +56,8 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
+
+## UI dùng chung & trợ năng (thread UI/UX)
+- Thành phần: `src/lib/ui/` (Button, Toggle, Segmented, Slider, ProgressRing/Bar, KeyCap, Mochi, NavBar, JpText, EmptyState, ErrorState, Skeleton, SkipLink, Announcer). Import từ `src/lib/ui`. Xem thử: mở app với `?gallery`.
+- 15 màn hình thiết kế (sáng/tối, trống/tải/lỗi): `docs/design/screens.html` (mở bằng trình duyệt).
+- Quy tắc trợ năng bắt buộc cho mọi thread: `docs/ACCESSIBILITY.md`. Viền của thứ bấm được dùng `--border-strong`, màu vẽ dùng `--accent-gfx`.
