@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { dict, closePopup, popupBack, openWord, loadExamples, loadKanji } from './state.svelte';
+  import { dict, closePopup, popupBack, openWord, loadExamples, loadKanji, currentDb } from './state.svelte';
+  import { addWordToSrs, cardIdFor, hasSrsCard, type AddWordInput } from '../srs/bridge';
   import { relatedWords } from './related';
   import { isKanji } from './kana';
   import { freqLabel, jlptLabel, posLabels } from './labels';
@@ -26,6 +27,36 @@
     return () => { stale = true; };
   });
   $effect(() => { if (word) closeBtn?.focus(); });
+
+  // "Add to SRS": the card comes from this entry; when the word was tapped in manga or a subtitle, the line becomes its example sentence.
+  let inSrs = $state(false);
+  let srsMsg = $state('');
+  const cardKind = $derived(dict.context?.kind ?? 'dictionary');
+  $effect(() => {
+    const w = word; const kind = cardKind;
+    inSrs = false; srsMsg = '';
+    const db = currentDb();
+    if (!w || !db) return;
+    let stale = false;
+    hasSrsCard(db, cardIdFor(kind, w.id)).then((r) => { if (!stale) inSrs = r; });
+    return () => { stale = true; };
+  });
+  async function addToSrs() {
+    const w = word; const db = currentDb();
+    if (!w || !db) return;
+    const ctx = dict.context;
+    const input: AddWordInput = {
+      wordId: w.id, word: spelling(w), reading: w.kana[0].text, meaning: gloss(w),
+      sentence: ctx?.sentence, blank: ctx?.surface, kind: ctx?.kind ?? 'dictionary', origin: ctx?.origin
+    };
+    try {
+      const added = await addWordToSrs(db, input);
+      inSrs = true;
+      srsMsg = added ? `Đã thêm “${input.word}” vào thẻ ôn.` : 'Từ này đã có trong thẻ ôn rồi.';
+    } catch (e) {
+      srsMsg = 'Chưa thêm được: ' + (e instanceof Error ? e.message : String(e));
+    }
+  }
 
   const tags = $derived(word ? [
     word.jlpt ? { text: jlptLabel(word.jlpt), tone: 'pink' } : null,
@@ -67,6 +98,10 @@
         {/each}
       </ol>
       <p class="muted small">Nghĩa lấy từ JMdict (tiếng Anh).</p>
+      <div class="srs-row">
+        <button class="btn" onclick={addToSrs} disabled={inSrs}>{inSrs ? '✓ Đã có trong thẻ ôn' : '+ Thêm vào thẻ ôn (SRS)'}</button>
+        {#if srsMsg}<span role="status" class="muted small">{srsMsg}</span>{/if}
+      </div>
 
       {#if examples.length}
         <h3>Câu ví dụ</h3>
@@ -124,6 +159,7 @@
   .senses li { margin-bottom: .35rem; }
   .pos { font-size: var(--text-sm); color: var(--text-muted); margin-right: .4rem; }
   .plain { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-2); }
+  .srs-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
   .kanji li { display: flex; gap: var(--space-3); align-items: center; }
   .big { font-size: 2rem; color: var(--accent-strong); min-width: 2.4rem; text-align: center; }
   .rel { border: 0; min-height: 44px; display: inline-flex; align-items: center; gap: .4rem; }

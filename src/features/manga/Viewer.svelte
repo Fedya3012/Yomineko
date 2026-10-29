@@ -11,6 +11,9 @@
   import { buildSpreads, arrowToStep, screenOrder, spreadIndexOf } from './spreads';
   import { dragToRegion, isWidePage, locate, spreadContentSize } from './spreadMath';
   import type { Book } from './types';
+  import { dict, loadDictionary, openWord } from '../dictionary/state.svelte';
+  import { lookupAt as dictLookupAt } from '../dictionary/lookup';
+  import { addWordToSrs } from '../srs/bridge';
   import { clampPan, clampScale, FIT_VIEW, fitSize, toggleZoom, viewToContent, zoomAt, type View } from './zoom';
 
   let { book, db, onClose }: { book: Book; db: DB; onClose: () => void } = $props();
@@ -244,8 +247,29 @@
 
   async function showMeaning(page: number, block: OcrBlock, index: number) {
     words ??= await loadWordIndex(db);
-    picked = { page, block, result: lookupAt(words, block, index) };
+    if (!dict.index) await loadDictionary(db);
+    const result = lookupAt(words, block, index);
+    picked = { page, block, result };
+    openFullEntry(block, index, result);
   }
+
+  /** Tapping a word opens the dictionary popup (which has "add to SRS"); the sheet below stays for re-tapping the sentence. */
+  function openFullEntry(block: OcrBlock, index: number, result: LookupResult) {
+    const id = result.entries[0]?.id ?? (dict.index ? dictLookupAt(dict.index, block.text, index)?.words[0]?.id : undefined);
+    if (id && dict.index?.get(id)) openWord(id, { sentence: block.text, kind: 'manga', origin: book.title, surface: result.surface });
+  }
+
+  let cardMsg = $state('');
+  async function makeCard() {
+    const r = picked?.result; const e = r?.entries[0];
+    if (!picked || !r || !e) return;
+    const added = await addWordToSrs(db, {
+      wordId: e.id, word: e.kanji ?? e.reading, reading: e.reading, meaning: e.meaning,
+      sentence: picked.block.text, blank: r.surface, kind: 'manga', origin: book.title
+    });
+    cardMsg = added ? `Đã thêm “${e.kanji ?? e.reading}” vào thẻ ôn.` : 'Từ này đã có trong thẻ ôn rồi.';
+  }
+  $effect(() => { picked; cardMsg = ''; });
 
   const toggleOcr = () => (ocrOn ? (ocrOn = false, picked = undefined) : scanSpread());
 
@@ -313,6 +337,8 @@
             <li><span class="jp" lang="ja">{e.kanji ?? e.reading}{e.kanji ? `（${e.reading}）` : ''}</span> — {e.meaning}</li>
           {/each}
         </ul>
+        <p class="card-row"><button class="btn" onclick={makeCard}>+ Tạo thẻ ôn</button>
+          {#if cardMsg}<span role="status" class="muted small">{cardMsg}</span>{/if}</p>
       {:else}
         <p class="muted">Chưa có nghĩa của “{picked.result.surface}” trong từ điển offline. Hãy cài gói từ điển (JMdict) để xem nghĩa đầy đủ.</p>
       {/if}
@@ -397,6 +423,7 @@
   .small { font-size: var(--text-sm); margin: 0; }
   /* in the flow (not floating) so the page shrinks above it and the highlighted word stays visible */
   .sheet { margin: 0 var(--space-2); max-height: 40vh; overflow: auto; padding: var(--space-3) var(--space-4); }
+  .card-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: var(--space-2) 0; }
   .sheet-head { display: flex; justify-content: space-between; align-items: center; }
   .word { font-size: calc(2.2rem * var(--font-scale)); color: var(--accent-strong); }
   .meanings { margin: var(--space-2) 0; padding-left: 1.2rem; }

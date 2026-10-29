@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { listCollection, getUserData, setUserData, type DB } from '../../lib/db';
+  import { getUserData, setUserData, type DB } from '../../lib/db';
+  import { loadFlatEntries } from '../dictionary/flat';
+  import { dict, loadDictionary, openWord } from '../dictionary/state.svelte';
   import { cueAt, parseSubtitles, type Cue } from './subtitles';
-  import { buildIndex, tokenize, type DictEntry, type DictIndex, type Token } from './tokenizer';
+  import { buildIndex, tokenize, type DictIndex, type Token } from './tokenizer';
   import { comprehension } from './comprehension';
   import { loadKnown, saveKnown, loadCards, planCards, saveNewCards, tokenizeCues, type NewCard } from './store';
   import { compareRecordings, type ShadowResult } from './shadowing';
@@ -31,7 +33,8 @@
   const activeScore = $derived(active >= 0 ? comprehension([activeTokens], known) : undefined);
 
   onMount(async () => {
-    index = buildIndex((await listCollection(db, 'words')) as unknown as DictEntry[]);
+    index = buildIndex(await loadFlatEntries(db));
+    await loadDictionary(db);
     known = await loadKnown(db);
     cards = await loadCards(db);
   });
@@ -73,7 +76,18 @@
     if (!t.countable) return;
     selected = t;
   }
-  function pickAndPause(t: Token) { if (t.countable) videoEl?.pause(); pick(t); }
+  function pickAndPause(t: Token) {
+    if (t.countable) videoEl?.pause();
+    pick(t);
+    openEntry(t);
+  }
+  /** Tapping a subtitle word opens the dictionary popup (with "add to SRS"); words the dictionary lacks keep the small card below. */
+  function openEntry(t: Token) {
+    const id = t.entry?.id;
+    if (!id || !dict.index?.get(id)) return;
+    const sentence = (active >= 0 ? cues[active].text : '').replace(/\n/g, ' ');
+    openWord(id, { sentence, kind: 'anime', origin: subName || 'anime', surface: t.surface });
+  }
   async function toggleKnown(t: Token) {
     const next = new Set(known);
     next.has(t.key) ? next.delete(t.key) : next.add(t.key);

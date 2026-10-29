@@ -6,8 +6,12 @@ import type { Example, KanjiEntry, Word } from './types';
 export const dict = $state({
   index: undefined as DictionaryIndex | undefined,
   count: 0,
-  popup: [] as string[] // stack of word ids; last = shown; lets "back" work after following a related word
+  popup: [] as string[], // stack of word ids; last = shown; lets "back" work after following a related word
+  /** Where the shown word was met (manga text, subtitle line); lets "add to SRS" make a sentence card. */
+  context: undefined as WordContext | undefined
 });
+
+export interface WordContext { sentence: string; kind: 'manga' | 'anime'; origin?: string; surface?: string }
 
 let current: DB | undefined;
 
@@ -19,9 +23,11 @@ export async function loadDictionary(db: DB): Promise<void> {
   dict.count = words.length;
 }
 
-export const openWord = (id: string) => { dict.popup = [...dict.popup, id]; };
-export const popupBack = () => { dict.popup = dict.popup.slice(0, -1); };
-export const closePopup = () => { dict.popup = []; };
+/** Opens the popup. Pass `context` when the word comes from running text; following a related word drops it. */
+export const openWord = (id: string, context?: WordContext) => { dict.context = context; dict.popup = [...dict.popup, id]; };
+export const popupBack = () => { dict.popup = dict.popup.slice(0, -1); dict.context = undefined; };
+export const closePopup = () => { dict.popup = []; dict.context = undefined; };
+export const currentDb = () => current;
 
 export async function loadExamples(ids: string[]): Promise<Example[]> {
   if (!current) return [];

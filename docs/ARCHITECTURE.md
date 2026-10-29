@@ -106,7 +106,7 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
 - Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
 - `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
-- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
+- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — `saveNewCards` chép thẻ mới sang SRS qua `syncAnimeCards` (xem mục "Nối với SRS"); `anime.position:<tên>:<kích thước>` (vị trí xem dở).
 - `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
 
 ## Giáo trình (`src/features/textbook/`)
@@ -114,3 +114,10 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
 - **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
 - **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).
+
+## Nối từ điển / manga / anime với SRS (`src/features/srs/bridge.ts`)
+- SRS chỉ đọc collection `cards`. Mọi thẻ người học tự thêm nằm trong **một gói cá nhân `user-srs`** (cùng cách với `tb-srs-<bài>`); id ổn định (`word:<idTừ>` từ từ điển/manga, `anime:<idTừ>` từ phụ đề) nên thêm hai lần không bị trùng, và lịch sử ôn (`srs.state:*`) không bị đụng tới. `addWordToSrs` xếp hàng các lần ghi để không đè nhau.
+- Popup từ điển có nút **Thêm vào thẻ ôn**. Nơi nào có chữ Nhật chạy (manga OCR, phụ đề anime) gọi `openWord(id, { sentence, kind, origin, surface })`: câu đó trở thành câu điền chỗ trống của thẻ.
+- Manga và anime đọc `words` qua `dictionary/flat.ts` (`loadFlatEntries`), nhận cả bản ghi JMdict lẫn gói mẫu phẳng, và giữ id để mở đúng popup.
+- `syncAnimeCards` cũng chạy mỗi lần mở màn Ôn tập, nên thẻ anime tạo từ trước cũng vào hàng ôn.
+- Màn hình chính: "Lối tắt" gồm các ô đánh số; mỗi ô dẫn tới một màn hình hoặc cuộn tới mục tương ứng.
