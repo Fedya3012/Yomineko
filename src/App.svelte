@@ -56,7 +56,8 @@
   $effect(() => { applySettings(settings); saveSettings(settings); });
 
   async function refresh() {
-    words = (await listCollection(db!, 'words')) as typeof words;
+    // The dictionary pack also fills `words` (with a different shape); this demo list shows only the simple sample words.
+    words = ((await listCollection(db!, 'words')) as unknown as typeof words).filter((w) => typeof w.kanji === 'string' && typeof w.reading === 'string');
   }
 
   onMount(async () => {
