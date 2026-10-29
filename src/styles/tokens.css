@@ -1,0 +1,71 @@
+/* Yomineko design tokens. Every colour/size in the app comes from here.
+   Light = "sakura cream". Dark = warm purple-charcoal, designed by hand (NOT an inversion). */
+:root {
+  /* palette */
+  --sakura-50: #fff1f5; --sakura-100: #ffdde7; --sakura-300: #ffb3c8; --sakura-500: #e8799a; --sakura-700: #b8456a;
+  --cream-50: #fffaf5; --cream-100: #fff3e8;
+  --mint-100: #d8f3e6; --mint-500: #5cbf97; --mint-700: #2f8a68;
+  --lavender-100: #e8e0fb; --lavender-500: #9a85d8; --lavender-700: #6b55b5;
+  --peach-100: #ffe3d1; --peach-500: #f4a07a;
+
+  /* semantic: light */
+  --bg: var(--cream-50);
+  --bg-sunken: var(--cream-100);
+  --surface: #ffffff;
+  --surface-2: var(--sakura-50);
+  --border: #f3dfe5;
+  --text: #4a3548;
+  --text-muted: #85707f;
+  --accent: var(--sakura-500);
+  --accent-strong: var(--sakura-700);
+  --accent-soft: var(--sakura-100);
+  --on-accent: #ffffff;
+  --success: var(--mint-700); --success-soft: var(--mint-100);
+  --info: var(--lavender-700); --info-soft: var(--lavender-100);
+  --warn: var(--peach-500); --warn-soft: var(--peach-100);
+  --shadow: 0 6px 20px rgba(184, 69, 106, 0.10);
+  --focus: 0 0 0 3px rgba(154, 133, 216, 0.55);
+
+  /* shape & spacing */
+  --radius-sm: 10px; --radius: 18px; --radius-lg: 26px; --radius-pill: 999px;
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem; --space-6: 1.5rem; --space-8: 2rem;
+
+  /* typography; --font-scale is changed by the "chữ lớn" setting */
+  --font-scale: 1;
+  --font-ui: "Nunito", "Noto Sans JP", "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  --font-jp-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --text-sm: calc(.875rem * var(--font-scale));
+  --text-md: calc(1rem * var(--font-scale));
+  --text-lg: calc(1.25rem * var(--font-scale));
+  --text-xl: calc(1.75rem * var(--font-scale));
+  --text-jp-reading: calc(1.5rem * var(--font-scale));
+  --line-jp: 1.9; /* extra room so furigana never collides with the line above */
+}
+
+:root[data-theme="dark"] {
+  --bg: #1f1a26;
+  --bg-sunken: #181420;
+  --surface: #2a2333;
+  --surface-2: #332a3e;
+  --border: #433752;
+  --text: #f3e9ef;
+  --text-muted: #b5a5b8;
+  --accent: #f08fae;
+  --accent-strong: #ffb3c8;
+  --accent-soft: #4a2f40;
+  --on-accent: #2a1620;
+  --success: #7fd9b3; --success-soft: #25392f;
+  --info: #b8a6f0; --info-soft: #322b4d;
+  --warn: #f6b394; --warn-soft: #43302a;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --focus: 0 0 0 3px rgba(184, 166, 240, 0.7);
+}
+
+/* High contrast mode: layered on top of either theme */
+:root[data-contrast="high"] {
+  --text: #1a0f18; --text-muted: #4a3548; --border: #7a5a6c; --accent-strong: #8f2149;
+}
+:root[data-theme="dark"][data-contrast="high"] {
+  --text: #ffffff; --text-muted: #e6d9e4; --border: #9a86a8; --accent-strong: #ffd0de;
+}

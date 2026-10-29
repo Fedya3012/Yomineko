@@ -1,0 +1,40 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100dvh;
+  background: var(--bg); color: var(--text);
+  font: var(--text-md)/1.6 var(--font-ui);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  transition: background .25s, color .25s;
+}
+:lang(ja), .jp { font-family: var(--font-jp); line-height: var(--line-jp); }
+.jp-serif { font-family: var(--font-jp-serif); }
+.vertical { writing-mode: vertical-rl; text-orientation: mixed; }
+
+/* Furigana: <ruby>漢字<rt>かんじ</rt></ruby>. The toggle hides <rt> globally. */
+ruby rt { font-size: .5em; color: var(--text-muted); }
+:root[data-furigana="off"] rt { display: none; }
+
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: none; box-shadow: var(--focus); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Reusable pieces */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-4);
+}
+.btn {
+  border: 0; border-radius: var(--radius-pill); padding: .6rem 1.2rem;
+  background: var(--accent); color: var(--on-accent); font-weight: 700;
+  min-height: 44px; /* comfortable touch target */
+}
+.btn.soft { background: var(--accent-soft); color: var(--accent-strong); }
+.chip {
+  display: inline-block; padding: .15rem .7rem; border-radius: var(--radius-pill);
+  background: var(--lavender-100); color: var(--lavender-700); font-size: var(--text-sm);
+}
+:root[data-theme="dark"] .chip { background: var(--info-soft); color: var(--info); }

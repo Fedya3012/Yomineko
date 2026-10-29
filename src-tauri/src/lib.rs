@@ -1,0 +1,8 @@
+// The app UI is the Svelte web app in /src. Rust only hosts it in a native window.
+// Add native features (file dialogs, video, ...) here as plugins when a feature thread needs them.
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    tauri::Builder::default()
+        .run(tauri::generate_context!())
+        .expect("error while running Yomineko");
+}
