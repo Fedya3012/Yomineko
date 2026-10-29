@@ -30,15 +30,22 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 - `format.ts`: kiểu dữ liệu + `validatePack`. Một gói là một file JSON: `manifest` (id, kind, version, license, `base` nếu là gói delta) + `upserts` / `deletes` theo *collection*.
 - `install.ts`: `installPack` (một transaction, được-ăn-cả-ngã-về-không), `uninstallPack`, `planUpdates(catalog)`, `downloadAndInstall` (kiểm tra SHA-256).
 - Gói đầy đủ thay toàn bộ nội dung cũ của gói; gói delta chỉ áp dụng khi máy đang đúng phiên bản `base`.
-- `npm run catalog` tạo `catalog.json` (danh sách gói + mã kiểm tra) từ thư mục `packs-example/`. Mẫu: `packs-example/demo-hiragana.pack.json`.
+- Nguồn gói nằm ở `packs-src/<id>/v1.json, v2.json...` (mỗi file là bản ĐẦY ĐỦ). `npm run packs:build` (`scripts/packs-lib.ts`) tạo ra bản đầy đủ mới nhất, gói delta cho mỗi cặp phiên bản liền kề và `catalog.json` (SHA-256, size, `minAppVersion`). Pages workflow đăng tại `<site>/content/`. Hướng dẫn cho người không code: `docs/HUONG-DAN-XUAT-BAN-GOI.md`.
+- `install.ts` → `planUpdates(db, catalog, appVersion)` chọn cách rẻ nhất cho từng gói: chuỗi delta liên tiếp nếu nhỏ hơn gói đầy đủ, nếu không thì gói đầy đủ; không bao giờ hạ cấp; bỏ qua gói cần app mới hơn.
+- `updater.ts`: `checkContentUpdates` (chỉ tải catalog nhỏ) và `applyUpdates` (từng gói độc lập; delta hỏng thì thử gói đầy đủ; sai checksum thì giữ bản cũ). Chỉ chấp nhận https.
 - Mọi gói **bắt buộc** khai báo license; màn hình Credits (thread sau) sẽ liệt kê `attribution`.
+
+## Thông báo bản mới (`src/features/updates/UpdateCenter.svelte`)
+- Nội dung: kiểm tra tự động tối đa 12 giờ/lần khi có mạng, hoặc bấm *Kiểm tra cập nhật*.
+- App: Windows/Android hỏi GitHub Releases (`src/lib/appUpdate.ts`); web dùng service worker (`registerType: 'prompt'`, hiện nút tải lại). Phiên bản app = `package.json`, workflow release ghi đè bằng tên tag (`scripts/set-version.mjs`).
+- Địa chỉ catalog: `CATALOG_URL` trong `src/lib/appInfo.ts` (đổi bằng biến `VITE_CATALOG_URL`).
 
 ## Tên collection mỗi thread sở hữu (đề xuất)
 | Thread | Collection (content) | Khoá userdata |
 |---|---|---|
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
-| SRS | `cards`, `decks` | `srs.state:<cardId>`, `srs.settings` |
+| SRS | `cards` (`decks` chưa dùng) | `srs.state:<cardId>`, `srs.settings`, `srs.stats:<YYYY-MM-DD>` (số lượt ôn mỗi ngày, thread Tiến độ có thể đọc) |
 | Tiến độ | `lessons` | `progress.*` |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
@@ -56,6 +63,14 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
+
+## Từ điển (`src/features/dictionary/`)
+- Dữ liệu: collection `words` (JMdict), `examples` (Tatoeba), `kanji` (KANJIDIC2). Kiểu dữ liệu ở `types.ts`.
+- Gói thật được tạo bằng `scripts/build-dict-pack.mjs` (hoặc workflow **Dictionary packs** trên GitHub Actions) từ dữ liệu mở của dự án jmdict-simplified + danh sách JLPT; gói mẫu CC0 để thử: `packs-src/dict-sample/v1.json`.
+- Tìm kiếm: `DictionaryIndex` (trong bộ nhớ, dựng từ `words`) tìm theo chữ Hán, kana, romaji và nghĩa tiếng Anh. `loadDictionary(db)` dựng lại index sau khi cài/gỡ gói.
+- Chạm từ: `lookupAt(index, text, pos)` tìm từ dài nhất tại vị trí đó, có xử lý chia động từ/tính từ -i. `LookupText.svelte` dùng được ở mọi nơi có chữ Nhật (manga, phụ đề, bài học): chạm là mở popup (`WordPopup.svelte`, gắn một lần trong `App.svelte`). Mã khác có thể gọi `openWord(id)`.
+- Tìm kiếm chung: `searchAll(query)` gộp từ điển + thẻ/ghi chú của người học. Thread khác gắn nguồn của mình bằng `registerSearchSource`. Nguồn có sẵn đọc userdata `card:<id>` / `note:<id>` (trường `front`, `back`, `reading`, `title`, `text`, `tags`) và collection `cards`.
+- Giấy phép: `licenses.ts` là danh sách hiển thị trong app. **Thêm nguồn dữ liệu mới thì phải thêm vào đây.**
 
 ## Trợ lý AI (`src/features/assistant/`)
 - `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
