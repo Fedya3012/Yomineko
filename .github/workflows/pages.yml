@@ -21,6 +21,15 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}/
       # Content packs are published next to the web app: <site>/content/catalog.json
       - run: npm run packs:build -- packs-src dist/content
+      # Optional Jitendex dictionary (~27 MB), in its own catalog so the normal update check never downloads it.
+      # If the download fails the site still deploys, just without it.
+      - name: Jitendex pack
+        continue-on-error: true
+        run: |
+          mkdir -p data
+          curl -fsSL https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip -o data/jitendex-yomitan.zip
+          node scripts/build-jitendex-pack.mjs --zip data/jitendex-yomitan.zip --out jitendex-src
+          npm run packs:build -- jitendex-src dist/content/jitendex
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
       - id: deployment

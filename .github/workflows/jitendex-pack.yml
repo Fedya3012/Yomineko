@@ -1,0 +1,31 @@
+# Builds the optional Jitendex dictionary pack (CC BY-SA 4.0) and publishes it as a GitHub Release.
+# The Deploy PWA workflow also builds it on every deploy, into <site>/content/jitendex/, which is where the app downloads from;
+# run this one only if you want the files by hand. Actions > "Jitendex pack" > Run workflow.
+name: Jitendex pack
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Download Jitendex and build the pack
+        run: |
+          mkdir -p data
+          curl -fsSL https://github.com/stephenmk/stephenmk.github.io/releases/latest/download/jitendex-yomitan.zip -o data/jitendex-yomitan.zip
+          node scripts/build-jitendex-pack.mjs --zip data/jitendex-yomitan.zip --out jitendex-src
+          npm run packs:build -- jitendex-src dist-packs
+      - name: Publish release
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          version="$(ls jitendex-src/dict-jitendex | sed 's/^v//; s/\.json$//')"
+          gh release create "jitendex-pack-v${version}" dist-packs/*.json \
+            --title "Jitendex pack ${version}" \
+            --notes "Jitendex (c) Stephen Kraus, CC BY-SA 4.0, built on JMdict (EDRDG) and Tatoeba (CC BY 2.0 FR). See the Licenses panel in the app."

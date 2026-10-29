@@ -5,7 +5,7 @@ import { validatePack } from '../../lib/packs/format';
 
 describe('data licenses', () => {
   it('lists every data set with a name, license and links, and only open (Creative Commons) licenses', () => {
-    expect(DATA_LICENSES.map((l) => l.id)).toEqual(['jmdict', 'kanjidic', 'tatoeba', 'jlpt-lists']);
+    expect(DATA_LICENSES.map((l) => l.id)).toEqual(['jmdict', 'jitendex', 'kanjidic', 'tatoeba', 'jlpt-lists']);
     for (const l of DATA_LICENSES) {
       expect(l.license).toMatch(/^CC /);
       expect(l.url).toMatch(/^https:\/\//);

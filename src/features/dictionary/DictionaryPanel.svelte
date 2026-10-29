@@ -7,6 +7,7 @@
   import SearchPanel from './SearchPanel.svelte';
   import LookupText from './LookupText.svelte';
   import LicensesPanel from './LicensesPanel.svelte';
+  import JitendexCard from './JitendexCard.svelte';
 
   let { db }: { db: DB } = $props();
   let status = $state('');
@@ -33,6 +34,7 @@
 
 <h3>Thử chạm vào từ</h3>
 <LookupText text="猫は静かに本を読みました。" />
+<JitendexCard {db} />
 <LicensesPanel />
 
 <style>
