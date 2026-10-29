@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import type { DB } from '../../lib/db';
   import { installPack } from '../../lib/packs/install';
-  import samplePack from '../../../packs-example/dict-sample.pack.json';
+  import samplePack from '../../../packs-src/dict-sample/v1.json';
   import { dict, loadDictionary } from './state.svelte';
   import SearchPanel from './SearchPanel.svelte';
   import LookupText from './LookupText.svelte';

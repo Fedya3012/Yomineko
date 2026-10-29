@@ -6,10 +6,14 @@
   import Badge from './lib/Badge.svelte';
   import DictionaryPanel from './features/dictionary/DictionaryPanel.svelte';
   import WordPopup from './features/dictionary/WordPopup.svelte';
+  import UpdateCenter from './features/updates/UpdateCenter.svelte';
+  import Assistant from './features/assistant/Assistant.svelte';
+  import AnimePlayer from './features/anime/AnimePlayer.svelte';
+  import SrsHome from './features/srs/SrsHome.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import { recordSession } from './features/progress/store';
   import type { SessionSummary } from './features/progress/types';
-  import demoPack from '../packs-example/demo-hiragana.pack.json';
+  import demoPack from '../packs-src/demo-words/v1.json';
 
   let settings = $state<Settings>(loadSettings());
   let db: DB | undefined;
@@ -18,10 +22,11 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
+  let view = $state<'home' | 'anime'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
-    { tone: 'coral', name: 'Ôn tập SRS', note: 'Thread SRS', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
+    { tone: 'coral', name: 'Ôn tập SRS', note: 'Đã có', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
     { tone: 'teal', name: 'Từ điển', note: 'Ở bên dưới ↓', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
     { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
     { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
@@ -69,6 +74,9 @@
 </script>
 
 <main>
+  {#if view === 'anime' && readyDb}
+    <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
+  {:else}
   <header>
     <img src="favicon.svg" alt="Mochi, chú mèo trắng" width="56" height="56" />
     <div>
@@ -77,15 +85,24 @@
     </div>
   </header>
 
+  {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
+  {#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}
+
   <section class="grid" aria-label="Tính năng">
     {#each features as f}
       <div class="card feature">
         <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
         <strong>{f.name}</strong>
-        <span class="chip">{f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
+        {#if f.name === 'Xem anime'}
+          <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
+        {:else}
+          <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' || f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
+        {/if}
       </div>
     {/each}
   </section>
+
+  {#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}
 
   {#if readyDb}
     <section class="card" aria-label="Từ điển"><DictionaryPanel db={readyDb} /></section>
@@ -131,6 +148,7 @@
       {/each}
     </ul>
   </section>
+  {/if}
 </main>
 <WordPopup />
 

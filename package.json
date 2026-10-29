@@ -13,7 +13,8 @@
     "tauri": "tauri",
     "cap": "cap",
     "icons": "node scripts/make-icons.mjs",
-    "catalog": "node scripts/build-catalog.mjs packs-example"
+    "packs:build": "vite-node scripts/packs-build.ts --",
+    "packs:new": "vite-node scripts/packs-new.ts --"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.6.10",
@@ -24,11 +25,13 @@
     "svelte-check": "^4.7.7",
     "typescript": "~5.9",
     "vite": "^6.4.5",
+    "vite-node": "^3.2.4",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^3.2.7"
   },
   "dependencies": {
     "@capacitor/core": "^7.6.10",
-    "idb": "^8.0.4"
+    "idb": "^8.0.4",
+    "@tauri-apps/plugin-opener": "^2.5.0"
   }
 }

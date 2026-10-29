@@ -1,5 +1,5 @@
 // Record shapes of the dictionary collections. Packs are produced by scripts/dict-convert.mjs
-// (real data) or written by hand (packs-example/dict-sample.pack.json); both use these shapes.
+// (real data) or written by hand (packs-src/dict-sample/v1.json); both use these shapes.
 
 export interface KanjiForm { text: string; common?: boolean }
 export interface KanaForm {

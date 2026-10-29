@@ -1,5 +1,5 @@
-// Test helper: loads the sample pack that ships in packs-example/ as an index.
-import sample from '../../../packs-example/dict-sample.pack.json';
+// Test helper: loads the sample pack that ships in packs-src/dict-sample/ as an index.
+import sample from '../../../packs-src/dict-sample/v1.json';
 import { DictionaryIndex } from './index';
 import type { Word } from './types';
 

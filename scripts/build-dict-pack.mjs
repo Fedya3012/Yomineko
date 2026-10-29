@@ -1,7 +1,7 @@
 // Usage:
 //   node scripts/build-dict-pack.mjs --jmdict jmdict-eng-common.json [--kanjidic kanjidic2-en.json]
-//        [--jlpt-dir dir-with-n1.csv..n5.csv] [--freq words-by-frequency.txt] [--all-words] --version 1 --out dist-packs
-// Then: node scripts/build-catalog.mjs dist-packs
+//        [--jlpt-dir dir-with-n1.csv..n5.csv] [--freq words-by-frequency.txt] [--all-words] --version 1 --out packs-src
+// Writes packs-src/<id>/v<version>.json; then `npm run packs:build -- packs-src dist-packs` makes the catalog.
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildPacks, parseJlptCsv } from './dict-convert.mjs';
@@ -28,10 +28,10 @@ const packs = buildPacks({
   version: Number(args.version ?? 1),
   commonOnly: !args['all-words']
 });
-const out = args.out ?? 'dist-packs';
-mkdirSync(out, { recursive: true });
+const out = args.out ?? 'packs-src';
 for (const [id, pack] of Object.entries(packs)) {
-  writeFileSync(join(out, `${id}.pack.json`), JSON.stringify(pack));
+  mkdirSync(join(out, id), { recursive: true });
+  writeFileSync(join(out, id, `v${pack.manifest.version}.json`), JSON.stringify(pack));
   const counts = Object.entries(pack.upserts).map(([c, r]) => `${r.length} ${c}`).join(', ');
-  console.log(`${id}.pack.json: ${counts}`);
+  console.log(`${id}/v${pack.manifest.version}.json: ${counts}`);
 }

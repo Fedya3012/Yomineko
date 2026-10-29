@@ -41,8 +41,9 @@ jobs:
             --jmdict "$(ls data/jmdict-examples-eng-*.json | head -1)" \
             --kanjidic "$(ls data/kanjidic2-en-*.json | head -1)" \
             --jlpt-dir data/jlpt \
-            --version '${{ inputs.version }}' --out dist-packs ${{ inputs.all_words && '--all-words' || '' }}
-          node scripts/build-catalog.mjs dist-packs
+            --version '${{ inputs.version }}' --out packs-src ${{ inputs.all_words && '--all-words' || '' }}
+          npm ci
+          npm run packs:build -- packs-src dist-packs
       - name: Publish release
         env: { GH_TOKEN: '${{ github.token }}' }
         run: |
