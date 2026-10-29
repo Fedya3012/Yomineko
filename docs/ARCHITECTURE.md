@@ -38,7 +38,7 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 |---|---|---|
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
-| SRS | `cards`, `decks` | `srs.state:<cardId>`, `srs.settings` |
+| SRS | `cards` (`decks` chưa dùng) | `srs.state:<cardId>`, `srs.settings`, `srs.stats:<YYYY-MM-DD>` (số lượt ôn mỗi ngày, thread Tiến độ có thể đọc) |
 | Tiến độ | `lessons` | `progress.*` |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
