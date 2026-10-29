@@ -25,7 +25,10 @@ Cài Obtainium → *Add App* → dán `https://github.com/Fedya3012/Yomineko` �
 
 ## Cập nhật nội dung mà không cần bản app mới
 
-Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói nội dung** (*content pack*), tải và cập nhật riêng, từng phần nhỏ. Tiến độ học của bạn được lưu tách biệt nên cập nhật nội dung không bao giờ làm mất tiến độ. Chi tiết kỹ thuật: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói nội dung** (*content pack*), tải và cập nhật riêng, từng phần nhỏ. Tiến độ học của bạn được lưu tách biệt nên cập nhật nội dung không bao giờ làm mất tiến độ. Khi có bản mới, app tự hiện thông báo *"Có bản mới"* trong mục **Cập nhật**.
+
+- Muốn đăng nội dung mới: xem **[Hướng dẫn đăng gói nội dung](docs/HUONG-DAN-XUAT-BAN-GOI.md)** (hoặc nhờ Claude làm giúp).
+- Chi tiết kỹ thuật: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 **Về bản quyền:** app *không* kèm sẵn manga, anime hay giáo trình có bản quyền. Bạn tự nạp file của mình. Gói nội dung chỉ dùng dữ liệu mở (JMdict, KANJIDIC, Jitendex...), luôn ghi rõ giấy phép.
 
@@ -50,7 +53,7 @@ Bản Windows cần thêm [Rust](https://rustup.rs): `npm run tauri build`. Thô
 - **Hoàn tác** hiện trong 6 giây sau mỗi thao tác (chấm thẻ hoặc "Để sau").
 - **Ôn nhanh 5 phút**: phiên có đồng hồ đếm ngược, hết giờ thì dừng, thẻ còn lại để mai.
 - Tiến độ lưu ngay trên máy (offline), tách khỏi gói nội dung nên cập nhật hay gỡ gói thẻ **không làm mất tiến độ**.
-- Muốn thêm thẻ: làm một gói như `packs-example/demo-cards.pack.json` (mỗi thẻ có `word`, `reading`, `meaning`, và tuỳ chọn `example` để có câu điền chỗ trống).
+- Muốn thêm thẻ: làm một gói như `packs-src/demo-cards/v1.json` (mỗi thẻ có `word`, `reading`, `meaning`, và tuỳ chọn `example` để có câu điền chỗ trống).
 - Nghe phát âm dùng giọng đọc có sẵn của máy; nếu máy chưa có giọng tiếng Nhật thì tắt dạng "Nghe" trong cài đặt.
 
 ## Tình trạng

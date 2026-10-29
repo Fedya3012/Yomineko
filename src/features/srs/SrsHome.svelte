@@ -7,7 +7,7 @@
   import { ALL_TYPES, DEFAULT_SETTINGS, type QuestionType, type SrsSettings } from './types';
   import type { SessionSummary } from '../progress/types';
   import SrsReview from './SrsReview.svelte';
-  import demoCards from '../../../packs-example/demo-cards.pack.json';
+  import demoCards from '../../../packs-src/demo-cards/v1.json';
 
   let { db, onsession }: { db: DB; onsession?: (summary: SessionSummary) => void } = $props();
 
