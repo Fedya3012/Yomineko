@@ -69,3 +69,15 @@
 :root[data-theme="dark"][data-contrast="high"] {
   --text: #ffffff; --text-muted: #e6d9e4; --border: #9a86a8; --accent-strong: #ffd0de;
 }
+
+/* Illustration accents, from the "sticker badge" reference: flat fills + dark outlines + wobbly round frames.
+   Used by Badge.svelte frames and illustrations; kept apart from UI colours so buttons stay soft pink. */
+:root {
+  --ink: #3b2a3a;             /* outline colour for illustrations */
+  --badge-coral: #ee7d6c;
+  --badge-teal: #0f4350;
+  --badge-mint: #6dae94;
+  --badge-sky: #8cc4ea;
+  --badge-mustard: #f6c93a;
+}
+:root[data-theme="dark"] { --ink: #f3e9ef; --badge-teal: #7fb6c4; }

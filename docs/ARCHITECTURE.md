@@ -46,3 +46,10 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 - Giao diện tiếng Việt (có thể thêm i18n sau); chữ Nhật luôn có `lang="ja"`.
 - Mỗi tính năng: component trong `src/features/<tên>/`, test `*.test.ts` cạnh file.
 - Trước khi mở PR: `npm run check && npm test && npm run build` (CI chạy lại đúng ba lệnh này).
+
+## Phong cách minh hoạ & icon (theo ảnh tham khảo của Fedya)
+Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đậm, màu phẳng, chủ đề Nhật (torii, sushi, mèo may mắn, cá koinobori...).
+- Component `src/lib/Badge.svelte` vẽ khung tròn lượn sóng (`tone`: coral, teal, mint, sky) quanh icon SVG nét đơn (`stroke: currentColor`).
+- Màu minh hoạ nằm trong `tokens.css` (`--badge-*`, `--ink`), tách khỏi màu giao diện để nút vẫn mềm màu hồng.
+- Icon mới: SVG viewBox 100x100, nét 3.5, bo tròn đầu nét, không tô màu; để Badge lo khung.
+- Mochi (mèo trắng) theo kiểu mèo may mắn: mắt tròn to, má hồng.
