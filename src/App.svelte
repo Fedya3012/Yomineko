@@ -4,12 +4,14 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import AnimePlayer from './features/anime/AnimePlayer.svelte';
   import demoPack from '../packs-example/demo-hiragana.pack.json';
 
   let settings = $state<Settings>(loadSettings());
-  let db: DB | undefined;
+  let db = $state<DB | undefined>();
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
+  let view = $state<'home' | 'anime'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
@@ -46,6 +48,9 @@
 </script>
 
 <main>
+  {#if view === 'anime' && db}
+    <AnimePlayer {db} onclose={() => (view = 'home')} />
+  {:else}
   <header>
     <img src="favicon.svg" alt="Mochi, chú mèo trắng" width="56" height="56" />
     <div>
@@ -59,7 +64,11 @@
       <div class="card feature">
         <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
         <strong>{f.name}</strong>
-        <span class="chip">Sắp có · {f.note}</span>
+        {#if f.name === 'Xem anime'}
+          <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
+        {:else}
+          <span class="chip">Sắp có · {f.note}</span>
+        {/if}
       </div>
     {/each}
   </section>
@@ -98,6 +107,7 @@
       {/each}
     </ul>
   </section>
+  {/if}
 </main>
 
 <style>
