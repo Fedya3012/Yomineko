@@ -1,0 +1,20 @@
+{
+  "manifest": {
+    "format": 1, "id": "demo-cards", "kind": "deck", "title": "Bộ thẻ mẫu: từ vựng đầu tiên", "version": 1,
+    "license": { "name": "CC0 1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/", "attribution": "Do đội Yomineko tự viết" }
+  },
+  "upserts": {
+    "cards": [
+      { "id": "neko", "word": "猫", "reading": "ねこ", "meaning": "con mèo", "example": { "ja": "猫が好きです。", "blank": "猫", "vi": "Tôi thích mèo." } },
+      { "id": "inu", "word": "犬", "reading": "いぬ", "meaning": "con chó", "example": { "ja": "犬と散歩します。", "blank": "犬", "vi": "Tôi đi dạo cùng chó." } },
+      { "id": "hon", "word": "本", "reading": "ほん", "meaning": "quyển sách", "example": { "ja": "本を読みます。", "blank": "本", "vi": "Tôi đọc sách." } },
+      { "id": "yomu", "word": "読む", "reading": "よむ", "meaning": "đọc", "example": { "ja": "毎日マンガを読む。", "blank": "読む", "vi": "Mỗi ngày tôi đọc manga." } },
+      { "id": "taberu", "word": "食べる", "reading": "たべる", "meaning": "ăn", "example": { "ja": "朝ごはんを食べる。", "blank": "食べる", "vi": "Ăn sáng." } },
+      { "id": "mizu", "word": "水", "reading": "みず", "meaning": "nước", "example": { "ja": "冷たい水をください。", "blank": "水", "vi": "Cho tôi nước lạnh." } },
+      { "id": "gakkou", "word": "学校", "reading": "がっこう", "meaning": "trường học" },
+      { "id": "tomodachi", "word": "友達", "reading": "ともだち", "meaning": "bạn bè" },
+      { "id": "arigatou", "word": "ありがとう", "reading": "ありがとう", "meaning": "cảm ơn" },
+      { "id": "sensei", "word": "先生", "reading": "せんせい", "meaning": "thầy cô giáo" }
+    ]
+  }
+}

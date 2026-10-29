@@ -6,7 +6,7 @@
 // LEARNER DATA (`userdata` store only):
 //   `textbook.progress:<lessonId>`  : which sections are done + exercise results
 //   `textbook.audio:<lessonId>:<key>`: audio files the learner attached (Blob)
-//   `srs.inbox:<lessonId>`          : cards handed to the SRS thread (see srs.ts)
+//   (SRS cards: a personal pack `tb-srs-<lessonId>` fills the `cards` collection, see srs.ts)
 //
 // No copyrighted book text is shipped: books are "shells" (title + lesson numbers) and the
 // learner fills them with their own pack file. Audio is never shipped either.

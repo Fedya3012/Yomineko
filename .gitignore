@@ -6,3 +6,6 @@ src-tauri/gen
 android
 *.keystore
 *.jks
+public/ocr
+public/vendor
+dist-packs

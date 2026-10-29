@@ -5,15 +5,19 @@
   "type": "module",
   "description": "Yomineko (読み猫) - Japanese immersion learning app",
   "scripts": {
+    "assets": "node scripts/copy-vendor-assets.mjs",
+    "predev": "npm run assets",
     "dev": "vite",
     "build": "vite build",
+    "prebuild": "npm run assets",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
     "tauri": "tauri",
     "cap": "cap",
     "icons": "node scripts/make-icons.mjs",
-    "catalog": "node scripts/build-catalog.mjs packs-example"
+    "packs:build": "vite-node scripts/packs-build.ts --",
+    "packs:new": "vite-node scripts/packs-new.ts --"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.6.10",
@@ -25,13 +29,19 @@
     "svelte-check": "^4.7.7",
     "typescript": "~5.9",
     "vite": "^6.4.5",
+    "vite-node": "^3.2.4",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^3.2.7"
   },
   "dependencies": {
     "@capacitor/core": "^7.6.10",
+    "@tauri-apps/plugin-opener": "^2.5.0",
+    "@tesseract.js-data/jpn": "^1.0.0",
+    "@tesseract.js-data/jpn_vert": "^1.0.0",
     "fflate": "^0.8.3",
     "idb": "^8.0.4",
-    "pdfjs-dist": "^6.4.299"
+    "libarchive.js": "^2.0.2",
+    "pdfjs-dist": "^6.4.299",
+    "tesseract.js": "^7.0.0"
   }
 }

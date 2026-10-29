@@ -1,12 +1,13 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getUserData, listCollection, openDatabase, type DB } from '../../lib/db';
+import { getUserData, listCollection, openDatabase, setUserData, type DB } from '../../lib/db';
+import { loadCards } from '../srs/store';
 import { uninstallPack } from '../../lib/packs/install';
 import { validatePack } from '../../lib/packs/format';
 import { loadOverview } from '../progress/store';
 import { BUNDLED_PACKS, ensureBundledPacks, TEMPLATE_PACK } from './bundled';
 import { lessonRatio } from './logic';
-import { addLessonToSrs, buildCards, inboxKey, srsCardCount, type SrsInbox } from './srs';
+import { addLessonToSrs, buildCards, packId, srsCardCount } from './srs';
 import { answerExercise, loadAudio, loadLessons, loadNotes, loadProgress, loadTextbooks, removeAudio, resetLesson, saveAudio, saveNotes, setSectionDone } from './store';
 import type { Lesson } from './types';
 
@@ -87,18 +88,18 @@ describe('lesson progress', () => {
 });
 
 describe('SRS hand-off', () => {
-  it('builds stable cards for vocabulary, kanji and grammar, and adding twice does not duplicate', async () => {
+  it('turns vocabulary and kanji into real SRS cards, and adding twice does not duplicate', async () => {
     const l = await starter();
     const cards = buildCards(l);
     expect(cards.filter((c) => c.kind === 'word')).toHaveLength(l.vocab!.length);
     expect(cards.filter((c) => c.kind === 'kanji')).toHaveLength(3);
-    expect(cards.filter((c) => c.kind === 'grammar')).toHaveLength(3);
     expect(new Set(cards.map((c) => c.id)).size).toBe(cards.length);
 
     expect(await addLessonToSrs(db, l)).toBe(cards.length);
     expect(await addLessonToSrs(db, l)).toBe(cards.length);
-    const inbox = await getUserData<SrsInbox>(db, inboxKey(l.id));
-    expect(inbox!.cards).toHaveLength(cards.length);
+    const inSrs = (await loadCards(db)).filter((c) => c.id.startsWith(`${l.id}:`));
+    expect(inSrs).toHaveLength(cards.length);
+    expect(inSrs.every((c) => c.word && c.reading && c.meaning)).toBe(true);
     expect(await srsCardCount(db, l.id)).toBe(cards.length);
   });
   it('keeps each item\'s own source on its card, defaulting to the lesson source', async () => {
@@ -107,6 +108,15 @@ describe('SRS hand-off', () => {
     const [a, b] = buildCards(lesson);
     expect(a.source.origin).toEqual({ type: 'anime', title: 'One Piece', location: '12:31' });
     expect(b.source.origin).toEqual({ type: 'manga', title: 'X' });
+  });
+  it('removing the personal card pack keeps the learner\'s review history', async () => {
+    const l = await starter();
+    await addLessonToSrs(db, l);
+    const id = `${l.id}:word:watashi`;
+    await setUserData(db, `srs.state:${id}`, { cardId: id });
+    await uninstallPack(db, packId(l.id));
+    expect(await srsCardCount(db, l.id)).toBe(0);
+    expect(await getUserData(db, `srs.state:${id}`)).toEqual({ cardId: id });
   });
   it('does nothing for an empty frame', async () => {
     await ensureBundledPacks(db);

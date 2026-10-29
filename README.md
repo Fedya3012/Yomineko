@@ -25,13 +25,16 @@ Cài Obtainium → *Add App* → dán `https://github.com/Fedya3012/Yomineko` �
 
 ## Cập nhật nội dung mà không cần bản app mới
 
-Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói nội dung** (*content pack*), tải và cập nhật riêng, từng phần nhỏ. Tiến độ học của bạn được lưu tách biệt nên cập nhật nội dung không bao giờ làm mất tiến độ. Chi tiết kỹ thuật: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói nội dung** (*content pack*), tải và cập nhật riêng, từng phần nhỏ. Tiến độ học của bạn được lưu tách biệt nên cập nhật nội dung không bao giờ làm mất tiến độ. Khi có bản mới, app tự hiện thông báo *"Có bản mới"* trong mục **Cập nhật**.
+
+- Muốn đăng nội dung mới: xem **[Hướng dẫn đăng gói nội dung](docs/HUONG-DAN-XUAT-BAN-GOI.md)** (hoặc nhờ Claude làm giúp).
+- Chi tiết kỹ thuật: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 **Về bản quyền:** app *không* kèm sẵn manga, anime hay giáo trình có bản quyền. Bạn tự nạp file của mình. Gói nội dung chỉ dùng dữ liệu mở (JMdict, KANJIDIC, Jitendex...), luôn ghi rõ giấy phép.
 
 ## Học theo giáo trình (Minna no Nihongo, Genki...)
 
-Mở app → thẻ **Học theo giáo trình**. Chọn sách, thấy mục lục các bài theo thứ tự; mỗi bài có: cách học, từ vựng + kanji (có nút nghe), ngữ pháp kèm ví dụ, hội thoại (nghe + chữ + bản dịch), bài tập, chỗ dành cho video ngắn, ghi chú riêng và thanh tiến độ. Nút **Đưa vào thẻ ôn** chuyển từ vựng/kanji/ngữ pháp của bài sang hàng chờ SRS, và bài tập tự cập nhật phần **Tiến độ** (chuỗi ngày, từ đã học, điểm yếu).
+Mở app → thẻ **Học theo giáo trình**. Chọn sách, thấy mục lục các bài theo thứ tự; mỗi bài có: cách học, từ vựng + kanji (có nút nghe), ngữ pháp kèm ví dụ, hội thoại (nghe + chữ + bản dịch), bài tập, chỗ dành cho video ngắn, ghi chú riêng và thanh tiến độ. Nút **Đưa vào thẻ ôn** thêm từ vựng và kanji của bài vào bộ thẻ SRS, và bài tập tự cập nhật phần **Tiến độ** (chuỗi ngày, từ đã học, điểm yếu).
 
 **Về bản quyền (rất quan trọng):** Minna no Nihongo và Genki có bản quyền, nên repo và app **không chứa** chữ, hội thoại hay âm thanh của các sách này. Thứ có sẵn:
 - **Khung sách**: chỉ tên sách và số bài (Minna I/II, Genki I/II). Các bài trống, ghi rõ "chưa có nội dung".
@@ -54,6 +57,17 @@ npm run build    # tạo bản web trong thư mục dist/
 ```
 
 Bản Windows cần thêm [Rust](https://rustup.rs): `npm run tauri build`. Thông thường bạn không cần làm vậy, GitHub tự build giúp.
+
+## Ôn tập thẻ (SRS) hoạt động thế nào
+- Thẻ nào bạn **quên** sẽ quay lại sau ~10 phút (và ngay trong phiên ôn, sau 3 thẻ). Thẻ bạn nhớ rõ sẽ được hẹn **ngày càng xa**: 3 ngày, rồi 1-2 tuần, rồi vài tháng. Việc tính lịch dùng thuật toán mở **FSRS**.
+- Sau mỗi thẻ bạn bấm **Quên / Khó / Tốt / Dễ**. Trên nút có ghi bao lâu nữa thẻ sẽ quay lại.
+- 4 dạng câu hỏi: nhìn cách đọc chọn nghĩa; nghe rồi chọn chữ Hán; viết tay chữ Hán; điền từ vào chỗ trống. Có thể tắt bớt trong *Cài đặt ôn tập*.
+- Viết tay: app **không tự chấm** chữ bạn viết. Bạn viết, bấm *Xem đáp án*, tự so và chọn mức nhớ cho trung thực.
+- **Hoàn tác** hiện trong 6 giây sau mỗi thao tác (chấm thẻ hoặc "Để sau").
+- **Ôn nhanh 5 phút**: phiên có đồng hồ đếm ngược, hết giờ thì dừng, thẻ còn lại để mai.
+- Tiến độ lưu ngay trên máy (offline), tách khỏi gói nội dung nên cập nhật hay gỡ gói thẻ **không làm mất tiến độ**.
+- Muốn thêm thẻ: làm một gói như `packs-src/demo-cards/v1.json` (mỗi thẻ có `word`, `reading`, `meaning`, và tuỳ chọn `example` để có câu điền chỗ trống).
+- Nghe phát âm dùng giọng đọc có sẵn của máy; nếu máy chưa có giọng tiếng Nhật thì tắt dạng "Nghe" trong cài đặt.
 
 ## Tình trạng
 

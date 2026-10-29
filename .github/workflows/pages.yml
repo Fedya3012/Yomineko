@@ -19,6 +19,8 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+      # Content packs are published next to the web app: <site>/content/catalog.json
+      - run: npm run packs:build -- packs-src dist/content
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
       - id: deployment

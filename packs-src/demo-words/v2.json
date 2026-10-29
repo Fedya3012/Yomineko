@@ -1,0 +1,14 @@
+{
+  "manifest": {
+    "format": 1, "id": "demo-words", "kind": "deck", "title": "Gói mẫu: vài từ đầu tiên", "version": 2,
+    "license": { "name": "CC0 1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/", "attribution": "Do đội Yomineko tự viết" }
+  },
+  "upserts": {
+    "words": [
+      { "id": "neko", "kanji": "猫", "reading": "ねこ", "meaning": "con mèo" },
+      { "id": "hon", "kanji": "本", "reading": "ほん", "meaning": "quyển sách" },
+      { "id": "yomu", "kanji": "読む", "reading": "よむ", "meaning": "đọc, đọc sách" },
+      { "id": "mizu", "kanji": "水", "reading": "みず", "meaning": "nước" }
+    ]
+  }
+}

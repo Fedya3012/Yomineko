@@ -2,8 +2,8 @@
 import type { DB } from '../../lib/db';
 import { installPack } from '../../lib/packs/install';
 import type { PackFile } from '../../lib/packs/format';
-import shells from '../../../packs-example/textbook-shells.pack.json';
-import starter from '../../../packs-example/textbook-starter.pack.json';
+import shells from '../../../packs-src/textbook-shells/v1.json';
+import starter from '../../../packs-src/textbook-starter/v1.json';
 
 export const BUNDLED_PACKS = [shells, starter] as unknown as PackFile[];
 

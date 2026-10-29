@@ -1,4 +1,4 @@
-// Writes packs-example/textbook-shells.pack.json: EMPTY book frames (title + lesson numbers only).
+// Writes packs-src/textbook-shells/v1.json: EMPTY book frames (title + lesson numbers only).
 // No text from any publisher is included; learners fill the frames with their own pack file.
 // Usage: node scripts/make-textbook-packs.mjs
 import { writeFileSync } from 'node:fs';
@@ -24,5 +24,5 @@ const pack = {
       ({ id: lessonId(b, i + 1), textbookId: b.id, order: i + 1, title: `Bài ${i + 1}` })))
   }
 };
-writeFileSync('packs-example/textbook-shells.pack.json', JSON.stringify(pack, null, 1) + '\n');
+writeFileSync('packs-src/textbook-shells/v1.json', JSON.stringify(pack, null, 1) + '\n');
 console.log('textbook-shells.pack.json written');

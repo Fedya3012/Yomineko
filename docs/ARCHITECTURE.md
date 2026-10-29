@@ -30,17 +30,24 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 - `format.ts`: kiểu dữ liệu + `validatePack`. Một gói là một file JSON: `manifest` (id, kind, version, license, `base` nếu là gói delta) + `upserts` / `deletes` theo *collection*.
 - `install.ts`: `installPack` (một transaction, được-ăn-cả-ngã-về-không), `uninstallPack`, `planUpdates(catalog)`, `downloadAndInstall` (kiểm tra SHA-256).
 - Gói đầy đủ thay toàn bộ nội dung cũ của gói; gói delta chỉ áp dụng khi máy đang đúng phiên bản `base`.
-- `npm run catalog` tạo `catalog.json` (danh sách gói + mã kiểm tra) từ thư mục `packs-example/`. Mẫu: `packs-example/demo-hiragana.pack.json`.
+- Nguồn gói nằm ở `packs-src/<id>/v1.json, v2.json...` (mỗi file là bản ĐẦY ĐỦ). `npm run packs:build` (`scripts/packs-lib.ts`) tạo ra bản đầy đủ mới nhất, gói delta cho mỗi cặp phiên bản liền kề và `catalog.json` (SHA-256, size, `minAppVersion`). Pages workflow đăng tại `<site>/content/`. Hướng dẫn cho người không code: `docs/HUONG-DAN-XUAT-BAN-GOI.md`.
+- `install.ts` → `planUpdates(db, catalog, appVersion)` chọn cách rẻ nhất cho từng gói: chuỗi delta liên tiếp nếu nhỏ hơn gói đầy đủ, nếu không thì gói đầy đủ; không bao giờ hạ cấp; bỏ qua gói cần app mới hơn.
+- `updater.ts`: `checkContentUpdates` (chỉ tải catalog nhỏ) và `applyUpdates` (từng gói độc lập; delta hỏng thì thử gói đầy đủ; sai checksum thì giữ bản cũ). Chỉ chấp nhận https.
 - Mọi gói **bắt buộc** khai báo license; màn hình Credits (thread sau) sẽ liệt kê `attribution`.
+
+## Thông báo bản mới (`src/features/updates/UpdateCenter.svelte`)
+- Nội dung: kiểm tra tự động tối đa 12 giờ/lần khi có mạng, hoặc bấm *Kiểm tra cập nhật*.
+- App: Windows/Android hỏi GitHub Releases (`src/lib/appUpdate.ts`); web dùng service worker (`registerType: 'prompt'`, hiện nút tải lại). Phiên bản app = `package.json`, workflow release ghi đè bằng tên tag (`scripts/set-version.mjs`).
+- Địa chỉ catalog: `CATALOG_URL` trong `src/lib/appInfo.ts` (đổi bằng biến `VITE_CATALOG_URL`).
 
 ## Tên collection mỗi thread sở hữu (đề xuất)
 | Thread | Collection (content) | Khoá userdata |
 |---|---|---|
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
-| SRS | `cards`, `decks` | `srs.state:<cardId>`, `srs.settings` |
+| SRS | `cards` (`decks` chưa dùng) | `srs.state:<cardId>`, `srs.settings`, `srs.stats:<YYYY-MM-DD>` (số lượt ôn mỗi ngày, thread Tiến độ có thể đọc) |
 | Tiến độ | (không có) | `progress.*` |
-| Giáo trình | `textbooks`, `tb-lessons` | `textbook.progress:<lessonId>`, `textbook.notes:<id>`, `textbook.audio:<id>:<key>`, `srs.inbox:<lessonId>` |
+| Giáo trình | `textbooks`, `tb-lessons` | `textbook.*` (xem mục Giáo trình) |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
 ## Quy ước
@@ -58,8 +65,38 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
 
+## Trình đọc manga + OCR (`src/features/manga/`)
+Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ảnh); app **không** kèm truyện nào và không tải file đi đâu.
+- `open.ts` nhận file, đoán định dạng theo **byte đầu** (`formats.ts`, vì nhiều file `.cbr` thực ra là ZIP), rồi gọi `sources/{cbz,cbr,pdf,folder}.ts`. Mỗi nguồn trả về danh sách `PageRef` (chỉ giải nén/vẽ trang khi cần). `pageCache.ts` chỉ giữ vài trang quanh trang đang đọc.
+- `spreads.ts` (1 trang / 2 trang, bìa riêng, trang ngang đứng riêng, chiều đọc phải→trái hoặc trái→phải), `zoom.ts` + `spreadMath.ts` (zoom, kéo, chạm đúp, pinch; đổi toạ độ màn hình → toạ độ trang). Toàn bộ là hàm thuần, có test.
+- OCR (`ocr/`): `engine.ts` chạy Tesseract.js trong Web Worker, **offline**. Chạy 2 model (`jpn` ngang, `jpn_vert` dọc), `normalize.ts` lọc nhiễu, nhận kiểu chữ theo hình dạng dòng, ghép kết quả và sắp thứ tự đọc manga (trên→dưới, phải→trái). Có thể quét cả trang hoặc chỉ một vùng người dùng kéo chọn (chính xác hơn).
+  - Ô của từng chữ được chia đều theo ô của **dòng**, vì ô theo từng ký tự của tesseract.js không đáng tin với chữ Nhật (chữ dọc trả về x = 0).
+- Tra nghĩa (`lookup.ts`): chạm chữ → `hit.ts` tìm ký tự → khớp từ dài nhất trong collection `words` (gói từ điển, xem bảng trên). Chưa có gói từ điển thì app báo rõ. **Thread Từ điển**: khi đổi cấu trúc bản ghi `words`, sửa `WordEntry`/`buildWordIndex` ở đây; chưa có tách đuôi động từ/tính từ (ví dụ 読んだ → 読む), nên là việc nên làm.
+- Vị trí đọc + tuỳ chọn hiển thị lưu ở `userdata` (`reader.position:<id>`, `reader.prefs`).
+- `scripts/copy-vendor-assets.mjs` (chạy tự động trước `dev`/`build`) chép engine OCR, model tiếng Nhật và bộ đọc RAR vào `public/ocr`, `public/vendor` (git bỏ qua). PWA chỉ cache chúng lần đầu dùng (khoảng 20 MB), bản .exe/APK thì có sẵn.
+
+### Giấy phép thành phần dùng cho manga/OCR (đều cho phép dùng thương mại)
+| Thành phần | Giấy phép | Dùng để |
+|---|---|---|
+| tesseract.js + tesseract.js-core | Apache-2.0 | OCR chạy trên máy |
+| Model Tesseract `jpn`, `jpn_vert` (gói `@tesseract.js-data/*`, bản best_int) | Apache-2.0 (dữ liệu Tesseract) | nhận dạng chữ Nhật ngang/dọc |
+| pdfjs-dist | Apache-2.0 | mở PDF |
+| libarchive.js (bọc libarchive) | MIT (libarchive: BSD-2) | mở CBR/RAR/7z |
+| fflate | MIT | mở CBZ/ZIP |
+Màn hình Credits (thread sau) nên liệt kê các dòng này.
+## Trợ lý AI (`src/features/assistant/`)
+- `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
+- Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
+
+## Trình phát anime (`src/features/anime/`)
+- `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
+- Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
+- `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
+- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
+- `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
+
 ## Giáo trình (`src/features/textbook/`)
 - Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
-- **Nối với SRS:** bài ghi thẻ dựng sẵn vào `srs.inbox:<lessonId>` (xem `srs.ts`). Thread SRS đọc mọi khoá `srs.inbox:*` để tạo thẻ; id thẻ ổn định nên thêm lại không bị trùng.
+- **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
 - **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
 - **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).

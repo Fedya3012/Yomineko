@@ -55,7 +55,7 @@
   async function toSrs() {
     const n = await addLessonToSrs(db, lesson);
     srsCount = n;
-    srsNote = n ? `Đã đưa ${n} thẻ vào hàng chờ ôn tập (SRS).` : 'Bài này chưa có từ vựng hay ngữ pháp để ôn.';
+    srsNote = n ? `Đã thêm ${n} thẻ vào bộ ôn tập (SRS).` : 'Bài này chưa có từ vựng hay kanji để làm thẻ.';
   }
   function editNotes() {
     clearTimeout(notesTimer);
@@ -195,9 +195,9 @@
         </section>
         <section class="card soft stack">
           <strong>Ôn lại bằng thẻ (SRS)</strong>
-          <p class="muted">Đưa từ vựng, kanji và mẫu ngữ pháp của bài vào hàng ôn tập cách quãng.</p>
+          <p class="muted">Đưa từ vựng và kanji của bài vào bộ thẻ ôn tập cách quãng. Thêm lần nữa chỉ cập nhật, không bị trùng.</p>
           <button class="btn" type="button" onclick={toSrs}>{srsCount ? 'Cập nhật thẻ ôn' : 'Đưa vào thẻ ôn'}</button>
-          {#if srsNote || srsCount}<p class="muted" role="status">{srsNote || `${srsCount} thẻ đang chờ ôn.`}</p>{/if}
+          {#if srsNote || srsCount}<p class="muted" role="status">{srsNote || `${srsCount} thẻ của bài này đã có trong SRS.`}</p>{/if}
         </section>
         <section class="card soft stack">
           <strong>Sau bài này</strong>
