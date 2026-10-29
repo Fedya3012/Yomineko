@@ -29,19 +29,22 @@ button { cursor: pointer; }
 
 /* Reusable pieces */
 .card {
-  background: var(--surface); border: 1px solid var(--border);
+  min-width: 0; overflow-wrap: break-word;
+  background: var(--surface); border: 2px solid var(--ink);
   border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-4);
 }
 .btn {
-  border: 0; border-radius: var(--radius-pill); padding: .6rem 1.2rem;
-  background: var(--accent); color: var(--on-accent); font-weight: 700;
+  border: 2px solid var(--ink); border-radius: var(--radius-pill); padding: .6rem 1.2rem;
+  background: var(--accent); color: var(--on-accent); font-weight: 800; box-shadow: var(--shadow-sm);
   min-height: 44px; /* WCAG 2.5.8 target size */
 }
+.btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn.alt { background: var(--secondary); color: var(--on-secondary); }
 .btn.soft { background: var(--accent-soft); color: var(--accent-strong); }
 .btn.ghost { background: transparent; color: var(--text); border: 2px solid var(--border-strong); }
 .chip {
   display: inline-block; padding: .15rem .7rem; border-radius: var(--radius-pill);
-  background: var(--lavender-100); color: var(--info); font-size: var(--text-sm);
+  background: var(--info-soft); color: var(--info); border: 1.5px solid currentColor; font-size: var(--text-sm); font-weight: 700;
 }
 :root[data-theme="dark"] .chip { background: var(--info-soft); color: var(--info); }
 
@@ -49,7 +52,7 @@ button { cursor: pointer; }
 .chip.butter { background: var(--butter-100); color: #7a5b00; }
 .chip.sky { background: var(--sky-100); color: #2c5d8f; }
 .chip.mint { background: var(--mint-100); color: var(--success); }
-.chip.pink { background: var(--sakura-100); color: var(--accent-strong); }
+.chip.pink { background: var(--accent-soft); color: var(--accent-strong); }
 :root[data-theme="dark"] .chip.butter { background: #4a4126; color: #f2d98a; }
 :root[data-theme="dark"] .chip.sky { background: #263a4f; color: #a9d0f5; }
 :root[data-theme="dark"] .chip.mint { background: var(--success-soft); color: var(--success); }
