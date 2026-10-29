@@ -60,3 +60,10 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 ## Trợ lý AI (`src/features/assistant/`)
 - `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
 - Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
+
+## Trình phát anime (`src/features/anime/`)
+- `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
+- Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
+- `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
+- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
+- `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
