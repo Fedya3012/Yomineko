@@ -5,7 +5,8 @@
 // `srs.inbox:*` entry, create its own cards (collection `cards`, state `srs.state:<cardId>`),
 // and may delete the inbox entry afterwards. Card ids are stable, so adding twice never duplicates.
 import type { DB } from '../../lib/db';
-import type { Lesson } from './types';
+import { effectiveSource } from './logic';
+import type { Lesson, Source } from './types';
 
 export interface SrsCard {
   id: string;                          // stable: "<lessonId>:<kind>:<itemId>"
@@ -13,18 +14,18 @@ export interface SrsCard {
   front: string;
   back: string;
   reading?: string;
-  source: { textbookId: string; lessonId: string };
+  source: { textbookId: string; lessonId: string; origin: Source };
 }
 export interface SrsInbox { lessonId: string; addedAt: number; cards: SrsCard[] }
 
 export const inboxKey = (lessonId: string) => `srs.inbox:${lessonId}`;
 
 export function buildCards(l: Lesson): SrsCard[] {
-  const source = { textbookId: l.textbookId, lessonId: l.id };
+  const src = (item: { source?: Source }) => ({ textbookId: l.textbookId, lessonId: l.id, origin: effectiveSource(item, l) });
   return [
-    ...(l.vocab ?? []).map((v): SrsCard => ({ id: `${l.id}:word:${v.id}`, kind: 'word', front: v.word, back: v.meaning, reading: v.reading, source })),
-    ...(l.kanji ?? []).map((k): SrsCard => ({ id: `${l.id}:kanji:${k.id}`, kind: 'kanji', front: k.char, back: k.meaning, reading: k.reading, source })),
-    ...(l.grammar ?? []).map((g): SrsCard => ({ id: `${l.id}:grammar:${g.id}`, kind: 'grammar', front: g.pattern, back: g.title, source }))
+    ...(l.vocab ?? []).map((v): SrsCard => ({ id: `${l.id}:word:${v.id}`, kind: 'word', front: v.word, back: v.meaning, reading: v.reading, source: src(v) })),
+    ...(l.kanji ?? []).map((k): SrsCard => ({ id: `${l.id}:kanji:${k.id}`, kind: 'kanji', front: k.char, back: k.meaning, reading: k.reading, source: src(k) })),
+    ...(l.grammar ?? []).map((g): SrsCard => ({ id: `${l.id}:grammar:${g.id}`, kind: 'grammar', front: g.pattern, back: g.title, source: src(g) }))
   ];
 }
 

@@ -2,8 +2,9 @@
   import { onMount } from 'svelte';
   import type { DB } from '../../lib/db';
   import AudioButton from './AudioButton.svelte';
+  import SourceBadge from './SourceBadge.svelte';
   import ExercisePanel from './ExercisePanel.svelte';
-  import { availableSections, lessonRatio } from './logic';
+  import { availableSections, effectiveSource, lessonRatio } from './logic';
   import { speak } from './audio';
   import { addLessonToSrs, srsCardCount } from './srs';
   import { loadNotes, loadProgress, resetLesson, saveNotes, setSectionDone } from './store';
@@ -111,6 +112,7 @@
                   <span class="jp big-jp" lang="ja">{#if v.reading}<ruby>{v.word}<rt>{v.reading}</rt></ruby>{:else}{v.word}{/if}</span>
                   <span class="grow">{v.meaning}</span>
                   <AudioButton {db} lessonId={lesson.id} audioKey={v.audio ?? `vocab-${v.id}`} text={v.reading ?? v.word} label="Nghe" />
+                  <span class="src"><SourceBadge source={effectiveSource(v, lesson)} /></span>
                 </li>
               {/each}
             </ul>
@@ -119,7 +121,7 @@
             <h3>Kanji của bài</h3>
             <ul class="kanji">
               {#each lesson.kanji as k (k.id)}
-                <li class="card"><span class="jp k" lang="ja">{k.char}</span><span lang="ja" class="muted">{k.reading ?? ''}</span><span>{k.meaning}</span></li>
+                <li class="card"><span class="jp k" lang="ja">{k.char}</span><span lang="ja" class="muted">{k.reading ?? ''}</span><span>{k.meaning}</span><SourceBadge source={effectiveSource(k, lesson)} /></li>
               {/each}
             </ul>
           {/if}
@@ -127,7 +129,7 @@
           <div class="stack">
             {#each lesson.grammar ?? [] as g, i (g.id)}
               <article class="card soft stack">
-                <span class="chip butter">文型 {i + 1}</span>
+                <span class="row"><span class="chip butter">文型 {i + 1}</span><SourceBadge source={effectiveSource(g, lesson)} /></span>
                 <strong class="jp pattern" lang="ja">{g.pattern}</strong>
                 <span><strong>{g.title}.</strong> {g.explanation}</span>
                 {#each g.examples as ex}
@@ -144,13 +146,14 @@
               <article class="stack">
                 <div class="row">
                   <strong>{d.title}</strong>
+                  <SourceBadge source={effectiveSource(d, lesson)} />
                   <AudioButton {db} lessonId={lesson.id} audioKey={d.audio ?? `dialogue-${d.id}`} text={d.lines.map((l) => l.ja).join('。')} label="Nghe cả hội thoại" />
                 </div>
                 <div class="tr jp" lang="ja">
                   {#each d.lines as line}
                     <button type="button" onclick={() => speak(line.ja)} aria-label={`Nghe câu của ${line.speaker}: ${line.ja}`}>
                       <span class="who">{line.speaker}</span>
-                      <span>{line.ja}{#if showVi}<span class="muted vi" lang="vi">{line.vi}</span>{/if}</span>
+                      <span>{line.ja}{#if showVi}<span class="muted vi" lang="vi">{line.vi}</span>{/if}{#if line.source}<span class="vi"><SourceBadge source={line.source} /></span>{/if}</span>
                     </button>
                   {/each}
                 </div>
@@ -234,6 +237,7 @@
   .no { color: var(--text-muted); font-variant-numeric: tabular-nums; }
   .big-jp { font-size: var(--text-jp-reading); font-weight: 700; }
   .grow { flex: 1 1 8rem; }
+  .src { flex-basis: 100%; padding-left: 2.4rem; }
   .kanji { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
   .kanji li { display: grid; justify-items: center; text-align: center; gap: 2px; background: var(--surface-2); }
   .k { font-size: 2.4rem; line-height: 1.3; }

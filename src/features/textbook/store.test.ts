@@ -101,6 +101,13 @@ describe('SRS hand-off', () => {
     expect(inbox!.cards).toHaveLength(cards.length);
     expect(await srsCardCount(db, l.id)).toBe(cards.length);
   });
+  it('keeps each item\'s own source on its card, defaulting to the lesson source', async () => {
+    const l = await starter();
+    const lesson: Lesson = { ...l, source: { type: 'manga', title: 'X' }, vocab: [{ id: 'a', word: 'あ', meaning: 'a', source: { type: 'anime', title: 'One Piece', location: '12:31' } }, { id: 'b', word: 'い', meaning: 'b' }], kanji: [], grammar: [] };
+    const [a, b] = buildCards(lesson);
+    expect(a.source.origin).toEqual({ type: 'anime', title: 'One Piece', location: '12:31' });
+    expect(b.source.origin).toEqual({ type: 'manga', title: 'X' });
+  });
   it('does nothing for an empty frame', async () => {
     await ensureBundledPacks(db);
     const frame = (await loadLessons(db, 'mnn1'))[0];

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { availableSections, bookRatio, checkAnswer, isEmptyLesson, lessonRatio, nextLesson, practiceComplete } from './logic';
+import { availableSections, describeSource, effectiveSource, bookRatio, checkAnswer, isEmptyLesson, lessonRatio, nextLesson, practiceComplete } from './logic';
 import type { Lesson } from './types';
 
 const base: Lesson = { id: 'b-l01', textbookId: 'b', order: 1, title: 'Bài 1' };
@@ -39,5 +39,17 @@ describe('answers', () => {
     expect(practiceComplete(full, { e1: true })).toBe(false);
     expect(practiceComplete(full, { e1: true, e2: true })).toBe(true);
     expect(practiceComplete(base, {})).toBe(false);
+  });
+});
+
+describe('sources', () => {
+  it('uses the item source, then the lesson source, then "textbook"', () => {
+    expect(effectiveSource({ source: { type: 'anime', title: 'One Piece' } }, base).type).toBe('anime');
+    expect(effectiveSource({}, { ...base, source: { type: 'music' } }).type).toBe('music');
+    expect(effectiveSource(undefined, base)).toEqual({ type: 'textbook' });
+  });
+  it('describes a source on one line', () => {
+    expect(describeSource({ type: 'anime', title: 'One Piece', location: '12:31', note: 'ghi chú' })).toBe('Anime · One Piece · 12:31 — ghi chú');
+    expect(describeSource({ type: 'user' })).toBe('Bạn thêm');
   });
 });

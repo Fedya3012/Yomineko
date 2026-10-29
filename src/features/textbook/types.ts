@@ -11,6 +11,15 @@
 // No copyrighted book text is shipped: books are "shells" (title + lesson numbers) and the
 // learner fills them with their own pack file. Audio is never shipped either.
 
+/** Where an item came from, shown as a badge with a description. */
+export type SourceType = 'textbook' | 'anime' | 'music' | 'manga' | 'dictionary' | 'user';
+export interface Source {
+  type: SourceType;
+  title?: string;     // e.g. the series, song or book name
+  location?: string;  // page, timestamp or track, e.g. "tr. 24", "12:31", "Track 3"
+  note?: string;
+}
+
 export interface Textbook {
   id: string;
   title: string;
@@ -28,12 +37,13 @@ export interface VocabItem {
   meaning: string;
   /** Key of an audio file the learner attached; without one the device voice (TTS) is used. */
   audio?: string;
+  source?: Source;
 }
-export interface KanjiItem { id: string; char: string; reading?: string; meaning: string }
+export interface KanjiItem { id: string; char: string; reading?: string; meaning: string; source?: Source }
 export interface Example { ja: string; reading?: string; vi: string }
-export interface GrammarPoint { id: string; title: string; pattern: string; explanation: string; examples: Example[] }
-export interface DialogueLine { speaker: string; ja: string; reading?: string; vi: string }
-export interface Dialogue { id: string; title: string; lines: DialogueLine[]; audio?: string }
+export interface GrammarPoint { id: string; title: string; pattern: string; explanation: string; examples: Example[]; source?: Source }
+export interface DialogueLine { speaker: string; ja: string; reading?: string; vi: string; source?: Source }
+export interface Dialogue { id: string; title: string; lines: DialogueLine[]; audio?: string; source?: Source }
 
 export type Exercise =
   | { id: string; type: 'choice'; prompt: string; choices: string[]; answer: string; explain?: string; ref?: ExerciseRef }
@@ -49,6 +59,8 @@ export interface Lesson {
   order: number;
   title: string;
   titleJa?: string;
+  /** Default source for items that do not state their own (falls back to "textbook"). */
+  source?: Source;
   /** How-to-study guidance, one tip per entry. */
   guide?: string[];
   vocab?: VocabItem[];

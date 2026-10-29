@@ -9,7 +9,7 @@
     ],
     "tb-lessons": [
       {
-        "id": "starter-l01", "textbookId": "starter", "order": 1, "title": "Chào hỏi và giới thiệu", "titleJa": "第1課",
+        "id": "starter-l01", "textbookId": "starter", "order": 1, "source": { "type": "textbook", "title": "Giáo trình mẫu Yomineko", "note": "Do Yomineko tự viết" }, "title": "Chào hỏi và giới thiệu", "titleJa": "第1課",
         "guide": [
           "Nghe từ vựng 2 lần, nhại theo to tiếng. Phát âm quan trọng không kém nhớ nghĩa.",
           "Đọc mẫu câu và tự đặt 1 câu về bản thân trước khi xem ví dụ.",
@@ -60,7 +60,7 @@
           { "id": "sore", "word": "それ", "meaning": "cái đó (gần người nghe)" },
           { "id": "are", "word": "あれ", "meaning": "cái kia" },
           { "id": "hon", "word": "本", "reading": "ほん", "meaning": "quyển sách" },
-          { "id": "neko", "word": "猫", "reading": "ねこ", "meaning": "con mèo" }
+          { "id": "neko", "word": "猫", "reading": "ねこ", "meaning": "con mèo", "source": { "type": "dictionary", "title": "JMdict", "note": "Nghĩa lấy từ từ điển mở" } }
         ],
         "grammar": [
           { "id": "kore-wa", "title": "Chỉ đồ vật", "pattern": "これ／それ／あれ は N です", "explanation": "Chọn これ, それ hay あれ tuỳ khoảng cách giữa đồ vật với người nói và người nghe.",
