@@ -7,6 +7,8 @@
   --mint-100: #d8f3e6; --mint-500: #5cbf97; --mint-700: #2f8a68;
   --lavender-100: #e8e0fb; --lavender-500: #9a85d8; --lavender-700: #6b55b5;
   --peach-100: #ffe3d1; --peach-500: #f4a07a;
+  --butter-100: #fff0b8; --butter-500: #f2c94c;   /* soft yellow highlight */
+  --sky-100: #d6e9fb;    --sky-500: #7fb5e8;       /* soft blue, for info/links */
 
   /* semantic: light */
   --bg: var(--cream-50);
@@ -33,7 +35,7 @@
   /* typography; --font-scale is changed by the "chữ lớn" setting */
   --font-scale: 1;
   --font-ui: "Nunito", "Noto Sans JP", "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
-  --font-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  --font-jp: "Zen Maru Gothic", "M PLUS Rounded 1c", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
   --font-jp-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --text-sm: calc(.875rem * var(--font-scale));
   --text-md: calc(1rem * var(--font-scale));

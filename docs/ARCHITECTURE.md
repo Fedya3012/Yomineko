@@ -53,3 +53,6 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 - Màu minh hoạ nằm trong `tokens.css` (`--badge-*`, `--ink`), tách khỏi màu giao diện để nút vẫn mềm màu hồng.
 - Icon mới: SVG viewBox 100x100, nét 3.5, bo tròn đầu nét, không tô màu; để Badge lo khung.
 - Mochi (mèo trắng) theo kiểu mèo may mắn: mắt tròn to, má hồng.
+
+## Màu & cảm giác chung (tham khảo thêm)
+Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
