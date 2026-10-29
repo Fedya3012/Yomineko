@@ -4,6 +4,7 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
   import UpdateCenter from './features/updates/UpdateCenter.svelte';
   import Assistant from './features/assistant/Assistant.svelte';
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
@@ -20,7 +21,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime'>('home');
+  let view = $state<'home' | 'anime' | 'kana'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
@@ -72,7 +73,9 @@
 </script>
 
 <main>
-  {#if view === 'anime' && readyDb}
+  {#if view === 'kana'}
+    <KanaKanjiApp onback={() => (view = 'home')} />
+  {:else if view === 'anime' && readyDb}
     <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
   {:else}
   <header>
@@ -93,6 +96,8 @@
         <strong>{f.name}</strong>
         {#if f.name === 'Xem anime'}
           <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
+        {:else if f.name === 'Kana & Kanji'}
+          <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
         {:else}
           <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' ? 'Đã có' : `Sắp có · ${f.note}`}</span>
         {/if}
