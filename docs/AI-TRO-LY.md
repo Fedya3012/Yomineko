@@ -36,4 +36,4 @@ AI **tắt** khi cài mới. Khi tắt, không có gì rời khỏi máy bạn. 
 ## Dành cho người sửa app sau này
 - Mã nằm trong `src/features/assistant/`. Nhân vật: `personas.ts`; bài ngữ pháp và luật sửa lỗi: `offline-data.ts`; tình huống nhập vai: `scenarios.ts`. Thêm nội dung chỉ cần thêm một dòng vào các file này.
 - Kiểm tra: `npm run check && npm test && npm run build`.
-- Khi nhập vai kết thúc, trợ lý báo cho thread Tiến độ qua `onSessionEnd` (cùng dạng `SessionInput` của `recordSession`). Sau khi PR Tiến độ được gộp, chỉ cần nối `onSessionEnd={(r) => recordSession(db, r)}` trong `App.svelte`.
+- Khi nhập vai kết thúc, trợ lý báo cho thread Tiến độ qua `onSessionEnd` (cùng dạng `SessionInput` của `recordSession`). Đã nối sẵn với `recordSession` trong `App.svelte`.

@@ -59,4 +59,4 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 
 ## Trợ lý AI (`src/features/assistant/`)
 - `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
-- Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), nối với `recordSession` của thread Tiến độ. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
+- Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
