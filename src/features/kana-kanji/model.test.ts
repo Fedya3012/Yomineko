@@ -8,8 +8,8 @@ import {
   KANA_KNOWN_KEY
 } from './model';
 import { scoreStroke } from './scoring';
-import kanaPack from '../../../packs-example/kana-core.pack.json';
-import kanjiPack from '../../../packs-example/kanji-grade1.pack.json';
+import kanaPack from '../../../packs-src/kana-core/v1.json';
+import kanjiPack from '../../../packs-src/kanji-grade1/v1.json';
 
 let db: DB;
 let n = 0;
@@ -58,6 +58,10 @@ describe('gói nội dung đi kèm', () => {
     const cards = (await listCollection(db, 'cards')) as { id: string; ref: { collection: string; id: string }; deck: string }[];
     const decks = new Set(((await listCollection(db, 'decks')) as { id: string }[]).map((d) => d.id));
     expect(cards.length).toBe(142 + 80);
+    for (const c of cards as unknown as { word: string; reading: string; meaning: string; example?: { ja: string; blank: string } }[]) {
+      expect(c.word && c.reading && c.meaning).toBeTruthy();
+      if (c.example) expect(c.example.ja).toContain(c.example.blank);
+    }
     for (const c of cards) {
       expect(decks.has(c.deck)).toBe(true);
       expect(await db.get('records', [c.ref.collection, c.ref.id])).toBeTruthy();

@@ -34,6 +34,11 @@ export interface Card {
   front: string;
   back: string;
   ref: { collection: 'kana' | 'kanji'; id: string };
+  // Cùng hình dạng với CardContent của thread SRS, để SRS ôn được thẻ này như mọi thẻ khác.
+  word: string;
+  reading: string;
+  meaning: string;
+  example?: { ja: string; blank: string; vi?: string };
 }
 
 export interface Point { x: number; y: number }

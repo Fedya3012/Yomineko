@@ -1,6 +1,6 @@
 // Tạo hai gói nội dung từ dữ liệu mở:
-//   packs-example/kana-core.pack.json    : hiragana + katakana (nét viết từ KanjiVG)
-//   packs-example/kanji-grade1.pack.json : 80 kanji lớp 1 (KANJIDIC + KanjiVG + nội dung tự viết)
+//   packs-src/kana-core/v1.json         : hiragana + katakana (nét viết từ KanjiVG)
+//   packs-src/kanji-grade1/v1.json      : 80 kanji lớp 1 (KANJIDIC + KanjiVG + nội dung tự viết)
 // Dùng:  node scripts/build-kana-kanji-packs.mjs [thư-mục-cache]
 // Cần mạng lần đầu; các file tải về được lưu vào thư mục cache để chạy lại không tải nữa.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { CURATED } from './kanji-curated.mjs';
 
 const CACHE = process.argv[2] ?? join(process.env.TMPDIR ?? '/tmp', 'yomineko-kanji-cache');
-const OUT = 'packs-example';
+const OUT = 'packs-src';
 const RAW = 'https://raw.githubusercontent.com';
 const KANJIVG = `${RAW}/KanjiVG/kanjivg/master/kanji`;
 const KANJI_JSON = `${RAW}/davidluzgouveia/kanji-data/master/kanji.json`;
@@ -82,7 +82,9 @@ async function buildKana() {
   ];
   const cards = kana.map((k) => ({
     id: `card:${k.id}`, deck: k.script === 'hiragana' ? 'kana-hiragana' : 'kana-katakana', type: 'kana',
-    front: k.char, back: k.romaji, ref: { collection: 'kana', id: k.id }
+    front: k.char, back: k.romaji, ref: { collection: 'kana', id: k.id },
+    // Các trường SRS đọc (xem CardContent trong src/features/srs/types.ts)
+    word: k.char, reading: k.char, meaning: k.romaji
   }));
   return {
     manifest: {
@@ -128,7 +130,10 @@ async function buildKanji() {
   }
   const cards = kanji.map((k) => ({
     id: `card:kanji:${k.id}`, deck: 'kanji-grade1', type: 'kanji', front: k.char,
-    back: `${k.vi} — ${k.onyomi.join('、')} / ${k.kunyomi.join('、')}`, ref: { collection: 'kanji', id: k.id }
+    back: `${k.vi} — ${k.onyomi.join('、')} / ${k.kunyomi.join('、')}`, ref: { collection: 'kanji', id: k.id },
+    // Các trường SRS đọc: cách đọc ưu tiên Kun (bỏ dấu "." và "-"), không có thì On
+    word: k.char, reading: (k.kunyomi[0] ?? k.onyomi[0] ?? '').replace(/[.-]/g, ''), meaning: k.vi,
+    example: { ja: k.examples[0].ja, blank: k.char, vi: k.examples[0].vi }
   }));
   return {
     manifest: {
@@ -152,7 +157,8 @@ async function buildKanji() {
 await mkdir(CACHE, { recursive: true });
 await mkdir(OUT, { recursive: true });
 for (const [file, pack] of [['kana-core', await buildKana()], ['kanji-grade1', await buildKanji()]]) {
-  const path = join(OUT, `${file}.pack.json`);
+  await mkdir(join(OUT, file), { recursive: true });
+  const path = join(OUT, file, 'v1.json');
   await writeFile(path, JSON.stringify(pack));
   const n = Object.values(pack.upserts).reduce((s, l) => s + l.length, 0);
   console.log(`${path}: ${n} bản ghi`);

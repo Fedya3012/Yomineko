@@ -5,10 +5,14 @@
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
   import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
+  import UpdateCenter from './features/updates/UpdateCenter.svelte';
+  import Assistant from './features/assistant/Assistant.svelte';
+  import AnimePlayer from './features/anime/AnimePlayer.svelte';
+  import SrsHome from './features/srs/SrsHome.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import { recordSession } from './features/progress/store';
   import type { SessionSummary } from './features/progress/types';
-  import demoPack from '../packs-example/demo-hiragana.pack.json';
+  import demoPack from '../packs-src/demo-words/v1.json';
 
   let settings = $state<Settings>(loadSettings());
   let db: DB | undefined;
@@ -17,13 +21,13 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'kana'>('home');
+  let view = $state<'home' | 'anime' | 'kana'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
-    { tone: 'coral', name: 'Ôn tập SRS', note: 'Thread SRS', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
+    { tone: 'coral', name: 'Ôn tập SRS', note: 'Đã có', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
     { tone: 'teal', name: 'Từ điển', note: 'Thread Từ điển', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
-    { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', open: 'kana', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
+    { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
     { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
     { tone: 'coral', name: 'Xem anime', note: 'Thread Anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
     { tone: 'mint', name: 'Tiến độ', note: 'Thread Tiến độ', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' }
@@ -71,6 +75,8 @@
 <main>
   {#if view === 'kana'}
     <KanaKanjiApp onback={() => (view = 'home')} />
+  {:else if view === 'anime' && readyDb}
+    <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
   {:else}
   <header>
     <img src="favicon.svg" alt="Mochi, chú mèo trắng" width="56" height="56" />
@@ -80,23 +86,26 @@
     </div>
   </header>
 
+  {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
+  {#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}
+
   <section class="grid" aria-label="Tính năng">
     {#each features as f}
-      {#if 'open' in f}
-        <button class="card feature link" onclick={() => (view = f.open)}>
-          <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
-          <strong>{f.name}</strong>
-          <span class="chip mint">Mở ra học</span>
-        </button>
-      {:else}
-        <div class="card feature">
-          <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
-          <strong>{f.name}</strong>
-          <span class="chip">Sắp có · {f.note}</span>
-        </div>
-      {/if}
+      <div class="card feature">
+        <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
+        <strong>{f.name}</strong>
+        {#if f.name === 'Xem anime'}
+          <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
+        {:else if f.name === 'Kana & Kanji'}
+          <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
+        {:else}
+          <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' ? 'Đã có' : `Sắp có · ${f.note}`}</span>
+        {/if}
+      </div>
     {/each}
   </section>
+
+  {#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}
 
   <section aria-label="Tiến độ học">
     <h2 class="section-title">Tiến độ học</h2>
@@ -149,7 +158,6 @@
   .section-title { margin: 0 0 var(--space-2); font-size: var(--text-lg); color: var(--accent-strong); }
   .muted { color: var(--text-muted); margin: 0; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
-  .link { text-align: left; font: inherit; color: inherit; cursor: pointer; }
   .feature { display: grid; gap: var(--space-2); justify-items: start; background: var(--surface-2); }
   .sample { font-size: var(--text-jp-reading); margin: 0; }
   .row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }

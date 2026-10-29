@@ -14,3 +14,4 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run build
+      - run: npm run packs:build -- packs-src dist-packs # fails with a readable message if a pack file is wrong

@@ -9,8 +9,8 @@ export const PACK_IDS = ['kana-core', 'kanji-grade1'] as const;
 /** Cài hai gói đi kèm app nếu máy chưa có (hoặc đang cũ hơn). Các bản mới hơn tải từ catalog sau này. */
 export async function ensureContentInstalled(db: DB): Promise<void> {
   const bundled: Record<string, () => Promise<{ default: unknown }>> = {
-    'kana-core': () => import('../../../packs-example/kana-core.pack.json'),
-    'kanji-grade1': () => import('../../../packs-example/kanji-grade1.pack.json')
+    'kana-core': () => import('../../../packs-src/kana-core/v1.json'),
+    'kanji-grade1': () => import('../../../packs-src/kanji-grade1/v1.json')
   };
   for (const id of PACK_IDS) {
     if (await db.get('packs', id)) continue;
