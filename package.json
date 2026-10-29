@@ -5,8 +5,11 @@
   "type": "module",
   "description": "Yomineko (読み猫) - Japanese immersion learning app",
   "scripts": {
+    "assets": "node scripts/copy-vendor-assets.mjs",
+    "predev": "npm run assets",
     "dev": "vite",
     "build": "vite build",
+    "prebuild": "npm run assets",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
@@ -21,6 +24,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@tauri-apps/cli": "^2.12.4",
     "fake-indexeddb": "^6.2.6",
+    "happy-dom": "^21.0.4",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.7",
     "typescript": "~5.9",
@@ -36,6 +40,12 @@
     "@fontsource/dm-mono": "^5.3.0",
     "@fontsource/zen-maru-gothic": "^5.3.1",
     "@tauri-apps/plugin-opener": "^2.5.0",
-    "idb": "^8.0.4"
+    "@tesseract.js-data/jpn": "^1.0.0",
+    "@tesseract.js-data/jpn_vert": "^1.0.0",
+    "fflate": "^0.8.3",
+    "idb": "^8.0.4",
+    "libarchive.js": "^2.0.2",
+    "pdfjs-dist": "^6.4.299",
+    "tesseract.js": "^7.0.0"
   }
 }
