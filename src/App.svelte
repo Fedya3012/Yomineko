@@ -104,10 +104,67 @@
     progressKey++;
   }
 
+  // Desktop sidebar (Windows .exe and wide browser windows). Items either switch screen or jump to a home section.
+  type NavItem = { label: string; go?: typeof view; jump?: string; key: string };
+  const nav: NavItem[] = [
+    { label: 'Trang chủ', go: 'home', key: '1' },
+    { label: 'Lộ trình', go: 'roadmap', key: '2' },
+    { label: 'Ôn tập SRS', jump: 'sec-srs', key: '3' },
+    { label: 'Từ điển', jump: 'sec-dictionary', key: '4' },
+    { label: 'Giáo trình', go: 'textbooks', key: '5' },
+    { label: 'Kana & Kanji', go: 'kana', key: '6' },
+    { label: 'Đọc manga', go: 'manga', key: '7' },
+    { label: 'Xem anime', go: 'anime', key: '8' },
+    { label: 'Tiến độ', jump: 'sec-progress', key: '9' },
+    { label: 'Trợ lý AI', jump: 'sec-assistant', key: '' },
+    { label: 'Cộng đồng', go: 'community', key: '' }
+  ];
+  let activeJump = $state('');
+  function openNav(n: NavItem) {
+    if (n.go) { view = n.go; activeJump = ''; scrollTo({ top: 0 }); }
+    else if (n.jump) {
+      const id = n.jump;
+      activeJump = id; view = 'home';
+      setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }), 30);
+    }
+    setTimeout(() => (document.getElementById('main') as HTMLElement | null)?.focus({ preventScroll: true }), 40);
+  }
+  const isCurrent = (n: NavItem) => (n.go ? view === n.go && (n.go !== 'home' || !activeJump) : view === 'home' && activeJump === n.jump);
+
+  // Desktop shortcuts: Alt+1…9 opens a sidebar item, Ctrl+K or "/" jumps to dictionary search, Esc returns home.
+  function onkey(e: KeyboardEvent) {
+    const t = e.target as HTMLElement;
+    const typing = t.closest('input, textarea, select, [contenteditable="true"]');
+    if (e.altKey && !e.ctrlKey && /^[1-9]$/.test(e.key)) {
+      const n = nav.find((x) => x.key === e.key);
+      if (n) { e.preventDefault(); openNav(n); }
+    } else if ((e.ctrlKey && e.key.toLowerCase() === 'k') || (e.key === '/' && !typing)) {
+      e.preventDefault();
+      openNav(nav[3]);
+      setTimeout(() => (document.querySelector('#sec-dictionary input') as HTMLInputElement | null)?.focus(), 80);
+    } else if (e.key === 'Escape' && !typing && view !== 'home' && !document.querySelector('[role="dialog"]')) {
+      openNav(nav[0]);
+    }
+  }
+
   const themes: [ThemeChoice, string][] = [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']];
 </script>
 
-<main>
+<svelte:window onkeydown={onkey} />
+<a class="skip-link" href="#main">Bỏ qua tới nội dung chính</a>
+<div class="shell">
+<nav class="side" aria-label="Điều hướng chính">
+  <div class="brand"><img src="favicon.svg" alt="" width="40" height="40" /><span>Yomineko<small lang="ja">読み猫</small></span></div>
+  <ul>
+    {#each nav as n}
+      <li><button class="navi" aria-current={isCurrent(n) ? 'page' : undefined} onclick={() => openNav(n)}>
+        <span>{n.label}</span>{#if n.key}<kbd aria-label={'Phím tắt Alt ' + n.key}>Alt {n.key}</kbd>{/if}
+      </button></li>
+    {/each}
+  </ul>
+  <p class="hint"><kbd>Ctrl K</kbd> tra từ · <kbd>Esc</kbd> về trang chủ</p>
+</nav>
+<main id="main" tabindex="-1">
   {#if view === 'textbooks'}
     {#if readyDb}<TextbookView db={readyDb} onback={() => (view = 'home')} />{:else}<p class="muted">Đang mở kho dữ liệu…</p>{/if}
   {:else if view === 'kana'}
@@ -131,8 +188,8 @@
     </div>
   </header>
 
-  {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
-  {#if readyDb}<TodayCard db={readyDb} refreshKey={roadmapKey + progressKey} onview={() => (view = 'roadmap')} oncreate={() => (view = 'onboarding')} />{/if}
+  <div class="home">
+  <div class="col-main">
   <div id="sec-srs">{#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}</div>
 
   <section class="card hero" aria-label="Học theo giáo trình">
@@ -158,7 +215,6 @@
     </div>
   </section>
 
-  <div id="sec-assistant">{#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}</div>
 
   {#if readyDb}
     <section class="card" id="sec-dictionary" aria-label="Từ điển"><DictionaryPanel db={readyDb} /></section>
@@ -171,6 +227,11 @@
     {#if readyDb}<InsightsView db={readyDb} refreshKey={progressKey} />{/if}
   </section>
 
+  </div>
+  <aside class="col-side" aria-label="Cột bên">
+  {#if readyDb}<TodayCard db={readyDb} refreshKey={roadmapKey + progressKey} onview={() => (view = 'roadmap')} oncreate={() => (view = 'onboarding')} />{/if}
+  {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
+  <div id="sec-assistant">{#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}</div>
   <section class="card">
     <h2>Xem thử chữ Nhật</h2>
     <p class="jp sample" lang="ja">
@@ -205,12 +266,38 @@
       {/each}
     </ul>
   </section>
+  </aside>
+  </div>
   {/if}
 </main>
+</div>
 <WordPopup />
 
 <style>
-  main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }
+  main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); align-content: start; outline: none; }
+  .home, .col-main, .col-side { display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
+  .side { display: none; }
+  /* Desktop (Windows .exe, wide browser): sidebar + wide two-column home instead of a stretched phone layout */
+  @media (min-width: 1024px) {
+    .shell { display: grid; grid-template-columns: 15rem minmax(0, 1fr); min-height: 100vh; }
+    .side { display: flex; flex-direction: column; gap: var(--space-2); position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: var(--space-4) var(--space-3); background: var(--surface); border-right: 2px solid var(--ink); }
+    .side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+    .brand { display: flex; align-items: center; gap: var(--space-2); font-weight: 800; font-size: var(--text-lg); padding: 0 var(--space-2) var(--space-3); border-bottom: 2px dashed var(--border); margin-bottom: var(--space-2); }
+    .brand small { display: block; font: 400 var(--text-sm) var(--font-display-jp); color: var(--accent-strong); letter-spacing: .2em; }
+    .navi { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); width: 100%; min-height: 44px; padding: var(--space-1) var(--space-3); border: 2px solid transparent; border-radius: var(--radius-sm); background: transparent; color: var(--text); font-weight: 700; text-align: left; cursor: pointer; }
+    .navi:hover { background: var(--surface-2); border-color: var(--border); }
+    .navi[aria-current='page'] { background: var(--secondary); color: var(--on-secondary); border-color: var(--ink); box-shadow: var(--shadow-sm); }
+    .navi kbd { font: 500 .72rem var(--font-mono); color: inherit; opacity: .8; border: 1.5px solid currentColor; border-radius: 6px; padding: 0 5px; }
+    .hint { margin-top: auto; font-size: var(--text-sm); color: var(--text-muted); }
+    .hint kbd { font: 500 .72rem var(--font-mono); border: 1.5px solid var(--border-strong); border-radius: 6px; padding: 0 5px; }
+    main { max-width: 1320px; width: 100%; padding: var(--space-6) var(--space-8); }
+    main > header { display: none; }
+    .home { grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem); align-items: start; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+    .tile { transition: transform .1s, box-shadow .1s; }
+    .tile:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .tile:hover { transform: none; } }
   main > * { min-width: 0; }
   header { display: flex; align-items: center; gap: var(--space-3); }
   header > :global(div) { min-width: 0; }

@@ -38,7 +38,7 @@
 {#if book}
   <Viewer {book} {db} onClose={() => (book = undefined)} />
 {:else}
-  <main>
+  <div class="manga-home">
     <button class="btn soft" onclick={onBack}>← Trang chủ</button>
     <h1>Đọc manga <span lang="ja">漫画</span></h1>
     <p class="muted">Yomineko không kèm sẵn truyện nào. Bạn tự nạp file truyện của mình; file nằm yên trên máy bạn, không bị tải đi đâu.</p>
@@ -71,11 +71,11 @@
         <li>Trên Android, nếu không chọn được thư mục, hãy dùng “Chọn nhiều ảnh” hoặc nén thư mục thành CBZ.</li>
       </ul>
     </section>
-  </main>
+  </div>
 {/if}
 
 <style>
-  main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }
+  .manga-home { max-width: 1100px; width: 100%; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }
   h1 { margin: 0; font-size: var(--text-xl); color: var(--accent-strong); }
   h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
   .muted { color: var(--text-muted); margin: 0; }
