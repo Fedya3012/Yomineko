@@ -4,10 +4,11 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
-  import demoPack from '../packs-example/demo-hiragana.pack.json';
+  import UpdateCenter from './features/updates/UpdateCenter.svelte';
+  import demoPack from '../packs-src/demo-words/v1.json';
 
   let settings = $state<Settings>(loadSettings());
-  let db: DB | undefined;
+  let db = $state<DB>();
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
 
@@ -53,6 +54,8 @@
       <p class="muted">Học tiếng Nhật qua manga và anime cùng Mochi</p>
     </div>
   </header>
+
+  {#if db}<UpdateCenter {db} onContentChanged={refresh} />{/if}
 
   <section class="grid" aria-label="Tính năng">
     {#each features as f}

@@ -30,8 +30,15 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 - `format.ts`: kiểu dữ liệu + `validatePack`. Một gói là một file JSON: `manifest` (id, kind, version, license, `base` nếu là gói delta) + `upserts` / `deletes` theo *collection*.
 - `install.ts`: `installPack` (một transaction, được-ăn-cả-ngã-về-không), `uninstallPack`, `planUpdates(catalog)`, `downloadAndInstall` (kiểm tra SHA-256).
 - Gói đầy đủ thay toàn bộ nội dung cũ của gói; gói delta chỉ áp dụng khi máy đang đúng phiên bản `base`.
-- `npm run catalog` tạo `catalog.json` (danh sách gói + mã kiểm tra) từ thư mục `packs-example/`. Mẫu: `packs-example/demo-hiragana.pack.json`.
+- Nguồn gói nằm ở `packs-src/<id>/v1.json, v2.json...` (mỗi file là bản ĐẦY ĐỦ). `npm run packs:build` (`scripts/packs-lib.ts`) tạo ra bản đầy đủ mới nhất, gói delta cho mỗi cặp phiên bản liền kề và `catalog.json` (SHA-256, size, `minAppVersion`). Pages workflow đăng tại `<site>/content/`. Hướng dẫn cho người không code: `docs/HUONG-DAN-XUAT-BAN-GOI.md`.
+- `install.ts` → `planUpdates(db, catalog, appVersion)` chọn cách rẻ nhất cho từng gói: chuỗi delta liên tiếp nếu nhỏ hơn gói đầy đủ, nếu không thì gói đầy đủ; không bao giờ hạ cấp; bỏ qua gói cần app mới hơn.
+- `updater.ts`: `checkContentUpdates` (chỉ tải catalog nhỏ) và `applyUpdates` (từng gói độc lập; delta hỏng thì thử gói đầy đủ; sai checksum thì giữ bản cũ). Chỉ chấp nhận https.
 - Mọi gói **bắt buộc** khai báo license; màn hình Credits (thread sau) sẽ liệt kê `attribution`.
+
+## Thông báo bản mới (`src/features/updates/UpdateCenter.svelte`)
+- Nội dung: kiểm tra tự động tối đa 12 giờ/lần khi có mạng, hoặc bấm *Kiểm tra cập nhật*.
+- App: Windows/Android hỏi GitHub Releases (`src/lib/appUpdate.ts`); web dùng service worker (`registerType: 'prompt'`, hiện nút tải lại). Phiên bản app = `package.json`, workflow release ghi đè bằng tên tag (`scripts/set-version.mjs`).
+- Địa chỉ catalog: `CATALOG_URL` trong `src/lib/appInfo.ts` (đổi bằng biến `VITE_CATALOG_URL`).
 
 ## Tên collection mỗi thread sở hữu (đề xuất)
 | Thread | Collection (content) | Khoá userdata |
