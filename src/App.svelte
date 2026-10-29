@@ -4,6 +4,8 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import Assistant from './features/assistant/Assistant.svelte';
+
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import { recordSession } from './features/progress/store';
@@ -93,6 +95,8 @@
       </div>
     {/each}
   </section>
+
+  {#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}
 
   <section aria-label="Tiến độ học">
     <h2 class="section-title">Tiến độ học</h2>

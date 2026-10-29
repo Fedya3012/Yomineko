@@ -57,6 +57,10 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
 
+## Trợ lý AI (`src/features/assistant/`)
+- `userdata` keys: `assistant.settings`, `assistant.apikey`, `assistant.history`. AI **tắt mặc định**; gửi dữ liệu cần `consent` gắn đúng host (`hasConsent`). Mọi gọi mạng đi qua `respond()` trong `assistant.ts`, nơi tự lùi về `offline.ts` khi thiếu đồng ý, khoá, mạng hoặc khi lỗi.
+- Báo cáo buổi nhập vai: `onSessionEnd` (xem `report.ts`), đã nối với `recordSession` trong `App.svelte`. Hướng dẫn người dùng: `docs/AI-TRO-LY.md`.
+
 ## Trình phát anime (`src/features/anime/`)
 - `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
 - Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
