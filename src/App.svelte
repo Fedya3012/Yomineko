@@ -4,6 +4,7 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import TextbookView from './features/textbook/TextbookView.svelte';
   import KanaKanjiApp from './features/kana-kanji/KanaKanjiApp.svelte';
   import UpdateCenter from './features/updates/UpdateCenter.svelte';
   import Assistant from './features/assistant/Assistant.svelte';
@@ -22,7 +23,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime' | 'kana' | 'manga'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
@@ -74,7 +75,9 @@
 </script>
 
 <main>
-  {#if view === 'kana'}
+  {#if view === 'textbooks'}
+    {#if readyDb}<TextbookView db={readyDb} onback={() => (view = 'home')} />{:else}<p class="muted">Đang mở kho dữ liệu…</p>{/if}
+  {:else if view === 'kana'}
     <KanaKanjiApp onback={() => (view = 'home')} />
   {:else if view === 'manga' && readyDb}
     <MangaReader db={readyDb} onBack={() => (view = 'home')} />
@@ -91,6 +94,15 @@
 
   {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
   {#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}
+
+  <section class="card hero" aria-label="Học theo giáo trình">
+    <Badge tone="coral" size={72}><svg viewBox="0 0 100 100"><path d="M22 20h46a10 10 0 0 1 10 10v50H32a10 10 0 0 1-10-10zM22 70a10 10 0 0 1 10-10h46M38 36h26M38 48h18" /></svg></Badge>
+    <div class="hero-text">
+      <h2 class="section-title">Học theo giáo trình</h2>
+      <p class="muted">Minna no Nihongo, Genki… Học lần lượt từng bài: từ vựng, ngữ pháp, hội thoại, bài tập.</p>
+    </div>
+    <button class="btn" onclick={() => (view = 'textbooks')}>Mở giáo trình</button>
+  </section>
 
   <section class="grid" aria-label="Tính năng">
     {#each features as f}
@@ -162,6 +174,8 @@
   h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
   .section-title { margin: 0 0 var(--space-2); font-size: var(--text-lg); color: var(--accent-strong); }
   .muted { color: var(--text-muted); margin: 0; }
+  .hero { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; background: var(--surface-2); }
+  .hero-text { flex: 1 1 14rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
   .feature { display: grid; gap: var(--space-2); justify-items: start; background: var(--surface-2); }
   .sample { font-size: var(--text-jp-reading); margin: 0; }

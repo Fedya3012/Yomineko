@@ -32,6 +32,19 @@ Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói n�
 
 **Về bản quyền:** app *không* kèm sẵn manga, anime hay giáo trình có bản quyền. Bạn tự nạp file của mình. Gói nội dung chỉ dùng dữ liệu mở (JMdict, KANJIDIC, Jitendex...), luôn ghi rõ giấy phép.
 
+## Học theo giáo trình (Minna no Nihongo, Genki...)
+
+Mở app → thẻ **Học theo giáo trình**. Chọn sách, thấy mục lục các bài theo thứ tự; mỗi bài có: cách học, từ vựng + kanji (có nút nghe), ngữ pháp kèm ví dụ, hội thoại (nghe + chữ + bản dịch), bài tập, chỗ dành cho video ngắn, ghi chú riêng và thanh tiến độ. Nút **Đưa vào thẻ ôn** thêm từ vựng và kanji của bài vào bộ thẻ SRS, và bài tập tự cập nhật phần **Tiến độ** (chuỗi ngày, từ đã học, điểm yếu).
+
+**Về bản quyền (rất quan trọng):** Minna no Nihongo và Genki có bản quyền, nên repo và app **không chứa** chữ, hội thoại hay âm thanh của các sách này. Thứ có sẵn:
+- **Khung sách**: chỉ tên sách và số bài (Minna I/II, Genki I/II). Các bài trống, ghi rõ "chưa có nội dung".
+- **Giáo trình mẫu Yomineko**: 2 bài do chúng tôi tự viết (CC0) để thử.
+- **Bạn tự nạp** nội dung từ sách của mình: bấm *Tải file mẫu để điền*, điền (hoặc nhờ Claude điền giúp từ sách bạn đã mua), rồi *Thêm giáo trình (nạp file)*. Nếu dùng id `mnn1-l01`, `genki1-l01`... thì file của bạn sẽ lấp vào đúng khung bài.
+- **Đọc sách PDF/EPUB của bạn trong app**: ở trang sách bấm *Mở file sách của bạn (PDF/EPUB)*, hoặc ở tủ sách bấm *Thêm giáo trình* rồi chọn thẳng file PDF/EPUB (sẽ tạo một sách mới). Sau đó bấm *Đọc sách*. Trong màn hình đọc, đứng ở trang đầu của một bài rồi bấm *Gắn* để nối bài với trang đó; từ bài học, nút *Mở trang sách* nhảy thẳng tới trang. File nằm trong máy bạn, không tải lên đâu cả, và không bao giờ nằm trong repo. Chưa hỗ trợ: DjVu, CBZ, tìm trong sách, OCR.
+- **Nguồn gốc từng mục**: từ vựng, kanji, mẫu ngữ pháp và câu hội thoại đều hiện nhãn nguồn (giáo trình, anime, nhạc, manga, từ điển, bạn tự thêm) kèm tên, vị trí (trang/phút/track) và ghi chú. Trong file bài học, thêm `"source": {"type": "anime", "title": "One Piece", "location": "12:31", "note": "..."}` vào mục; không ghi thì lấy nguồn của cả bài.
+- **Âm thanh**: không kèm file. Mỗi nút nghe dùng file âm thanh bạn *gắn* (từ CD sách của bạn, lưu trong máy), nếu chưa gắn thì dùng giọng đọc tiếng Nhật có sẵn của thiết bị.
+- Nguồn mở có thể dùng thêm sau này: Tatoeba (câu ví dụ), JMdict/KANJIDIC (từ, kanji), có ghi giấy phép trong gói.
+
 ## Cho người muốn chạy thử trên máy (tuỳ chọn)
 
 Cần cài [Node.js 22](https://nodejs.org). Rồi:
