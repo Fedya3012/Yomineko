@@ -42,6 +42,17 @@ npm run build    # tạo bản web trong thư mục dist/
 
 Bản Windows cần thêm [Rust](https://rustup.rs): `npm run tauri build`. Thông thường bạn không cần làm vậy, GitHub tự build giúp.
 
+## Ôn tập thẻ (SRS) hoạt động thế nào
+- Thẻ nào bạn **quên** sẽ quay lại sau ~10 phút (và ngay trong phiên ôn, sau 3 thẻ). Thẻ bạn nhớ rõ sẽ được hẹn **ngày càng xa**: 3 ngày, rồi 1-2 tuần, rồi vài tháng. Việc tính lịch dùng thuật toán mở **FSRS**.
+- Sau mỗi thẻ bạn bấm **Quên / Khó / Tốt / Dễ**. Trên nút có ghi bao lâu nữa thẻ sẽ quay lại.
+- 4 dạng câu hỏi: nhìn cách đọc chọn nghĩa; nghe rồi chọn chữ Hán; viết tay chữ Hán; điền từ vào chỗ trống. Có thể tắt bớt trong *Cài đặt ôn tập*.
+- Viết tay: app **không tự chấm** chữ bạn viết. Bạn viết, bấm *Xem đáp án*, tự so và chọn mức nhớ cho trung thực.
+- **Hoàn tác** hiện trong 6 giây sau mỗi thao tác (chấm thẻ hoặc "Để sau").
+- **Ôn nhanh 5 phút**: phiên có đồng hồ đếm ngược, hết giờ thì dừng, thẻ còn lại để mai.
+- Tiến độ lưu ngay trên máy (offline), tách khỏi gói nội dung nên cập nhật hay gỡ gói thẻ **không làm mất tiến độ**.
+- Muốn thêm thẻ: làm một gói như `packs-example/demo-cards.pack.json` (mỗi thẻ có `word`, `reading`, `meaning`, và tuỳ chọn `example` để có câu điền chỗ trống).
+- Nghe phát âm dùng giọng đọc có sẵn của máy; nếu máy chưa có giọng tiếng Nhật thì tắt dạng "Nghe" trong cài đặt.
+
 ## Tình trạng
 
 Đây là **bộ khung**: giao diện, màu sáng/tối, furigana, kho dữ liệu offline, định dạng gói nội dung, và quy trình build tự động. Các tính năng (SRS, từ điển, kana/kanji, manga, anime, tiến độ) sẽ được làm ở các nhánh riêng, dựa trên bộ khung này.
