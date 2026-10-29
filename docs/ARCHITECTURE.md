@@ -109,6 +109,12 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
 - `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
 
+## Tổng kết & AI nâng cao (`src/features/insights/`)
+- `summary.ts`: tổng kết theo ngày/tuần/tháng từ `progress.day:*`, `progress.learned`, `srs.stats:*`; xuất text/Markdown. `weakness.ts`: phân loại lỗi (trợ từ, chia động từ, On/Kun, ...) bằng nhãn hoặc `tag` tuỳ chọn trong `StudiedItem`; điểm giảm một nửa sau 7 ngày. `adaptive.ts`: gợi ý độ khó từ 7 ngày gần nhất. Tất cả là hàm thuần, chạy offline.
+- `rewrite.ts`: viết lại tổng kết theo phong cách. Bản offline dùng mẫu câu; bản AI đi qua `aiBlockedReason` của trợ lý nên cần đúng sự đồng ý theo host, và chỉ gửi văn bản tổng kết (`aiPayload`).
+- SRS: `buildQueue` nhận `boost` (cardId → điểm yếu) để hỏi từ sai lặp lại trước; `SrsReview` lấy từ `loadBoost`.
+- Userdata: `insights.settings` (`adaptiveAuto` mặc định tắt, `lastAuto`). Hướng dẫn: `docs/HUONG-DAN-TONG-KET-AI.md`.
+
 ## Giáo trình (`src/features/textbook/`)
 - Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
 - **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
