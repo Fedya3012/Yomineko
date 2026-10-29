@@ -24,26 +24,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - name: Download open data (JMdict + examples, KANJIDIC2, JLPT lists)
+      - run: npm ci
+      - name: Build real dictionary packs from open data
         env: { GH_TOKEN: '${{ github.token }}' }
-        run: |
-          mkdir -p data/jlpt
-          gh release download -R scriptin/jmdict-simplified -p 'jmdict-examples-eng-*.json.zip' -D data
-          gh release download -R scriptin/jmdict-simplified -p 'kanjidic2-en-*.json.zip' -D data
-          (cd data && for z in *.zip; do unzip -o "$z"; done)
-          for n in 1 2 3 4 5; do
-            curl -fsSL "https://raw.githubusercontent.com/elzup/jlpt-word-list/master/src/n$n.csv" -o "data/jlpt/n$n.csv"
-          done
-          ls -la data
-      - name: Build packs
-        run: |
-          node scripts/build-dict-pack.mjs \
-            --jmdict "$(ls data/jmdict-examples-eng-*.json | head -1)" \
-            --kanjidic "$(ls data/kanjidic2-en-*.json | head -1)" \
-            --jlpt-dir data/jlpt \
-            --version '${{ inputs.version }}' --out packs-src ${{ inputs.all_words && '--all-words' || '' }}
-          npm ci
-          npm run packs:build -- packs-src dist-packs
+        run: scripts/fetch-dict-packs.sh '${{ inputs.version }}' ${{ inputs.all_words && '--all-words' || '' }}
+      - run: npm run packs:build -- packs-src dist-packs
       - name: Publish release
         env: { GH_TOKEN: '${{ github.token }}' }
         run: |

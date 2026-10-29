@@ -16,6 +16,12 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      # Real dictionary (JMdict + KANJIDIC2 + examples) goes into the same content feed. If the open-data
+      # download fails, the site still deploys; the app then offers only the small sample dictionary.
+      - name: Build dictionary packs
+        continue-on-error: true
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: scripts/fetch-dict-packs.sh 1
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
