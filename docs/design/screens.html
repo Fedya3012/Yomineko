@@ -1,213 +1,328 @@
 <title>Yomineko Screens</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Dela+Gothic+One&family=DM+Mono:wght@300;500&family=Zen+Maru+Gothic:wght@500;700&display=swap">
 <style>
-/* Layout concept: a studio sheet. A control bar (theme, state, text size) sits over one app frame that shows the chosen screen
-   exactly as shipped: bottom tabs on phones, side rail on desktop. Tokens mirror src/styles/tokens.css (AA-checked, see docs/ACCESSIBILITY.md). */
+/* Layout concept: "shotengai print". A retro Tokyo shopping-street poster: cream paper, flat coral/teal/mint/sky/mustard inks,
+   thick ink outlines and hard offset shadows like risograph stickers. Desktop = sidebar + topbar, phone = ticket-strip tab bar
+   with a raised review button. Night mode is the same street after dark (deep teal, glowing signs), drawn separately.
+   Every colour pair is AA-checked; see docs/ACCESSIBILITY.md. */
 :root {
-  --sakura-100:#ffdde7; --sakura-300:#ffb3c8; --mint-100:#d8f3e6; --lavender-100:#e8e0fb; --butter-100:#fff0b8;
-  --bg:#fffaf5; --bg-sunken:#fff3e8; --surface:#ffffff; --surface-2:#fff1f5; --border:#f3dfe5; --border-strong:#a58a98;
-  --text:#4a3548; --text-muted:#6b5666; --accent:#e8799a; --accent-gfx:#c94f77; --accent-strong:#9c3256; --accent-soft:#ffdde7; --on-accent:#3b1226;
-  --success:#1b6b4e; --success-soft:#d8f3e6; --info:#5f49a8; --info-soft:#e8e0fb; --warn:#8a4a22; --warn-soft:#ffe3d1;
-  --butter-ink:#7a5b00; --sky-ink:#2c5d8f; --butter-soft:#fff0b8; --sky-soft:#d6e9fb;
-  --shadow:0 6px 20px rgba(184,69,106,.10); --focus-ring:#5f49a8; --focus:0 0 0 2px var(--bg),0 0 0 5px var(--focus-ring);
-  --ink:#3b2a3a; --scene-a:#ffd6e2; --scene-b:#e8e0fb; --scene-c:#fff0b8; --panel:#fffdfb; --sub-bg:rgba(20,10,24,.82);
-  --radius-sm:10px; --radius:18px; --radius-lg:26px; --radius-pill:999px;
+  --paper:#fbf3e6; --paper-2:#f3e6cf; --card:#fffaf1; --card-2:#f7eddc;
+  --ink:#0f3640; --text:#0f3640; --muted:#4a5f63; --line:#dccbb0;
+  --coral:#ee7d6c; --coral-ink:#a3352a; --coral-soft:#fbdad0;
+  --teal:#0f4350; --teal-soft:#d5e8e4;
+  --mint:#6dae94; --mint-ink:#1c6347; --mint-soft:#dcefe5;
+  --sky:#8cc4ea; --sky-ink:#235c88; --sky-soft:#dcecf8;
+  --mustard:#f6c93a; --mustard-ink:#6a4f00; --mustard-soft:#fdf0c4;
+  --primary:#0f4350; --on-primary:#fffaf1; --secondary:#ee7d6c; --on-secondary:#0f3640;
+  --bar:#0f4350; --hard:4px 4px 0 var(--ink); --hard-sm:2px 2px 0 var(--ink);
+  --focus-ring:#c2410c; --focus:0 0 0 3px var(--paper),0 0 0 6px var(--focus-ring);
+  --sky-a:#dcecf8; --sky-b:#fbf3e6; --sub-bg:rgba(10,24,28,.86); --dot:rgba(15,54,64,.07);
+  --r-sm:10px; --r:16px; --r-lg:24px; --pill:999px;
   --font-scale:1;
-  --font-ui:"Nunito","Noto Sans JP","Hiragino Maru Gothic ProN","Yu Gothic UI",system-ui,sans-serif;
-  --font-jp:"Zen Maru Gothic","M PLUS Rounded 1c","Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-  --text-sm:calc(.875rem*var(--font-scale)); --text-md:calc(1rem*var(--font-scale)); --text-lg:calc(1.25rem*var(--font-scale)); --text-xl:calc(1.75rem*var(--font-scale));
-  --text-jp:calc(1.5rem*var(--font-scale));
+  --f-ui:"Be Vietnam Pro","Nunito","Segoe UI",system-ui,sans-serif;
+  --f-disp:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --f-jp:"Zen Maru Gothic","M PLUS Rounded 1c","Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  --f-jp-disp:"Dela Gothic One","Zen Maru Gothic","Noto Sans JP","Hiragino Sans",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"Cascadia Mono",monospace;
+  --t-xs:calc(.75rem*var(--font-scale)); --t-sm:calc(.875rem*var(--font-scale)); --t-md:calc(1rem*var(--font-scale));
+  --t-lg:calc(1.25rem*var(--font-scale)); --t-xl:calc(1.85rem*var(--font-scale)); --t-jp:calc(1.5rem*var(--font-scale));
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg:#1f1a26; --bg-sunken:#181420; --surface:#2a2333; --surface-2:#332a3e; --border:#433752; --border-strong:#9080a3; --text:#f3e9ef; --text-muted:#b5a5b8;
-  --accent:#f08fae; --accent-gfx:#f08fae; --accent-strong:#ffb3c8; --accent-soft:#4a2f40; --on-accent:#2a1620;
-  --success:#7fd9b3; --success-soft:#25392f; --info:#b8a6f0; --info-soft:#322b4d; --warn:#f6b394; --warn-soft:#43302a;
-  --butter-ink:#f2d98a; --sky-ink:#a9d0f5; --butter-soft:#4a4126; --sky-soft:#263a4f; --shadow:0 6px 20px rgba(0,0,0,.35); --focus-ring:#cdbcff;
-  --ink:#f3e9ef; --scene-a:#3a2742; --scene-b:#2a2a4d; --scene-c:#5a4a2a; --panel:#241e2d; color-scheme:dark; } }
+  --paper:#0f2a31; --paper-2:#0a1f25; --card:#163a43; --card-2:#1c4752; --ink:#e8dcc6; --text:#fbf3e6; --muted:#b8cdcc; --line:#2c5660;
+  --coral:#ff8b76; --coral-ink:#ffb3a5; --coral-soft:#4a2a2a; --teal:#7fc4c9; --teal-soft:#1f4d55;
+  --mint:#7fd1ad; --mint-ink:#7fd1ad; --mint-soft:#1d4038; --sky:#9fd3f5; --sky-ink:#a6d4f5; --sky-soft:#1d3b52;
+  --mustard:#ffd35a; --mustard-ink:#ffe08a; --mustard-soft:#463d1e;
+  --primary:#ff8b76; --on-primary:#10262b; --secondary:#ffd35a; --on-secondary:#10262b; --bar:#ff8b76;
+  --hard:4px 4px 0 #051418; --hard-sm:2px 2px 0 #051418; --focus-ring:#ffd35a; --sky-a:#16304a; --sky-b:#0f2a31; --dot:rgba(232,220,198,.05); color-scheme:dark; } }
 :root[data-theme="dark"] {
-  --bg:#1f1a26; --bg-sunken:#181420; --surface:#2a2333; --surface-2:#332a3e; --border:#433752; --border-strong:#9080a3; --text:#f3e9ef; --text-muted:#b5a5b8;
-  --accent:#f08fae; --accent-gfx:#f08fae; --accent-strong:#ffb3c8; --accent-soft:#4a2f40; --on-accent:#2a1620;
-  --success:#7fd9b3; --success-soft:#25392f; --info:#b8a6f0; --info-soft:#322b4d; --warn:#f6b394; --warn-soft:#43302a;
-  --butter-ink:#f2d98a; --sky-ink:#a9d0f5; --butter-soft:#4a4126; --sky-soft:#263a4f; --shadow:0 6px 20px rgba(0,0,0,.35); --focus-ring:#cdbcff;
-  --ink:#f3e9ef; --scene-a:#3a2742; --scene-b:#2a2a4d; --scene-c:#5a4a2a; --panel:#241e2d; color-scheme:dark; }
-:root[data-contrast="high"] { --text:#000; --text-muted:#3a2736; --border:#5a3f50; --border-strong:#3a2736; --accent-strong:#7d1a3f; --accent-gfx:#a8325a; }
-:root[data-theme="dark"][data-contrast="high"] { --text:#fff; --text-muted:#eadfe8; --border:#b8a8c6; --border-strong:#d6c8e2; --accent-strong:#ffd0de; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-contrast="high"] { --text:#fff; --text-muted:#eadfe8; --border:#b8a8c6; --border-strong:#d6c8e2; --accent-strong:#ffd0de; } }
+  --paper:#0f2a31; --paper-2:#0a1f25; --card:#163a43; --card-2:#1c4752; --ink:#e8dcc6; --text:#fbf3e6; --muted:#b8cdcc; --line:#2c5660;
+  --coral:#ff8b76; --coral-ink:#ffb3a5; --coral-soft:#4a2a2a; --teal:#7fc4c9; --teal-soft:#1f4d55;
+  --mint:#7fd1ad; --mint-ink:#7fd1ad; --mint-soft:#1d4038; --sky:#9fd3f5; --sky-ink:#a6d4f5; --sky-soft:#1d3b52;
+  --mustard:#ffd35a; --mustard-ink:#ffe08a; --mustard-soft:#463d1e;
+  --primary:#ff8b76; --on-primary:#10262b; --secondary:#ffd35a; --on-secondary:#10262b; --bar:#ff8b76;
+  --hard:4px 4px 0 #051418; --hard-sm:2px 2px 0 #051418; --focus-ring:#ffd35a; --sky-a:#16304a; --sky-b:#0f2a31; --dot:rgba(232,220,198,.05); color-scheme:dark; }
+:root[data-contrast="high"] { --text:#000; --muted:#1f2f33; --ink:#000; --line:#0f3640; --coral-ink:#7a1f15; }
+:root[data-theme="dark"][data-contrast="high"] { --text:#fff; --muted:#e6f0ef; --ink:#fff; --line:#e8dcc6; --coral-ink:#ffd0c7; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-contrast="high"] { --text:#fff; --muted:#e6f0ef; --ink:#fff; --line:#e8dcc6; --coral-ink:#ffd0c7; } }
 
 *,*::before,*::after { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--text); font:var(--text-md)/1.6 var(--font-ui);
-  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:14px 24px; transition:background .25s,color .25s; }
-.jp,[lang=ja] { font-family:var(--font-jp); line-height:1.9; }
-ruby rt { font-size:.5em; color:var(--text-muted); }
+body { margin:0; color:var(--text); font:500 var(--t-md)/1.6 var(--f-ui);
+  background:var(--paper) radial-gradient(var(--dot) 1.2px,transparent 1.3px) 0 0/14px 14px;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:14px 28px; }
+.jp,[lang=ja] { font-family:var(--f-jp); line-height:1.9; }
+ruby rt { font-size:.5em; color:var(--muted); font-family:var(--f-jp); }
 :root[data-furigana="off"] rt { display:none; }
 :root[data-vertical="on"] .vt { writing-mode:vertical-rl; text-orientation:mixed; }
-button,input,select { font:inherit; color:inherit; }
-button { cursor:pointer; }
-:focus-visible { outline:3px solid transparent; box-shadow:var(--focus); }
+button,input,select { font:inherit; color:inherit; } button { cursor:pointer; }
+:focus-visible { outline:3px solid transparent; box-shadow:var(--focus); border-radius:var(--r-sm); }
+h1,h2,h3 { margin:0; text-wrap:balance; } p { margin:0; } h1:focus { outline:none; box-shadow:none; }
 .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-.skip { position:absolute; left:8px; top:-5rem; z-index:50; padding:.5rem 1rem; border-radius:var(--radius-pill); background:var(--surface); border:2px solid var(--focus-ring); color:var(--text); }
+.skip { position:absolute; left:8px; top:-5rem; z-index:50; padding:.5rem 1rem; border-radius:var(--pill); background:var(--card); border:2px solid var(--ink); }
 .skip:focus { top:8px; }
-@media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
-:root[data-motion="reduce"] * { transition:none !important; animation:none !important; scroll-behavior:auto !important; }
-@media (forced-colors: active) { .btn,.card,.flat,.chip,.sw { border:1px solid CanvasText; } }
-h1,h2,h3 { margin:0; text-wrap:balance; } p { margin:0; } h1:focus { outline:none; }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
+:root[data-motion="reduce"] * { transition:none !important; animation:none !important; }
+@media (forced-colors: active) { .btn,.card,.chip,.sw,.navi { border:2px solid CanvasText !important; } }
 
-/* studio bar */
-.studio { max-width:1100px; margin:0 auto 12px; display:grid; gap:10px; }
-.studio-top > div { min-width:0; max-width:100%; }
+/* studio bar (outside the app) */
+.studio { max-width:1180px; margin:0 auto 14px; display:grid; gap:10px; }
 .studio-top { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px; }
-.studio .name { font-size:var(--text-lg); font-weight:800; color:var(--accent-strong); }
+.studio-top > div { min-width:0; max-width:100%; }
+.studio .name { font:800 var(--t-lg) var(--f-disp); letter-spacing:-.01em; }
+.studio .name span { font-family:var(--f-jp-disp); font-weight:400; color:var(--coral-ink); }
 .ctl { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; }
-.ctl > div { display:grid; gap:2px; min-width:0; max-width:100%; } .ctl .lbl { font-size:.78rem; font-weight:700; color:var(--text-muted); }
-.picker { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin; }
-.picker button { flex:none; border:2px solid var(--border-strong); background:var(--surface); border-radius:var(--radius-pill); padding:.2rem .9rem; min-height:44px; font-weight:700; color:var(--text); }
-.picker button[aria-current=true] { background:var(--accent-soft); color:var(--accent-strong); border-color:var(--accent-gfx); }
-.mini-seg { display:flex; flex-wrap:wrap; max-width:100%; gap:4px; padding:4px; border-radius:var(--radius-pill); background:var(--bg-sunken); border:2px solid var(--border-strong); }
-.mini-seg button { border:0; background:transparent; border-radius:var(--radius-pill); min-height:40px; padding:0 .8rem; font-weight:700; color:var(--text-muted); }
-.mini-seg button[aria-checked=true] { background:var(--surface); color:var(--accent-strong); box-shadow:var(--shadow); }
+.ctl > div { display:grid; gap:3px; min-width:0; max-width:100%; }
+.lbl { font:500 var(--t-xs) var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.picker { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; scrollbar-width:thin; }
+.picker button { flex:none; border:2px solid var(--ink); background:var(--card); border-radius:var(--pill); padding:.15rem .9rem; min-height:44px; font-weight:700; }
+.picker button[aria-current=true] { background:var(--mustard); color:#10262b; box-shadow:var(--hard-sm); }
+.seg { display:flex; flex-wrap:wrap; max-width:100%; gap:3px; padding:3px; border-radius:var(--pill); background:var(--card); border:2px solid var(--ink); }
+.seg button { border:0; background:transparent; border-radius:var(--pill); min-height:40px; padding:0 .85rem; font-weight:700; color:var(--muted); }
+.seg button[aria-checked=true] { background:var(--primary); color:var(--on-primary); }
 
 /* app frame */
-.app { max-width:1100px; margin:0 auto; display:flex; flex-direction:column-reverse; background:var(--bg); border:1px solid var(--border-strong); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow); min-height:680px; }
-.rail { display:flex; justify-content:space-around; gap:2px; padding:6px 8px; background:var(--surface); border-top:1px solid var(--border-strong); }
-.rail button { flex:1; display:grid; justify-items:center; align-content:center; gap:1px; min-height:56px; min-width:44px; border:0; border-radius:var(--radius); background:transparent; color:var(--text-muted); font-size:var(--text-sm); font-weight:700; padding:2px; }
-.rail svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
-.rail button[aria-current=page] { background:var(--accent-soft); color:var(--accent-strong); }
-.rail .wide-only { display:none; }
-.screen { flex:1; min-width:0; padding:18px; display:grid; gap:14px; align-content:start; }
-@media (min-width:860px) { .app { flex-direction:row; } .rail { flex-direction:column; justify-content:flex-start; width:6.5rem; flex:none; border-top:0; border-right:1px solid var(--border-strong); padding:14px 6px; overflow-y:auto; } .rail .wide-only { display:grid; } .rail .narrow-only { display:none; } .screen { padding:24px; } }
+.app { max-width:1180px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); background:var(--paper); border:2.5px solid var(--ink); border-radius:var(--r-lg); overflow:hidden; box-shadow:6px 6px 0 var(--ink); min-height:720px; }
+.side { display:none; }
+.col { display:grid; grid-template-rows:auto 1fr auto; min-width:0; }
+.top { display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:2px solid var(--ink); background:var(--card); flex-wrap:wrap; }
+.logo { display:flex; align-items:center; gap:10px; font:800 var(--t-lg)/1.1 var(--f-disp); }
+.logo small { display:block; font:400 var(--t-xs) var(--f-jp-disp); color:var(--coral-ink); letter-spacing:.2em; }
+.top .gsearch { flex:1; min-width:10rem; display:none; }
+.top .meta { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.counter { display:flex; align-items:center; gap:6px; border:2px solid var(--ink); border-radius:var(--pill); padding:2px 12px 2px 4px; background:var(--mustard-soft); font:500 var(--t-sm) var(--f-mono); min-height:40px; }
+.counter b { font-weight:500; font-size:var(--t-md); }
+.counter .dot { width:30px; height:30px; border-radius:50%; background:var(--coral); border:2px solid var(--ink); display:grid; place-items:center; }
+.counter .dot svg { width:16px; height:16px; fill:none; stroke:#10262b; stroke-width:9; stroke-linecap:round; stroke-linejoin:round; }
+.screen { min-width:0; padding:20px 16px 32px; display:grid; gap:18px; align-content:start; }
+.tabbar { position:sticky; bottom:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:end; gap:2px; padding:8px 8px calc(10px + env(safe-area-inset-bottom,0px)); background:var(--card); border-top:2.5px solid var(--ink); z-index:4; }
+.tabbar button { display:grid; justify-items:center; gap:2px; min-height:56px; border:0; background:transparent; border-radius:var(--r); font:700 var(--t-xs) var(--f-ui); color:var(--muted); padding:4px 2px; min-width:0; }
+.tabbar svg,.navi svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:7; stroke-linecap:round; stroke-linejoin:round; }
+.tabbar button[aria-current=page] { color:var(--text); }
+.tabbar button[aria-current=page] .ic { background:var(--mustard); border-color:var(--ink); color:#10262b; }
+.tabbar .ic { display:grid; place-items:center; width:44px; height:32px; border-radius:var(--pill); border:2px solid transparent; }
+.tabbar .fab .ic { width:60px; height:60px; margin-top:-28px; border-radius:50%; background:var(--coral); border:2.5px solid var(--ink); box-shadow:var(--hard-sm); color:#10262b; }
+.tabbar .fab[aria-current=page] .ic { background:var(--coral); }
+.tabbar .fab .ic svg { width:28px; height:28px; }
+@media (min-width:880px) {
+  .app { grid-template-columns:15rem minmax(0,1fr); }
+  .side { display:flex; flex-direction:column; gap:4px; padding:18px 12px; border-right:2.5px solid var(--ink); background:var(--card); }
+  .side .logo { padding:0 6px 14px; border-bottom:2px dashed var(--line); margin-bottom:8px; }
+  .side h2 { font:500 var(--t-xs) var(--f-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:12px 10px 4px; }
+  .navi { display:flex; align-items:center; gap:10px; min-height:46px; padding:4px 10px; border:2px solid transparent; border-radius:var(--r); background:transparent; font-weight:700; text-align:left; width:100%; }
+  .navi:hover { background:var(--card-2); }
+  .navi[aria-current=page] { background:var(--mustard); color:#10262b; border-color:var(--ink); box-shadow:var(--hard-sm); }
+  .navi .n { margin-left:auto; font:500 var(--t-xs) var(--f-mono); border:2px solid currentColor; border-radius:var(--pill); padding:0 7px; }
+  .side .help { margin-top:auto; border:2px solid var(--ink); border-radius:var(--r); padding:12px; background:var(--sky-soft); display:grid; gap:6px; font-size:var(--t-sm); }
+  .top .logo { display:none; } .top .gsearch { display:flex; }
+  .tabbar { display:none; }
+  .screen { padding:28px 30px 40px; }
+}
 
-.card { background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; min-width:0; }
-.card.pink { background:var(--surface-2); }
-.flat { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; min-width:0; }
-.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr)); gap:14px; }
-.grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap:12px; }
+/* shared pieces */
+.card { background:var(--card); border:2px solid var(--ink); border-radius:var(--r); box-shadow:var(--hard); padding:18px; min-width:0; }
+.card.flat { box-shadow:none; }
+.card.coral { background:var(--coral-soft); } .card.mint { background:var(--mint-soft); } .card.sky { background:var(--sky-soft); } .card.mustard { background:var(--mustard-soft); } .card.teal { background:var(--teal-soft); }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr)); gap:18px; }
+.grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap:14px; }
 .row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; } .between { justify-content:space-between; } .stack { display:grid; gap:10px; min-width:0; }
-.muted { color:var(--text-muted); font-size:var(--text-sm); }
-.h { font-size:var(--text-xl); font-weight:800; color:var(--accent-strong); } .h2 { font-size:var(--text-lg); font-weight:800; }
-.num { font-variant-numeric:tabular-nums; font-weight:800; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid transparent; border-radius:var(--radius-pill); padding:.45rem 1.2rem; min-height:44px; font-weight:800; background:var(--accent); color:var(--on-accent); }
-.btn:active { transform:scale(.97); } .btn.soft { background:var(--accent-soft); color:var(--accent-strong); }
-.btn.ghost { background:transparent; border-color:var(--border-strong); color:var(--text); } .btn.lg { min-height:56px; font-size:var(--text-lg); padding:.7rem 1.8rem; }
-.btn.sm { padding:.2rem .9rem; font-size:var(--text-sm); } .btn[disabled] { opacity:.6; cursor:not-allowed; }
-.chip { display:inline-flex; align-items:center; gap:4px; padding:.1rem .7rem; border-radius:var(--radius-pill); background:var(--info-soft); color:var(--info); font-size:var(--text-sm); font-weight:700; }
-.chip.pink { background:var(--accent-soft); color:var(--accent-strong); } .chip.mint { background:var(--success-soft); color:var(--success); }
-.chip.butter { background:var(--butter-soft); color:var(--butter-ink); } .chip.sky { background:var(--sky-soft); color:var(--sky-ink); } .chip.warn { background:var(--warn-soft); color:var(--warn); }
-.bar { height:12px; border-radius:var(--radius-pill); background:var(--bg-sunken); border:1px solid var(--border-strong); overflow:hidden; }
-.bar i { display:block; height:100%; background:var(--accent-gfx); border-radius:inherit; } .bar.ok i { background:var(--success); } .bar.lav i { background:var(--info); }
-.ring { position:relative; display:inline-grid; place-items:center; flex:none; } .ring svg { position:absolute; inset:0; width:100%; height:100%; } .ring b { position:relative; text-align:center; line-height:1.15; }
-kbd { display:inline-grid; place-items:center; min-width:2rem; height:2rem; padding:0 .55rem; border-radius:var(--radius-sm); background:var(--surface); border:2px solid var(--border-strong); border-bottom-width:4px; font:700 var(--text-sm) var(--font-ui); }
-.badge { width:52px; height:52px; flex:none; display:grid; place-items:center; border-radius:58% 42% 55% 45%/48% 56% 44% 52%; border:3px solid var(--ring,var(--accent-gfx)); background:var(--surface); color:var(--ink); }
-.badge svg { width:60%; height:60%; fill:none; stroke:currentColor; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; }
-.tile { display:grid; gap:8px; justify-items:start; text-align:left; border:1px solid var(--border-strong); background:var(--surface-2); border-radius:var(--radius); padding:14px; min-height:44px; }
-.field { display:grid; gap:4px; } .field label { font-weight:700; }
-.input,.select { min-height:44px; border:2px solid var(--border-strong); border-radius:var(--radius-sm); background:var(--surface); padding:.3rem .8rem; width:100%; }
-.search { display:flex; gap:8px; align-items:center; background:var(--surface); border:2px solid var(--border-strong); border-radius:var(--radius-pill); padding:4px 6px 4px 16px; min-height:48px; }
-.search input { flex:1; min-width:0; border:0; background:transparent; outline:none; min-height:40px; } .search:focus-within { box-shadow:var(--focus); }
+.muted { color:var(--muted); font-size:var(--t-sm); }
+.kick { font:500 var(--t-xs) var(--f-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.kick [lang=ja] { font:700 var(--t-sm)/1.2 var(--f-jp); letter-spacing:.1em; color:var(--coral-ink); text-transform:none; }
+.kick::after { content:""; flex:1; border-top:2px dashed var(--line); min-width:1.5rem; }
+.h { font:800 var(--t-xl)/1.2 var(--f-disp); letter-spacing:-.02em; }
+.h2 { font:800 var(--t-lg)/1.3 var(--f-disp); letter-spacing:-.01em; }
+.big-num { font:300 calc(3rem*var(--font-scale))/1 var(--f-mono); letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+.big-num small { font-size:.45em; color:var(--muted); letter-spacing:0; }
+.num { font-family:var(--f-mono); font-variant-numeric:tabular-nums; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid var(--ink); border-radius:var(--pill); padding:.45rem 1.25rem; min-height:44px; font-weight:800; background:var(--primary); color:var(--on-primary); box-shadow:var(--hard-sm); transition:transform .08s, box-shadow .08s; }
+.btn:active { transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+.btn.alt { background:var(--secondary); color:var(--on-secondary); }
+.btn.ghost { background:var(--card); color:var(--text); }
+.btn.lg { min-height:56px; font-size:var(--t-lg); padding:.6rem 1.7rem; }
+.btn.sm { padding:.15rem .9rem; font-size:var(--t-sm); box-shadow:none; }
+.btn[disabled] { opacity:.55; cursor:not-allowed; box-shadow:none; }
+.btn svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:9; stroke-linecap:round; stroke-linejoin:round; }
+.chip { display:inline-flex; align-items:center; gap:5px; padding:.05rem .65rem; border-radius:var(--pill); border:1.5px solid currentColor; font:700 var(--t-xs)/1.7 var(--f-ui); background:var(--teal-soft); color:var(--text); }
+.chip.coral { background:var(--coral-soft); color:var(--coral-ink); } .chip.mint { background:var(--mint-soft); color:var(--mint-ink); }
+.chip.sky { background:var(--sky-soft); color:var(--sky-ink); } .chip.mustard { background:var(--mustard-soft); color:var(--mustard-ink); }
+.bar { height:14px; border-radius:var(--pill); background:var(--paper-2); border:2px solid var(--ink); overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--bar); }
+.bar.mint i { background:var(--mint); } .bar.sky i { background:var(--sky); } .bar.mustard i { background:var(--mustard); }
+.stripes { background:repeating-linear-gradient(-45deg,var(--coral) 0 8px,var(--card) 8px 16px); }
+kbd { display:inline-grid; place-items:center; min-width:2.1rem; height:2.1rem; padding:0 .55rem; border-radius:var(--r-sm); background:var(--card); border:2px solid var(--ink); box-shadow:0 3px 0 var(--ink); font:500 var(--t-sm) var(--f-mono); }
+.badge { width:58px; height:58px; flex:none; position:relative; display:grid; place-items:center; }
+.badge::before { content:""; position:absolute; inset:0; border-radius:50%; background:var(--card); border:2px solid var(--ink); box-shadow:inset 0 0 0 5px var(--ring,var(--coral)), inset 0 0 0 7px var(--ink); }
+.badge svg { position:relative; width:46%; height:46%; fill:none; stroke:var(--ink); stroke-width:7; stroke-linecap:round; stroke-linejoin:round; }
+.tile { position:relative; display:grid; gap:6px; justify-items:start; text-align:left; border:2px solid var(--ink); background:var(--card); border-radius:var(--r); padding:16px; min-height:44px; box-shadow:var(--hard-sm); transition:transform .1s, box-shadow .1s; }
+.tile:hover { transform:translate(-1px,-1px); box-shadow:var(--hard); }
+.tile .idx { position:absolute; right:12px; top:10px; font:500 var(--t-xs) var(--f-mono); color:var(--muted); }
+.select { min-height:44px; border:2px solid var(--ink); border-radius:var(--r-sm); background:var(--card); padding:.3rem .8rem; width:100%; }
+.search { display:flex; gap:8px; align-items:center; background:var(--card); border:2px solid var(--ink); border-radius:var(--pill); padding:3px 4px 3px 14px; min-height:48px; }
+.search svg { width:20px; height:20px; flex:none; fill:none; stroke:var(--muted); stroke-width:9; stroke-linecap:round; }
+.search input { flex:1; min-width:0; border:0; background:transparent; outline:none; min-height:40px; }
+.search:focus-within { box-shadow:var(--focus); }
 .filters { display:flex; flex-wrap:wrap; gap:8px; }
-.fchip { border:2px solid var(--border-strong); background:var(--surface); border-radius:var(--radius-pill); min-height:40px; padding:0 .9rem; font-weight:700; }
-.fchip[aria-pressed=true] { background:var(--accent-soft); color:var(--accent-strong); border-color:var(--accent-gfx); }
-.list { display:grid; gap:0; margin:0; padding:0; list-style:none; } .list > li { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); min-height:56px; flex-wrap:wrap; } .list > li:last-child { border-bottom:0; }
-.list .grow { flex:1; min-width:10rem; display:grid; }
-.tabs { display:flex; gap:4px; border-bottom:2px solid var(--border); overflow-x:auto; }
-.tabs button { border:0; background:transparent; min-height:44px; padding:0 14px; font-weight:700; color:var(--text-muted); border-bottom:4px solid transparent; margin-bottom:-2px; }
-.tabs button[aria-selected=true] { color:var(--accent-strong); border-bottom-color:var(--accent-gfx); }
-.crumb { color:var(--text-muted); font-size:var(--text-sm); }
+.fchip { border:2px solid var(--ink); background:var(--card); border-radius:var(--pill); min-height:44px; padding:0 1rem; font-weight:700; }
+.fchip[aria-pressed=true] { background:var(--teal-soft); box-shadow:inset 0 -4px 0 var(--primary); }
+.fchip[aria-pressed=true]::before { content:"✓ "; }
+.list { display:grid; margin:0; padding:0; list-style:none; } .list > li { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:2px dashed var(--line); min-height:60px; flex-wrap:wrap; } .list > li:last-child { border-bottom:0; }
+.list .grow { flex:1; min-width:8rem; display:grid; }
+.tabs { display:flex; gap:6px; overflow-x:auto; padding:2px 2px 6px; }
+.tabs button { flex:none; border:2px solid var(--ink); background:var(--card); border-radius:var(--r-sm); min-height:44px; padding:0 16px; font-weight:700; }
+.tabs button[aria-selected=true] { background:var(--primary); color:var(--on-primary); }
+.ticket { position:relative; border:2px solid var(--ink); border-radius:var(--r); background:var(--card); padding:14px 22px; }
+.ticket::before,.ticket::after { content:""; position:absolute; top:50%; width:20px; height:20px; margin-top:-10px; border-radius:50%; background:var(--paper); border:2px solid var(--ink); }
+.ticket::before { left:-11px; clip-path:inset(0 0 0 50%); } .ticket::after { right:-11px; clip-path:inset(0 50% 0 0); }
+.vlabel { writing-mode:vertical-rl; font:500 var(--t-xs) var(--f-mono); letter-spacing:.25em; color:var(--muted); text-transform:uppercase; }
 
 /* states */
-.state { display:grid; justify-items:center; gap:10px; text-align:center; padding:32px 16px; border:2px dashed var(--border-strong); border-radius:var(--radius-lg); background:var(--surface-2); }
-.state p { max-width:38ch; color:var(--text-muted); }
-.alert { display:flex; gap:12px; padding:16px; border-radius:var(--radius); background:var(--warn-soft); border:2px solid var(--warn); }
-.alert .mk { flex:none; width:2rem; height:2rem; border-radius:50%; display:grid; place-items:center; font-weight:800; background:var(--warn); color:var(--bg); }
-.sk { display:grid; gap:10px; } .sk span { display:block; height:1rem; border-radius:99px; background:linear-gradient(90deg,var(--bg-sunken),var(--surface-2),var(--bg-sunken)); background-size:200% 100%; animation:sh 1.4s linear infinite; } .sk span.blk { height:5rem; border-radius:var(--radius); }
+.state { display:grid; justify-items:center; gap:12px; text-align:center; padding:36px 18px; border:2.5px dashed var(--ink); border-radius:var(--r-lg); background:var(--card); }
+.state p { max-width:38ch; color:var(--muted); }
+.alert { display:flex; gap:14px; padding:16px; border-radius:var(--r); background:var(--coral-soft); border:2px solid var(--ink); box-shadow:var(--hard-sm); }
+.alert .mk { flex:none; width:2.2rem; height:2.2rem; border-radius:50%; display:grid; place-items:center; font:800 1.1rem var(--f-disp); background:var(--coral); color:#10262b; border:2px solid var(--ink); }
+.alert.info { background:var(--sky-soft); } .alert.info .mk { background:var(--sky); } .alert.ok { background:var(--mint-soft); } .alert.ok .mk { background:var(--mint); }
+.sk { display:grid; gap:12px; } .sk span { display:block; height:1rem; border-radius:99px; border:2px solid var(--line); background:linear-gradient(90deg,var(--paper-2),var(--card),var(--paper-2)); background-size:200% 100%; animation:sh 1.4s linear infinite; } .sk span.blk { height:6rem; border-radius:var(--r); }
 @keyframes sh { to { background-position:-200% 0; } }
-.toast { position:sticky; bottom:12px; justify-self:center; background:var(--text); color:var(--bg); border-radius:var(--radius-pill); padding:.5rem 1.2rem; font-weight:700; }
+.toast { position:sticky; bottom:96px; justify-self:center; background:var(--ink); color:var(--paper); border-radius:var(--pill); padding:.55rem 1.3rem; font-weight:700; box-shadow:var(--hard-sm); z-index:3; }
+@media (min-width:880px) { .toast { bottom:16px; } }
 
 /* home */
-.hello { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-.week { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; text-align:center; } .week span { display:grid; place-items:center; aspect-ratio:1; min-width:2.2rem; border-radius:50%; background:var(--bg-sunken); color:var(--text-muted); font-size:var(--text-sm); font-weight:700; }
-.week span.done { background:var(--accent-gfx); color:#fff; } .week span.today { background:var(--surface); color:var(--accent-strong); border:3px solid var(--accent-gfx); }
-.cont { display:flex; gap:12px; align-items:center; } .thumb { width:64px; height:84px; flex:none; border-radius:var(--radius-sm); background:linear-gradient(160deg,var(--scene-a),var(--scene-b)); border:2px solid var(--ink); display:grid; place-items:center; } .thumb.wide { width:100px; height:64px; background:linear-gradient(160deg,var(--scene-b),var(--scene-c)); }
-.steps { display:flex; gap:6px; } .steps i { flex:1; height:8px; border-radius:99px; background:var(--bg-sunken); border:1px solid var(--border-strong); } .steps i.on { background:var(--accent-gfx); border-color:var(--accent-gfx); }
+.hero { display:grid; grid-template-columns:minmax(0,1fr); border:2.5px solid var(--ink); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--hard); background:linear-gradient(180deg,var(--sky-a),var(--sky-b)); }
+.hero .txt { padding:22px; display:grid; gap:12px; align-content:center; min-width:0; }
+.hero .art { display:grid; align-items:end; min-width:0; }
+.hero .art svg { width:100%; height:auto; display:block; }
+.hl { background:var(--mustard); color:#10262b; padding:0 .2em; border-radius:6px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+@media (min-width:640px) { .hero { grid-template-columns:1.05fr 1fr; } }
+.week { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; text-align:center; }
+.week span { display:grid; place-items:center; aspect-ratio:1; border-radius:50%; border:2px solid var(--ink); background:var(--card); font:500 var(--t-xs) var(--f-mono); }
+.week span.done { background:var(--coral); color:#10262b; } .week span.today { background:var(--mustard); color:#10262b; box-shadow:var(--hard-sm); }
+.cont { display:flex; gap:14px; align-items:center; }
+.cover { position:relative; border:2px solid var(--ink); border-radius:var(--r-sm); overflow:hidden; display:grid; place-items:center; background:var(--sky-soft); }
+.cover.m { width:72px; height:96px; flex:none; } .cover.v { width:112px; height:70px; flex:none; }
+.cover svg.scene { width:100%; height:100%; }
 
 /* srs */
-.srs-card { text-align:center; display:grid; gap:12px; justify-items:center; padding:28px 18px; min-height:300px; align-content:center; }
-.srs-word { font-size:calc(3.4rem*var(--font-scale)); line-height:1.5; }
-.grades { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr)); gap:8px; } .grades button { border:2px solid transparent; border-radius:var(--radius); min-height:64px; display:grid; place-items:center; font-weight:800; padding:6px; }
-.grades small { font-weight:700; } .g-again { background:var(--warn-soft); color:var(--warn); border-color:var(--warn)!important; } .g-hard { background:var(--butter-soft); color:var(--butter-ink); } .g-good { background:var(--success-soft); color:var(--success); } .g-easy { background:var(--sky-soft); color:var(--sky-ink); }
-.ex { background:var(--bg-sunken); border-radius:var(--radius); padding:10px 14px; text-align:left; width:100%; }
-.tools { display:flex; gap:6px; flex-wrap:wrap; }
+.deckhead { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:14px; align-items:center; }
+.srs-card { position:relative; text-align:center; display:grid; gap:14px; justify-items:center; padding:38px 18px 28px; min-height:320px; align-content:center; background:var(--card); border:2.5px solid var(--ink); border-radius:var(--r-lg); box-shadow:6px 6px 0 var(--ink); }
+.srs-card::before { content:""; position:absolute; inset:10px; border:2px dashed var(--line); border-radius:calc(var(--r-lg) - 8px); pointer-events:none; }
+.srs-card .corner { position:absolute; left:22px; top:16px; font:500 var(--t-xs) var(--f-mono); color:var(--muted); letter-spacing:.1em; }
+.srs-word { font:400 calc(3.6rem*var(--font-scale))/1.5 var(--f-jp-disp); }
+.grades { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,7.5rem),1fr)); gap:10px; }
+.grades button { border:2px solid var(--ink); border-radius:var(--r); min-height:76px; display:grid; place-items:center; font-weight:800; padding:6px; box-shadow:var(--hard-sm); color:var(--text); }
+.grades button:active { transform:translate(2px,2px); box-shadow:none; }
+.grades .k,.grades small { font:500 var(--t-xs) var(--f-mono); } .grades .k { color:var(--muted); }
+.g-again { background:var(--coral-soft); } .g-hard { background:var(--mustard-soft); } .g-good { background:var(--mint-soft); } .g-easy { background:var(--sky-soft); }
+.ex { background:var(--paper-2); border:2px solid var(--ink); border-radius:var(--r); padding:10px 14px; text-align:left; width:100%; }
+.ex .vi { font-family:var(--f-ui); line-height:1.4; }
+.tools { display:flex; gap:8px; flex-wrap:wrap; }
 
 /* dictionary */
-.sheet { border-radius:var(--radius-lg); background:var(--surface); border:2px solid var(--border-strong); box-shadow:var(--shadow); padding:16px; display:grid; gap:10px; min-width:0; }
-.word-big { font-size:calc(2.2rem*var(--font-scale)); } .gloss { margin:0; padding-left:1.2em; display:grid; gap:4px; }
-.kc { display:flex; gap:8px; flex-wrap:wrap; } .kc div { display:grid; place-items:center; width:4.2rem; padding:6px 0; border-radius:var(--radius-sm); background:var(--surface-2); border:1px solid var(--border-strong); font-size:.75rem; color:var(--text-muted); } .kc div b { font:700 1.8rem var(--font-jp); color:var(--text); line-height:1.3; }
-.word { cursor:pointer; border-radius:6px; border:0; background:transparent; padding:0 2px; font:inherit; color:inherit; min-height:1.9em; } .word:hover,.word.on { background:var(--butter-soft); color:var(--butter-ink); }
-.kv { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; } .kv dt { color:var(--text-muted); font-weight:700; } .kv dd { margin:0; }
+.sheet { border-radius:var(--r-lg); background:var(--card); border:2.5px solid var(--ink); box-shadow:var(--hard); padding:18px; display:grid; gap:12px; min-width:0; position:relative; }
+.sheet.bare { border:0; box-shadow:none; padding:0; }
+.sheet .tab { position:absolute; top:-2px; right:22px; background:var(--coral); border:2px solid var(--ink); border-top:0; border-radius:0 0 8px 8px; padding:0 10px 2px; font:700 var(--t-xs) var(--f-jp); color:#10262b; }
+.word-big { font:400 calc(2.4rem*var(--font-scale))/1.5 var(--f-jp-disp); }
+.gloss { margin:0; padding-left:1.4em; display:grid; gap:4px; } .gloss li::marker { font-family:var(--f-mono); color:var(--coral-ink); }
+.kc { display:flex; gap:10px; flex-wrap:wrap; } .kc div { display:grid; place-items:center; width:4.4rem; padding:6px 0 4px; border-radius:var(--r-sm); background:var(--paper-2); border:2px solid var(--ink); font:500 .7rem var(--f-mono); color:var(--muted); } .kc div b { font:400 1.8rem var(--f-jp-disp); color:var(--text); line-height:1.4; }
+.word { cursor:pointer; border-radius:6px; border:0; background:transparent; padding:0 2px; font:inherit; color:inherit; min-height:1.9em; text-decoration:underline dotted var(--muted); text-underline-offset:.35em; }
+.word:hover,.word.on { background:var(--mustard); color:#10262b; text-decoration:none; }
+.kv { display:grid; grid-template-columns:auto 1fr; gap:6px 16px; margin:0; } .kv dt { font:500 var(--t-xs)/2 var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); } .kv dd { margin:0; }
 
 /* kana */
 .kgrid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
-.kgrid button { position:relative; border:2px solid var(--border-strong); border-radius:var(--radius); min-height:4rem; background:var(--surface); display:grid; place-items:center; line-height:1; font-family:var(--font-jp); font-size:calc(1.6rem*var(--font-scale)); padding:6px 0; }
-.kgrid button small { font:700 .75rem var(--font-ui); color:var(--text-muted); } .kgrid button em { position:absolute; top:3px; right:6px; font-style:normal; font:700 .8rem var(--font-ui); }
-.kgrid .m3 { background:var(--success-soft); } .kgrid .m2 { background:var(--butter-soft); } .kgrid .m1 { background:var(--warn-soft); } .kgrid [aria-pressed=true] { box-shadow:0 0 0 4px var(--focus-ring); }
-.draw { aspect-ratio:1; width:min(100%,260px); margin:auto; border-radius:var(--radius); background:var(--panel); border:2px dashed var(--border-strong); position:relative; display:grid; place-items:center; }
-.draw::before,.draw::after { content:""; position:absolute; background:var(--border); } .draw::before { left:50%; top:6px; bottom:6px; width:1px; } .draw::after { top:50%; left:6px; right:6px; height:1px; }
-.draw > span { position:relative; z-index:1; font:500 calc(8rem*var(--font-scale))/1 var(--font-jp); color:var(--accent-gfx); opacity:.3; }
-.draw svg { position:absolute; inset:14%; z-index:2; fill:none; stroke:var(--accent-strong); stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
+.kgrid button { position:relative; border:2px solid var(--ink); border-radius:var(--r-sm); min-height:4.2rem; background:var(--card); display:grid; place-items:center; line-height:1; font-family:var(--f-jp); font-weight:700; font-size:calc(1.6rem*var(--font-scale)); padding:10px 0 6px; }
+.kgrid button small { font:500 .7rem var(--f-mono); color:var(--muted); } .kgrid button em { position:absolute; top:3px; left:6px; font:500 .72rem var(--f-mono); font-style:normal; }
+.kgrid .m3 { background:var(--mint-soft); } .kgrid .m2 { background:var(--mustard-soft); } .kgrid .m1 { background:var(--coral-soft); }
+.kgrid [aria-pressed=true] { background:var(--primary); color:var(--on-primary); box-shadow:var(--hard-sm); } .kgrid [aria-pressed=true] small,.kgrid [aria-pressed=true] em { color:inherit; }
+.draw { aspect-ratio:1; width:min(100%,270px); margin:auto; border-radius:var(--r); background:var(--card); border:2.5px solid var(--ink); position:relative; display:grid; place-items:center; box-shadow:var(--hard-sm); }
+.draw::before,.draw::after { content:""; position:absolute; border:0 dashed var(--coral); } .draw::before { left:50%; top:8px; bottom:8px; border-left-width:2px; } .draw::after { top:50%; left:8px; right:8px; border-top-width:2px; }
+.draw > span { position:relative; z-index:1; font:400 calc(8rem*var(--font-scale))/1 var(--f-jp-disp); color:var(--line); }
+.draw svg { position:absolute; inset:14%; z-index:2; fill:none; stroke:var(--ink); stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+.legend { display:flex; flex-wrap:wrap; gap:8px; }
 
 /* path */
-.unit { display:flex; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; } .unit:last-child { border-bottom:0; }
-.unit .st { width:2.4rem; height:2.4rem; flex:none; display:grid; place-items:center; border-radius:50%; font-weight:800; border:3px solid var(--border-strong); }
-.unit.done .st { background:var(--success-soft); color:var(--success); border-color:var(--success); } .unit.now .st { background:var(--accent-soft); color:var(--accent-strong); border-color:var(--accent-gfx); } .unit .grow { flex:1; min-width:10rem; display:grid; }
+.unit { display:grid; grid-template-columns:3rem minmax(0,1fr) auto; gap:14px; align-items:center; padding:14px 0; position:relative; }
+.unit::before { content:""; position:absolute; left:calc(1.5rem - 1px); top:0; bottom:0; border-left:3px dotted var(--ink); }
+.unit:first-child::before { top:50%; } .unit:last-child::before { bottom:50%; }
+.unit .st { position:relative; width:3rem; height:3rem; display:grid; place-items:center; border-radius:50%; font:500 var(--t-sm) var(--f-mono); border:2.5px solid var(--ink); background:var(--card); }
+.unit.done .st { background:var(--mint); color:#10262b; } .unit.now .st { background:var(--coral); color:#10262b; box-shadow:var(--hard-sm); } .unit .grow { min-width:0; display:grid; }
+@media (max-width:520px) { .unit { grid-template-columns:3rem minmax(0,1fr); } .unit > :last-child { grid-column:2; justify-self:start; } }
+.levels { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.levels > div { display:grid; gap:4px; text-align:center; border:2px solid var(--ink); border-radius:var(--r-sm); padding:10px 6px; background:var(--card); min-width:0; }
+.levels .cur { background:var(--mustard); color:#10262b; box-shadow:var(--hard-sm); }
+.levels b { font:300 var(--t-lg) var(--f-mono); } .levels .l { font:400 var(--t-md) var(--f-jp-disp); }
 
-/* library / reader / player */
-.cover { aspect-ratio:3/4; border-radius:var(--radius); border:2px solid var(--ink); background:linear-gradient(160deg,var(--scene-a),var(--scene-b)); display:grid; place-items:center; position:relative; }
-.cover.v { aspect-ratio:16/9; background:linear-gradient(160deg,var(--scene-b),var(--scene-c)); }
-.cover .tag { position:absolute; left:6px; top:6px; }
-.drop { border:3px dashed var(--border-strong); border-radius:var(--radius-lg); padding:22px; display:grid; gap:8px; justify-items:center; text-align:center; background:var(--surface-2); }
-.reader { background:var(--bg-sunken); border-radius:var(--radius); border:1px solid var(--border-strong); padding:14px; display:grid; gap:12px; justify-items:center; }
-.page { width:min(100%,380px); aspect-ratio:3/4.1; background:var(--panel); border:3px solid var(--ink); border-radius:6px; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1.2fr; gap:6px; padding:6px; position:relative; }
-.page .pn { border:2px solid var(--ink); border-radius:4px; background:linear-gradient(160deg,var(--scene-a),var(--scene-b)); position:relative; overflow:hidden; display:grid; place-items:center; } .page .pn.wide { grid-column:1 / 3; background:linear-gradient(160deg,var(--scene-b),var(--scene-c)); }
-.page .pn svg { width:70%; height:70%; fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
-.bubble { position:absolute; background:var(--surface); color:var(--text); border:2px solid var(--ink); border-radius:50%/40%; padding:6px 12px; font-size:calc(.95rem*var(--font-scale)); line-height:1.7; box-shadow:var(--shadow); max-width:80%; text-align:center; }
-.toolbar { display:flex; align-items:center; gap:10px; width:100%; flex-wrap:wrap; } .toolbar input[type=range],.pctl input[type=range] { flex:1; min-width:120px; accent-color:var(--accent-gfx); min-height:44px; }
-.player { border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-strong); background:var(--bg-sunken); }
-.video { aspect-ratio:16/9; position:relative; background:linear-gradient(180deg,var(--scene-b),var(--scene-a) 60%,var(--scene-c)); display:grid; place-items:end center; padding:10px; }
-.video .moon { position:absolute; top:12%; right:14%; width:14%; aspect-ratio:1; border-radius:50%; background:var(--butter-100); border:3px solid var(--ink); } .video .ground { position:absolute; left:0; right:0; bottom:0; height:22%; background:var(--ink); opacity:.85; border-radius:50% 50% 0 0/100% 100% 0 0; }
-.video .cat { position:absolute; left:50%; bottom:18%; transform:translateX(-50%); width:18%; }
-.subs { position:relative; z-index:2; text-align:center; background:var(--sub-bg); color:#fff; border-radius:var(--radius-sm); padding:4px 14px; font-size:calc(1.15rem*var(--font-scale)); max-width:94%; }
-.subs ruby rt { color:#ffd9e6; } .subs .vi { display:block; font:600 calc(.9rem*var(--font-scale))/1.4 var(--font-ui); color:#f0e6f4; } .subs .word:hover,.subs .word.on { background:rgba(255,255,255,.28); color:#fff; }
-.pctl { display:flex; align-items:center; gap:8px; padding:10px 12px; flex-wrap:wrap; background:var(--surface); }
-.tr { display:grid; gap:2px; max-height:240px; overflow-y:auto; } .tr button { text-align:left; border:0; background:transparent; border-radius:var(--radius-sm); padding:6px 10px; min-height:44px; display:grid; grid-template-columns:3.6rem 1fr; gap:8px; align-items:center; } .tr button[aria-current=true] { background:var(--accent-soft); } .tr time { color:var(--text-muted); font-size:var(--text-sm); font-variant-numeric:tabular-nums; }
+/* library, reader, player */
+.drop { border:2.5px dashed var(--ink); border-radius:var(--r-lg); padding:24px; display:grid; gap:10px; justify-items:center; text-align:center; background:var(--card); }
+.shelf { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,10.5rem),1fr)); gap:18px; }
+.item .cover { aspect-ratio:3/4; width:100%; box-shadow:var(--hard-sm); }
+.item .cover.v { aspect-ratio:16/10; height:auto; }
+.item .tag { position:absolute; left:6px; top:6px; z-index:1; }
+.reader { background:var(--paper-2); border-radius:var(--r-lg); border:2.5px solid var(--ink); padding:16px; display:grid; gap:12px; justify-items:center; }
+.page { width:min(100%,380px); aspect-ratio:3/4.1; background:#fffdf8; border:3px solid #0f3640; border-radius:4px; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1.2fr; gap:6px; padding:6px; box-shadow:var(--hard); color:#0f3640; }
+.page .pn { border:2.5px solid #0f3640; position:relative; overflow:hidden; display:grid; place-items:center; background:#dcecf8; }
+.page .pn.b { background:repeating-linear-gradient(0deg,#fbdad0 0 6px,#fffdf8 6px 12px); } .page .pn.wide { grid-column:1 / 3; background:#fdf0c4; }
+.page .pn svg { width:72%; height:72%; fill:none; stroke:#0f3640; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+.bubble { position:absolute; background:#fffdf8; color:#0f3640; border:2.5px solid #0f3640; border-radius:50%/42%; padding:6px 12px; font-size:calc(.95rem*var(--font-scale)); line-height:1.7; max-width:82%; text-align:center; }
+.bubble rt { color:#4a5f63; } .bubble .word { text-decoration-color:#4a5f63; }
+.toolbar { display:flex; align-items:center; gap:10px; width:100%; flex-wrap:wrap; }
+input[type=range] { accent-color:var(--primary); min-height:44px; }
+.toolbar input[type=range],.pctl input[type=range] { flex:1; min-width:120px; }
+.player { border-radius:var(--r-lg); overflow:hidden; border:2.5px solid var(--ink); background:var(--card); box-shadow:var(--hard); }
+.video { aspect-ratio:16/9; position:relative; display:grid; place-items:end center; padding:12px; background:#16304a; overflow:hidden; }
+.video svg.scene { position:absolute; inset:0; width:100%; height:100%; }
+.subs { position:relative; z-index:2; text-align:center; background:var(--sub-bg); color:#fff; border-radius:var(--r-sm); padding:4px 16px 6px; font-size:calc(1.15rem*var(--font-scale)); max-width:94%; }
+.subs ruby rt { color:#ffe08a; } .subs .vi { display:block; font:600 calc(.9rem*var(--font-scale))/1.4 var(--f-ui); color:#f3eee6; }
+.subs .word { text-decoration-color:rgba(255,255,255,.55); } .subs .word:hover,.subs .word.on { background:#ffd35a; color:#10262b; }
+.pctl { display:flex; align-items:center; gap:8px; padding:10px 14px; flex-wrap:wrap; border-top:2px solid var(--ink); }
+.tr { display:grid; gap:4px; max-height:260px; overflow-y:auto; padding:2px; }
+.tr button { text-align:left; border:2px solid transparent; background:transparent; border-radius:var(--r-sm); padding:6px 10px; min-height:48px; display:grid; grid-template-columns:3.6rem minmax(0,1fr); gap:8px; align-items:center; }
+.tr button[aria-current=true] { background:var(--mustard-soft); border-color:var(--ink); } .tr time { color:var(--muted); font:500 var(--t-xs) var(--f-mono); }
 
 /* progress */
-.path5 { display:grid; grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr)); gap:8px; } .path5 > div { text-align:center; padding:10px 4px; border-radius:var(--radius); background:var(--surface); border:1px solid var(--border-strong); display:grid; gap:4px; } .path5 .cur { border:3px solid var(--accent-gfx); background:var(--accent-soft); } .path5 b { font-size:var(--text-lg); }
-.bars { display:flex; align-items:flex-end; gap:8px; height:150px; padding-top:8px; } .bars div { flex:1; display:grid; justify-items:center; align-content:end; gap:4px; height:100%; font-size:var(--text-sm); color:var(--text-muted); } .bars i { width:100%; max-width:34px; background:var(--accent-gfx); border-radius:8px 8px 3px 3px; min-height:4px; } .bars div.today i { background:var(--info); }
-.heat { display:grid; grid-template-columns:repeat(13,1fr); grid-auto-flow:column; grid-template-rows:repeat(7,1fr); gap:3px; } .heat i { aspect-ratio:1; border-radius:3px; background:var(--bg-sunken); border:1px solid var(--border); } .heat .l1 { background:var(--accent-soft); } .heat .l2 { background:var(--sakura-300); } .heat .l3 { background:var(--accent-gfx); border-color:var(--accent-gfx); }
-.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,8.5rem),1fr)); gap:10px; } .stats .flat { display:grid; gap:2px; } .stats .big { font-size:var(--text-xl); font-weight:800; font-variant-numeric:tabular-nums; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr)); gap:14px; }
+.stat { border:2px solid var(--ink); border-radius:var(--r); padding:14px; background:var(--card); display:grid; gap:4px; box-shadow:var(--hard-sm); }
+.stat .big-num { font-size:calc(2.4rem*var(--font-scale)); }
+.bars { display:flex; align-items:flex-end; gap:10px; height:170px; padding:8px 4px 0; border-bottom:2px solid var(--ink); background:repeating-linear-gradient(0deg,transparent 0 41px,var(--line) 41px 42px); }
+.bars div { flex:1; display:grid; justify-items:center; align-content:end; gap:4px; height:100%; }
+.bars i { width:100%; max-width:36px; background:var(--coral); border:2px solid var(--ink); border-bottom:0; border-radius:8px 8px 0 0; }
+.bars div.today i { background:var(--mustard); } .bars .v { font:500 var(--t-xs) var(--f-mono); }
+.days { display:flex; gap:10px; padding:4px 4px 0; } .days span { flex:1; text-align:center; font:500 var(--t-xs) var(--f-mono); color:var(--muted); }
+.heat { display:grid; grid-template-columns:repeat(13,minmax(0,1fr)); grid-auto-flow:column; grid-template-rows:repeat(7,1fr); gap:4px; }
+.heat i,.key i { aspect-ratio:1; border-radius:4px; background:var(--paper-2); border:1.5px solid var(--line); }
+.heat .l1,.key .l1 { background:var(--mint-soft); border-color:var(--mint); } .heat .l2,.key .l2 { background:var(--mint); border-color:var(--ink); } .heat .l3,.key .l3 { background:var(--teal); border-color:var(--ink); }
+.key { display:flex; align-items:center; gap:4px; font-size:var(--t-xs); color:var(--muted); } .key i { width:14px; }
 
-/* settings + keys */
-.setrow { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:56px; padding:6px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; } .setrow:last-child { border-bottom:0; } .setrow > div:first-child { min-width:10rem; flex:1; display:grid; }
-.sw { position:relative; flex:none; width:56px; height:44px; border-radius:var(--radius-pill); background:transparent; border:0; padding:0; }
-.sw::before { content:""; position:absolute; left:2px; right:2px; top:7px; bottom:7px; border-radius:var(--radius-pill); background:var(--bg-sunken); border:2px solid var(--border-strong); }
-.sw::after { content:""; position:absolute; top:12px; left:8px; width:20px; height:20px; border-radius:50%; background:var(--text); transition:transform .2s; }
-.sw[aria-checked=true]::before { background:var(--accent-soft); border-color:var(--accent-gfx); } .sw[aria-checked=true]::after { transform:translateX(20px); background:var(--accent-strong); }
-.keyrow { display:flex; justify-content:space-between; align-items:center; gap:10px; min-height:56px; border-bottom:1px solid var(--border); flex-wrap:wrap; padding:6px 0; } .keyrow:last-child { border-bottom:0; } .keyrow .kk { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
-.keyrow.listen { background:var(--butter-soft); border-radius:var(--radius-sm); padding-inline:10px; } .keyrow.clash { background:var(--warn-soft); border-radius:var(--radius-sm); padding-inline:10px; }
-table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); font-size:var(--text-sm); } th { color:var(--text-muted); } .scroll-x { overflow-x:auto; }
+/* settings & keys */
+.setrow { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:60px; padding:8px 0; border-bottom:2px dashed var(--line); flex-wrap:wrap; } .setrow:last-child { border-bottom:0; }
+.setrow > div:first-child { min-width:10rem; flex:1; display:grid; }
+.sw { position:relative; flex:none; width:60px; height:44px; border-radius:var(--pill); background:transparent; border:0; padding:0; }
+.sw::before { content:""; position:absolute; left:2px; right:2px; top:6px; bottom:6px; border-radius:var(--pill); background:var(--paper-2); border:2px solid var(--ink); }
+.sw::after { content:"✕"; position:absolute; top:11px; left:8px; width:22px; height:22px; border-radius:50%; background:var(--card); border:2px solid var(--ink); font:800 11px/18px var(--f-ui); text-align:center; color:var(--muted); transition:transform .15s; }
+.sw[aria-checked=true]::before { background:var(--mint); } .sw[aria-checked=true]::after { content:"✓"; transform:translateX(22px); color:var(--mint-ink); }
+.keyrow { display:flex; justify-content:space-between; align-items:center; gap:10px; min-height:58px; border-bottom:2px dashed var(--line); flex-wrap:wrap; padding:6px 0; } .keyrow:last-child { border-bottom:0; }
+.keyrow .kk { display:flex; gap:6px; align-items:center; flex-wrap:wrap; } .keyrow.listen { background:var(--mustard-soft); border-radius:var(--r-sm); padding-inline:10px; }
+table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding:10px; border-bottom:2px dashed var(--line); font-size:var(--t-sm); } th { font:500 var(--t-xs) var(--f-mono); text-transform:uppercase; letter-spacing:.08em; color:var(--muted); } .scroll-x { overflow-x:auto; }
+.steps { display:flex; gap:6px; } .steps i { flex:1; height:12px; border-radius:99px; border:2px solid var(--ink); background:var(--card); } .steps i.on { background:var(--coral); }
+.opt { display:flex; gap:12px; align-items:center; border:2px solid var(--ink); border-radius:var(--r); padding:12px 14px; background:var(--card); cursor:pointer; min-height:64px; }
+.opt:has(input:checked) { background:var(--mustard-soft); box-shadow:var(--hard-sm); }
+.opt input { width:1.4rem; height:1.4rem; accent-color:var(--primary); flex:none; }
 </style>
 
 <a class="skip" href="#main">Bỏ qua tới nội dung chính</a>
 <header class="studio">
   <div class="studio-top">
-    <div><div class="name">Yomineko · Màn hình thiết kế</div><span class="muted">Bấm thử mọi nút. Chuyển Sáng/Tối, đổi trạng thái, phóng chữ lên 200% để kiểm tra.</span></div>
+    <div><div class="name">Yomineko <span lang="ja">読み猫</span> · màn hình thiết kế</div><span class="muted">Bấm thử mọi nút. Đổi Ngày/Đêm, trạng thái và cỡ chữ để kiểm tra.</span></div>
     <div class="ctl" id="ctl"></div>
   </div>
   <nav class="picker" id="picker" aria-label="Chọn màn hình để xem"></nav>
 </header>
 <div class="app">
-  <nav class="rail" id="rail" aria-label="Điều hướng chính"></nav>
-  <main class="screen" id="main"></main>
+  <nav class="side" id="side" aria-label="Điều hướng chính"></nav>
+  <div class="col">
+    <div class="top" id="top"></div>
+    <main class="screen" id="main"></main>
+    <nav class="tabbar" id="tabbar" aria-label="Điều hướng chính trên điện thoại"></nav>
+  </div>
 </div>
 <div class="sr" role="status" aria-live="polite" aria-atomic="true" id="live"></div>
 
@@ -216,10 +331,10 @@ table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding
   var root = document.documentElement;
   var st = { theme: 'system', furigana: true, vertical: false, contrast: false, motion: false, scale: 100, view: 'normal',
     revealed: false, popup: 'cat', kanaSel: 0, kana: 'hira', sub: true, subVi: true, line: 1, playing: false, bind: null, clash: false,
-    dtab: 'nghia', filt: { common: true, n5: false, verb: false }, setTab: 'hien-thi', step: 1, mode: 'single', undo: false, toast: '', keyPrimed: false };
+    dtab: 'nghia', filt: { common: true, n5: false, verb: false }, setTab: 'hien-thi', step: 1, mode: 'single', undo: false, toast: '', lib: 'all', xaudio: true, xwrite: true };
   var KEYS = ['theme', 'furigana', 'vertical', 'contrast', 'motion', 'scale'];
-  function save() { try { var o = {}; KEYS.forEach(function (k) { o[k] = st[k]; }); localStorage.setItem('yomineko.demo2', JSON.stringify(o)); } catch (e) {} }
-  try { var s0 = JSON.parse(localStorage.getItem('yomineko.demo2') || '{}'); KEYS.forEach(function (k) { if (k in s0) st[k] = s0[k]; }); } catch (e) {}
+  function save() { try { var o = {}; KEYS.forEach(function (k) { o[k] = st[k]; }); localStorage.setItem('yomineko.demo3', JSON.stringify(o)); } catch (e) {} }
+  try { var s0 = JSON.parse(localStorage.getItem('yomineko.demo3') || '{}'); KEYS.forEach(function (k) { if (k in s0) st[k] = s0[k]; }); } catch (e) {}
   function apply() {
     if (st.theme === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', st.theme);
     root.dataset.furigana = st.furigana ? 'on' : 'off'; root.dataset.vertical = st.vertical ? 'on' : 'off';
@@ -229,192 +344,229 @@ table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding
   function say(t) { var l = document.getElementById('live'); l.textContent = ''; setTimeout(function () { l.textContent = t; }, 30); }
 
   var I = {
-    home: 'M15 48 50 18l35 30M24 42v38h52V42M42 80V58h16v22', cards: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18',
+    home: 'M15 48 50 18l35 30M24 42v38h52V42M42 80V58h16v22', cards: 'M22 30h56v44H22zM30 20h40M36 46h28M36 58h16',
     book: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50', kana: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0',
-    manga: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30', anime: 'M20 28h60v44H20zM42 40l20 10-20 10z', chart: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26',
-    gear: 'M50 34a16 16 0 100 32 16 16 0 000-32zM50 14v12M50 74v12M14 50h12M74 50h12M25 25l8 8M67 67l8 8M75 25l-8 8M33 67l-8 8', key: 'M12 30h76v40H12zM24 42h6M38 42h6M52 42h6M66 42h6M30 58h40',
-    lib: 'M22 22h14v56H22zM42 22h14v56H42zM62 28l14-4 10 52-14 4z', pack: 'M50 14 84 30v40L50 86 16 70V30zM16 30l34 16 34-16M50 46v40', path: 'M20 80c0-20 30-10 30-30S80 50 80 20M20 80h0M80 20h0', more: 'M24 50h0M50 50h0M76 50h0'
+    lib: 'M22 22h14v56H22zM42 22h14v56H42zM62 28l14-4 10 52-14 4z', chart: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26',
+    gear: 'M50 36a14 14 0 100 28 14 14 0 000-28zM50 14v12M50 74v12M14 50h12M74 50h12M25 25l8 8M67 67l8 8M75 25l-8 8M33 67l-8 8', key: 'M12 30h76v40H12zM24 42h6M38 42h6M52 42h6M66 42h6M30 58h40',
+    pack: 'M50 14 84 30v40L50 86 16 70V30zM16 30l34 16 34-16M50 46v40', path: 'M22 80c0-22 28-12 28-30S78 50 78 22', more: 'M22 50h1M50 50h1M78 50h1',
+    flame: 'M50 12c6 18 26 26 26 48a26 26 0 01-52 0c0-14 10-20 12-32 6 6 8 12 8 18 6-8 8-20 6-34z', search: 'M44 20a24 24 0 100 48 24 24 0 000-48zM62 62l18 18',
+    play: 'M34 24v52l40-26z', sound: 'M18 40h14l18-14v48L32 60H18zM64 36c6 8 6 20 0 28M74 28c10 12 10 32 0 44', plus: 'M50 22v56M22 50h56'
   };
   function ico(n) { return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="' + I[n] + '"/></svg>'; }
   function badge(n, c) { return '<span class="badge" style="--ring:var(--' + c + ')">' + ico(n) + '</span>'; }
   function r(b, t) { return '<ruby>' + b + '<rt>' + t + '</rt></ruby>'; }
-  function ring(v, size, inner, label) { var c = 2 * Math.PI * 42; return '<span class="ring" style="width:' + size + 'px;height:' + size + 'px" role="img" aria-label="' + label + ': ' + Math.round(v * 100) + ' phần trăm"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" fill="none" stroke="var(--accent-soft)" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--accent-gfx)" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + c * (1 - v) + '" transform="rotate(-90 50 50)"/></svg><b aria-hidden="true">' + inner + '</b></span>'; }
-  function mochi(sz, mood) {
-    var eyes = mood === 'cheer' ? '<path d="M42 70Q50 60 58 70M70 70Q78 60 86 70" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>' : mood === 'sleepy' ? '<path d="M42 68Q50 74 58 68M70 68Q78 74 86 68" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>' : '<circle cx="50" cy="68" r="5" fill="var(--ink)"/><circle cx="78" cy="68" r="5" fill="var(--ink)"/>';
-    return '<svg viewBox="0 0 128 128" width="' + sz + '" height="' + sz + '" aria-hidden="true"><path d="M30 52 34 22 54 38Q64 36 74 38L94 22 98 52Q104 62 102 76 98 100 64 102 30 100 26 76 24 62 30 52Z" fill="#fffaf5" stroke="#e58aa5" stroke-width="4" stroke-linejoin="round"/><path d="M38 34 48 42 40 48ZM90 34 80 42 88 48Z" fill="#ffb8c9" opacity=".8"/>' + eyes + '<path d="M60 80Q64 85 68 80" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/><circle cx="40" cy="80" r="6" fill="#ffb8c9" opacity=".7"/><circle cx="88" cy="80" r="6" fill="#ffb8c9" opacity=".7"/></svg>';
-  }
-  function sw(id, on, label, hint) { return '<div class="setrow"><div><strong id="l-' + id + '">' + label + '</strong><span class="muted">' + hint + '</span></div><button class="sw" role="switch" aria-labelledby="l-' + id + '" aria-checked="' + on + '" data-toggle="' + id + '"></button></div>'; }
-  function seg(label, name, opts, cur) { return '<div class="mini-seg" role="radiogroup" aria-label="' + label + '">' + opts.map(function (o) { return '<button role="radio" tabindex="' + (o[0] === cur ? 0 : -1) + '" aria-checked="' + (o[0] === cur) + '" data-seg="' + name + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>'; }
-  function tabs(label, name, opts, cur) { return '<div class="tabs" role="tablist" aria-label="' + label + '">' + opts.map(function (o) { return '<button role="tab" tabindex="' + (o[0] === cur ? 0 : -1) + '" aria-selected="' + (o[0] === cur) + '" data-tab="' + name + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>'; }
-  function h1(t, sub) { return '<div class="stack" style="gap:2px"><h1 class="h" id="h1" tabindex="-1">' + t + '</h1>' + (sub ? '<p class="muted">' + sub + '</p>' : '') + '</div>'; }
-  function go_(id, label, cls) { return '<button class="btn ' + (cls || '') + '" data-go="' + id + '">' + label + '</button>'; }
+  function kick(jp, vi) { return '<div class="kick"><span lang="ja">' + jp + '</span>' + vi + '</div>'; }
+  function pad(n) { return ('00' + n).slice(-3); }
 
-  /* ---- state views (empty / loading / error), used by every data screen ---- */
+  /* Mochi: original white cat, flat print style with an ink outline (fixed colours: Mochi is white in both themes) */
+  function mochiBody(mood) {
+    var eyes = mood === 'cheer' ? '<path d="M40 64q7-8 14 0M74 64q7-8 14 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round"/>' : mood === 'sleepy' ? '<path d="M40 62q7 6 14 0M74 62q7 6 14 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round"/>' : '<ellipse cx="47" cy="62" rx="5" ry="6" fill="#0f3640"/><ellipse cx="81" cy="62" rx="5" ry="6" fill="#0f3640"/><circle cx="49" cy="60" r="1.6" fill="#fff"/><circle cx="83" cy="60" r="1.6" fill="#fff"/>';
+    return '<path d="M22 50 26 12 52 32Q64 29 76 32L102 12 106 50Q114 64 110 80 102 104 64 104 26 104 18 80 14 64 22 50Z" fill="#fffdf8" stroke="#0f3640" stroke-width="4" stroke-linejoin="round"/><path d="M31 24 46 36 34 42ZM97 24 82 36 94 42Z" fill="#f4b6c2"/>' + eyes + '<path d="M58 74q6 6 12 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round"/><ellipse cx="36" cy="76" rx="8" ry="5" fill="#f4b6c2"/><ellipse cx="92" cy="76" rx="8" ry="5" fill="#f4b6c2"/><path d="M8 70h16M10 82l14-5M120 70h-16M118 82l-14-5" stroke="#0f3640" stroke-width="3" stroke-linecap="round"/>';
+  }
+  function mochi(sz, mood) { return '<svg viewBox="0 0 128 112" width="' + sz + '" height="' + Math.round(sz * .875) + '" aria-hidden="true">' + mochiBody(mood) + '</svg>'; }
+  /* Hero: original shopfront with Mochi in the window */
+  function shopfront() {
+    return '<svg viewBox="0 0 400 240" aria-hidden="true">' +
+      '<circle cx="330" cy="56" r="32" fill="var(--coral)" stroke="var(--ink)" stroke-width="3"/>' +
+      '<path d="M22 74q12-14 28-5 10-14 28-6 16 1 17 15H22z" fill="var(--card)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>' +
+      '<rect x="70" y="58" width="240" height="182" fill="#fffaf1" stroke="#0f3640" stroke-width="3.5"/>' +
+      '<rect x="92" y="70" width="196" height="40" rx="6" fill="#0f4350" stroke="#0f3640" stroke-width="3"/>' +
+      '<text x="190" y="99" text-anchor="middle" font-family="Dela Gothic One, Zen Maru Gothic, sans-serif" font-size="23" fill="#fffaf1" letter-spacing="4">よみねこ書店</text>' +
+      '<path d="M62 118h256l-12 26H74z" fill="#fffaf1"/>' +
+      '<path d="M78 118h22l-4 26H84zM122 118h22l-3 26h-15zM166 118h22l-1 26h-19zM210 118h22l1 26h-19zM254 118h22l3 26h-19zM298 118h20l-10 26h-12z" fill="#ee7d6c"/>' +
+      '<path d="M62 118h256l-12 26H74z" fill="none" stroke="#0f3640" stroke-width="3" stroke-linejoin="round"/>' +
+      '<rect x="92" y="156" width="112" height="70" rx="4" fill="#dcecf8" stroke="#0f3640" stroke-width="3"/>' +
+      '<g transform="translate(118 168) scale(.47)">' + mochiBody('happy') + '</g>' +
+      '<path d="M92 210h112" stroke="#0f3640" stroke-width="3"/><rect x="104" y="196" width="16" height="14" fill="#f6c93a" stroke="#0f3640" stroke-width="2"/><rect x="172" y="192" width="20" height="18" fill="#6dae94" stroke="#0f3640" stroke-width="2"/>' +
+      '<rect x="220" y="152" width="70" height="88" rx="4" fill="#6dae94" stroke="#0f3640" stroke-width="3"/><circle cx="278" cy="200" r="4" fill="#0f3640"/>' +
+      '<rect x="228" y="162" width="54" height="26" rx="3" fill="#fdf0c4" stroke="#0f3640" stroke-width="2.5"/><text x="255" y="180" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="#0f3640">OPEN</text>' +
+      '<rect x="14" y="236" width="372" height="4" fill="var(--ink)"/>' +
+      '<rect x="326" y="210" width="34" height="26" rx="3" fill="#ee7d6c" stroke="#0f3640" stroke-width="3"/><path d="M343 210v-26M343 196q-14-2-16-14 14 0 16 14M343 190q14-2 16-14-14 0-16 14" fill="#6dae94" stroke="#0f3640" stroke-width="3" stroke-linejoin="round"/>' +
+      '<g fill="#f4b6c2" stroke="#0f3640" stroke-width="1.5"><circle cx="40" cy="160" r="5"/><circle cx="366" cy="128" r="4"/><circle cx="26" cy="204" r="3.5"/></g></svg>';
+  }
+  function night() {
+    return '<svg class="scene" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="180" fill="#16304a"/><circle cx="252" cy="40" r="20" fill="#ffd35a" stroke="#0a1f25" stroke-width="3"/>' +
+      '<g fill="#fbf3e6"><circle cx="40" cy="30" r="1.5"/><circle cx="90" cy="18" r="1.2"/><circle cx="150" cy="40" r="1.5"/><circle cx="200" cy="22" r="1.2"/><circle cx="296" cy="80" r="1.2"/></g>' +
+      '<path d="M0 120h40V80h30v20h24V50h40v70h30V90h36v40h40V70h30v50h50v60H0z" fill="#0f4350" stroke="#0a1f25" stroke-width="3"/>' +
+      '<g fill="#ffd35a"><rect x="102" y="62" width="8" height="10"/><rect x="118" y="62" width="8" height="10"/><rect x="102" y="82" width="8" height="10"/><rect x="250" y="80" width="8" height="10"/><rect x="266" y="96" width="8" height="10"/><rect x="48" y="94" width="8" height="10"/></g>' +
+      '<rect x="174" y="98" width="36" height="14" rx="3" fill="#ff8b76" stroke="#0a1f25" stroke-width="2"/><path d="M0 150h320v30H0z" fill="#0a1f25"/></svg>';
+  }
+  function panelCat() { return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M24 44 28 16 46 30Q50 29 54 30L72 16 76 44Q82 54 80 66 76 84 50 86 24 84 20 66 18 54 24 44Z" fill="#fffdf8"/><ellipse cx="40" cy="58" rx="3" ry="4" fill="#0f3640"/><ellipse cx="62" cy="58" rx="3" ry="4" fill="#0f3640"/><path d="M46 68Q50 72 54 68"/></svg>'; }
+
+  function sw(id, on, label, hint) { return '<div class="setrow"><div><strong id="l-' + id + '">' + label + '</strong><span class="muted">' + hint + '</span></div><button class="sw" role="switch" aria-labelledby="l-' + id + '" aria-checked="' + on + '" data-toggle="' + id + '"></button></div>'; }
+  function seg(label, name, opts, cur) { return '<div class="seg" role="radiogroup" aria-label="' + label + '">' + opts.map(function (o) { return '<button role="radio" tabindex="' + (o[0] === cur ? 0 : -1) + '" aria-checked="' + (o[0] === cur) + '" data-seg="' + name + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>'; }
+  function tabs(label, name, opts, cur) { return '<div class="tabs" role="tablist" aria-label="' + label + '">' + opts.map(function (o) { return '<button role="tab" tabindex="' + (o[0] === cur ? 0 : -1) + '" aria-selected="' + (o[0] === cur) + '" data-tab="' + name + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>'; }
+  function h1(jp, t, sub) { return '<div class="stack" style="gap:4px">' + (jp ? '<span class="kick"><span lang="ja">' + jp + '</span></span>' : '') + '<h1 class="h" id="h1" tabindex="-1">' + t + '</h1>' + (sub ? '<p class="muted">' + sub + '</p>' : '') + '</div>'; }
+  function go_(id, label, cls) { return '<button class="btn ' + (cls || '') + '" data-go="' + id + '">' + label + '</button>'; }
+  function bar(v, label, cls) { return '<div class="bar ' + (cls || '') + '" role="progressbar" aria-label="' + label + '" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + v + '%"></i></div>'; }
+
   function skeleton(kind) {
-    if (kind === 'grid') return '<div class="sk grid3" role="status" aria-busy="true" aria-label="Đang tải">' + [1,2,3,4,5,6].map(function () { return '<span class="blk" style="height:9rem"></span>'; }).join('') + '</div>';
+    if (kind === 'grid') return '<div class="sk grid3" role="status" aria-busy="true" aria-label="Đang tải">' + [1,2,3,4,5,6].map(function () { return '<span class="blk" style="height:10rem"></span>'; }).join('') + '</div>';
     return '<div class="sk" role="status" aria-busy="true" aria-label="Đang tải"><span class="blk"></span><span style="width:90%"></span><span style="width:70%"></span><span class="blk"></span><span style="width:50%"></span></div><p class="muted">Đang tải… dữ liệu nằm trong máy nên thường chỉ mất vài giây.</p>';
   }
   function stateView(cfg) {
     if (st.view === 'loading') return skeleton(cfg.skel);
-    if (st.view === 'error') return '<div class="alert" role="alert"><span class="mk" aria-hidden="true">!</span><div class="stack"><strong>' + cfg.err[0] + '</strong><p>' + cfg.err[1] + '</p><details><summary style="min-height:44px;display:flex;align-items:center;cursor:pointer">Chi tiết kỹ thuật</summary><code style="overflow-wrap:anywhere">' + cfg.err[2] + '</code></details><div class="row"><button class="btn" data-act="retry">Thử lại</button>' + (cfg.errAlt ? '<button class="btn ghost" data-go="' + cfg.errAlt[0] + '">' + cfg.errAlt[1] + '</button>' : '') + '</div></div></div>';
-    return '<section class="state" aria-labelledby="es">' + mochi(96, 'sleepy') + '<h2 class="h2" id="es">' + cfg.empty[0] + '</h2><p>' + cfg.empty[1] + '</p><div class="row" style="justify-content:center">' + cfg.empty[2] + '</div></section>';
+    if (st.view === 'error') return '<div class="alert" role="alert"><span class="mk" aria-hidden="true">!</span><div class="stack"><strong>' + cfg.err[0] + '</strong><p>' + cfg.err[1] + '</p><details><summary style="min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:700">Chi tiết kỹ thuật</summary><code class="num" style="overflow-wrap:anywhere">' + cfg.err[2] + '</code></details><div class="row"><button class="btn" data-act="retry">Thử lại</button>' + (cfg.errAlt ? '<button class="btn ghost" data-go="' + cfg.errAlt[0] + '">' + cfg.errAlt[1] + '</button>' : '') + '</div></div></div>';
+    return '<section class="state" aria-labelledby="es">' + mochi(110, 'sleepy') + '<h2 class="h2" id="es">' + cfg.empty[0] + '</h2><p>' + cfg.empty[1] + '</p><div class="row" style="justify-content:center">' + cfg.empty[2] + '</div></section>';
   }
 
-  /* ---- dictionary data (original sample entries) ---- */
   var words = {
-    cat: { jp: '猫', rt: 'ねこ', vi: 'con mèo', jlpt: 'N5', pos: 'danh từ', freq: 'Thông dụng', ex: '猫が好きです。', exvi: 'Tôi thích mèo.' },
-    read: { jp: '読む', rt: 'よむ', vi: 'đọc', jlpt: 'N5', pos: 'động từ nhóm 1', freq: 'Thông dụng', ex: '本を読みます。', exvi: 'Tôi đọc sách.' },
-    book: { jp: '本', rt: 'ほん', vi: 'quyển sách; gốc', jlpt: 'N5', pos: 'danh từ', freq: 'Thông dụng', ex: '本を読む。', exvi: 'Đọc sách.' },
-    again: { jp: '明日', rt: 'あした', vi: 'ngày mai', jlpt: 'N5', pos: 'danh từ, trạng từ', freq: 'Thông dụng', ex: 'また明日ね。', exvi: 'Mai gặp lại nhé.' }
+    cat: { jp: '猫', rt: 'ねこ', vi: 'con mèo', jlpt: 'N5', pos: 'danh từ', ex: '猫が好きです。', exvi: 'Tôi thích mèo.' },
+    read: { jp: '読む', rt: 'よむ', vi: 'đọc', jlpt: 'N5', pos: 'động từ nhóm 1', ex: '本を読みます。', exvi: 'Tôi đọc sách.' },
+    again: { jp: '明日', rt: 'あした', vi: 'ngày mai', jlpt: 'N5', pos: 'danh từ, trạng từ', ex: 'また明日ね。', exvi: 'Mai gặp lại nhé.' }
   };
   function wordBtn(key, html) { return '<button class="word' + (st.popup === key ? ' on' : '') + '" data-word="' + key + '" aria-label="Tra từ ' + words[key].jp + '">' + html + '</button>'; }
-  function dictSheet(key, full) {
-    if (!key) return '<div class="state"><h2 class="h2">Chưa chọn từ nào</h2><p>Chạm vào một từ trong câu để xem nghĩa ngay tại đây.</p></div>';
+  function dictSheet(key, bare) {
+    if (!key) return '<div class="state"><h2 class="h2">Chưa chọn từ nào</h2><p>Chạm vào một từ có gạch chấm để xem nghĩa ngay tại đây.</p></div>';
     var w = words[key];
-    return '<section class="sheet" aria-labelledby="ds-t" id="sheet"><div class="row between"><div><div class="jp word-big" lang="ja" id="ds-t">' + r(w.jp, w.rt) + '</div><span class="chip pink">' + w.jlpt + '</span> <span class="chip">' + w.pos + '</span> <span class="chip mint">' + w.freq + '</span></div><div class="tools"><button class="btn ghost sm" data-act="speak" aria-label="Nghe phát âm ' + w.jp + '">Nghe</button><button class="btn ghost sm" data-act="closepop" aria-label="Đóng bảng tra từ">Đóng (Esc)</button></div></div>' +
-      '<ol class="gloss"><li><strong lang="vi">' + w.vi + '</strong></li></ol><div class="ex jp" lang="ja">' + w.ex + '<div class="muted" lang="vi" style="line-height:1.4">' + w.exvi + '</div></div>' +
-      '<div class="kc" aria-label="Kanji trong từ">' + w.jp.split('').filter(function (c) { return /[一-鿿]/.test(c); }).map(function (c) { return '<div><b lang="ja">' + c + '</b>kanji</div>'; }).join('') + '</div>' +
-      '<div class="row"><button class="btn" data-act="addsrs">Thêm vào thẻ ôn</button><button class="btn soft" data-go="dict">Mở trong Từ điển</button></div><span class="muted">Nguồn: JMdict, KANJIDIC (CC BY-SA). Xem mục Giấy phép.</span></section>';
+    return '<section class="sheet' + (bare ? ' bare' : '') + '" aria-labelledby="ds-t">' + (bare ? '' : '<span class="tab" aria-hidden="true">辞書</span>') + '<div class="row between" style="align-items:flex-start"><div class="stack" style="gap:4px"><div class="jp word-big" lang="ja" id="ds-t">' + r(w.jp, w.rt) + '</div><div class="row" style="gap:6px"><span class="chip coral">' + w.jlpt + '</span><span class="chip">' + w.pos + '</span><span class="chip mint">Thông dụng</span></div></div><div class="tools"><button class="btn ghost sm" data-act="speak" aria-label="Nghe phát âm ' + w.jp + '">' + ico('sound') + 'Nghe</button><button class="btn ghost sm" data-act="closepop" aria-label="Đóng bảng tra từ">Đóng</button></div></div>' +
+      '<ol class="gloss"><li><strong lang="vi">' + w.vi + '</strong></li></ol><div class="ex jp" lang="ja">' + w.ex + '<div class="muted vi" lang="vi">' + w.exvi + '</div></div>' +
+      '<div class="kc" role="group" aria-label="Kanji trong từ">' + w.jp.split('').filter(function (c) { return /[一-鿿]/.test(c); }).map(function (c) { return '<div><b lang="ja">' + c + '</b>KANJI</div>'; }).join('') + '</div>' +
+      '<div class="row"><button class="btn" data-act="addsrs">' + ico('plus') + 'Thêm vào thẻ ôn</button>' + (bare ? '' : '<button class="btn ghost" data-go="dict">Mở trong Từ điển</button>') + '</div><span class="muted">Nguồn: JMdict, KANJIDIC · CC BY-SA</span></section>';
   }
 
-  /* ---- screens ---- */
   var screens = {
-    home: { label: 'Trang chủ', nav: 'home', render: function () {
-      return h1('Chào buổi sáng!', 'Mochi đã chuẩn bị 24 thẻ cho bạn hôm nay.') +
-      '<div class="alert" style="background:var(--info-soft);border-color:var(--info)" role="status"><span class="mk" style="background:var(--info)" aria-hidden="true">↻</span><div class="row between" style="flex:1"><span><strong>Có 2 bản cập nhật nội dung</strong><br><span class="muted">JMdict và gói Kanji N4 · 3,2 MB</span></span>' + go_('packs', 'Xem cập nhật', 'soft') + '</div></div>' +
-      '<div class="grid2"><section class="card pink" aria-labelledby="g1"><div class="row" style="gap:16px">' + ring(0.62, 108, '31<br><small>/ 50</small>', 'Mục tiêu hôm nay') + '<div class="stack"><h2 class="h2" id="g1">Mục tiêu hôm nay</h2><span class="muted">Còn 19 thẻ: 12 ôn lại, 7 từ mới. Ước tính 8 phút.</span><div class="row">' + go_('srs', 'Ôn tập ngay', 'lg') + '</div></div></div></section>' +
-      '<section class="card" aria-labelledby="g2"><div class="row between"><h2 class="h2" id="g2">Chuỗi 12 ngày</h2><span class="chip butter">Kỷ lục 30</span></div><div class="week" style="margin-top:10px" role="list">' + ['T2','T3','T4','T5','T6','T7','CN'].map(function (d, i) { return '<span role="listitem" class="' + (i < 3 ? 'done' : i === 3 ? 'today' : '') + '" aria-label="' + d + (i < 3 ? ': đã học' : i === 3 ? ': hôm nay' : ': chưa tới') + '">' + (i < 3 ? '✓' : d) + '</span>'; }).join('') + '</div><p class="muted" style="margin-top:8px">Có thể dùng "đóng băng chuỗi" khi bận (còn 2 lần).</p></section></div>' +
-      '<div class="grid2"><section class="card" aria-labelledby="g3"><h2 class="h2" id="g3">Đọc tiếp</h2><div class="cont" style="margin-top:10px"><div class="thumb">' + mochi(40, 'happy') + '</div><div class="stack"><strong>Truyện mẫu của bạn · Tập 2</strong><span class="muted">Trang 14 / 32</span><div class="bar" role="progressbar" aria-label="Tiến độ đọc" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"><i style="width:44%"></i></div>' + go_('manga', 'Mở truyện', 'soft') + '</div></div></section>' +
-      '<section class="card" aria-labelledby="g4"><h2 class="h2" id="g4">Xem tiếp</h2><div class="cont" style="margin-top:10px"><div class="thumb wide"></div><div class="stack"><strong>Tập mẫu 3 · 12:40</strong><span class="muted">Phụ đề đôi Nhật–Việt</span><div class="bar lav" role="progressbar" aria-label="Tiến độ xem" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100"><i style="width:52%"></i></div>' + go_('anime', 'Phát tiếp', 'soft') + '</div></div></section></div>' +
-      '<section aria-labelledby="g5"><h2 class="h2" id="g5" style="margin-bottom:8px">Lối tắt</h2><div class="grid3">' + [['cards','badge-coral','Ôn tập','srs','24 thẻ đến hạn'],['book','badge-teal','Từ điển','dict','Tra từ, kanji'],['kana','badge-mint','Kana & Kanji','kana','Luyện viết nét'],['path','badge-sky','Lộ trình JLPT','path','Đang ở N4'],['lib','badge-mustard','Thư viện','library','Manga & anime của bạn'],['chart','badge-coral','Tiến độ','progress','Báo cáo tuần']].map(function (t) { return '<button class="tile" data-go="' + t[3] + '">' + badge(t[0], t[1]) + '<strong>' + t[2] + '</strong><span class="muted">' + t[4] + '</span></button>'; }).join('') + '</div></section>';
+    home: { label: 'Trang chủ', render: function () {
+      return '<h1 class="sr" id="h1" tabindex="-1">Trang chủ</h1><section class="hero" aria-labelledby="hi"><div class="txt">' + kick('おはよう', 'Thứ năm · 29/10') + '<h2 class="h" id="hi">Chào buổi sáng! Hôm nay Mochi giữ <span class="hl">24 thẻ</span> cho bạn.</h2><p class="muted">12 thẻ ôn lại · 7 từ mới · khoảng 8 phút.</p><div class="row">' + go_('srs', 'Ôn tập ngay', 'alt lg') + go_('library', 'Đọc tiếp', 'ghost') + '</div></div><div class="art">' + shopfront() + '</div></section>' +
+      '<div class="alert info" role="status"><span class="mk" aria-hidden="true">↻</span><div class="row between" style="flex:1"><span><strong>Có 2 bản cập nhật nội dung</strong><br><span class="muted">JMdict và gói Kanji N4 · 3,2 MB</span></span>' + go_('packs', 'Xem cập nhật', 'ghost sm') + '</div></div>' +
+      '<div class="grid2"><section class="card stack" aria-labelledby="g1">' + kick('今日の目標', 'Mục tiêu hôm nay') + '<h2 class="sr" id="g1">Mục tiêu hôm nay</h2><div class="row between" style="align-items:flex-end"><div class="big-num" aria-label="31 trên 50 thẻ">031<small>/050</small></div><span class="chip mustard">Còn 19 thẻ</span></div>' + bar(62, 'Mục tiêu hôm nay') + '<span class="muted">Giữ nhịp này, bạn xong N5 vào khoảng tháng 2.</span></section>' +
+      '<section class="card stack" aria-labelledby="g2">' + kick('連続', 'Chuỗi ngày học') + '<h2 class="sr" id="g2">Chuỗi ngày học</h2><div class="row between" style="align-items:flex-end"><div class="big-num" aria-label="12 ngày liên tiếp">012<small> ngày</small></div><span class="chip coral">Kỷ lục 030</span></div><div class="week" role="list">' + ['T2','T3','T4','T5','T6','T7','CN'].map(function (d, i) { return '<span role="listitem" class="' + (i < 3 ? 'done' : i === 3 ? 'today' : '') + '" aria-label="' + d + (i < 3 ? ': đã học' : i === 3 ? ': hôm nay' : ': chưa tới') + '">' + (i < 3 ? '✓' : d) + '</span>'; }).join('') + '</div></section></div>' +
+      '<div class="grid2"><section class="card" aria-labelledby="g3">' + kick('続きを読む', 'Đọc tiếp') + '<div class="cont" style="margin-top:12px"><div class="cover m" style="background:var(--coral-soft)">' + mochi(56, 'happy') + '</div><div class="stack" style="flex:1"><strong id="g3">Truyện mẫu của bạn · Tập 2</strong><span class="muted num">TRANG 014/032</span>' + bar(44, 'Tiến độ đọc', 'mustard') + '<div>' + go_('manga', 'Mở truyện', 'ghost sm') + '</div></div></div></section>' +
+      '<section class="card" aria-labelledby="g4">' + kick('続きを見る', 'Xem tiếp') + '<div class="cont" style="margin-top:12px"><div class="cover v">' + night() + '</div><div class="stack" style="flex:1"><strong id="g4">Tập mẫu 3</strong><span class="muted num">12:40/24:10 · PHỤ ĐỀ ĐÔI</span>' + bar(52, 'Tiến độ xem', 'sky') + '<div>' + go_('anime', 'Phát tiếp', 'ghost sm') + '</div></div></div></section></div>' +
+      '<section aria-labelledby="g5" class="stack">' + kick('メニュー', 'Lối tắt') + '<h2 class="sr" id="g5">Lối tắt</h2><div class="grid3">' + [['cards','coral','Ôn tập','srs','24 thẻ đến hạn'],['book','teal','Từ điển','dict','Tra từ, kanji'],['kana','mint','Kana & Kanji','kana','Luyện viết nét'],['path','sky','Lộ trình JLPT','path','Đang ở N4'],['lib','mustard','Thư viện','library','Truyện & phim của bạn'],['chart','coral','Tiến độ','progress','Báo cáo tuần']].map(function (t, i) { return '<button class="tile" data-go="' + t[3] + '"><span class="idx" aria-hidden="true">' + pad(i + 1) + '</span>' + badge(t[0], t[1]) + '<strong>' + t[2] + '</strong><span class="muted">' + t[4] + '</span></button>'; }).join('') + '</div></section>';
     } },
-    onboarding: { label: 'Làm quen', nav: 'home', render: function () {
+    onboarding: { label: 'Làm quen', render: function () {
       var n = st.step, body = '';
-      if (n === 1) body = '<h2 class="h2" id="ob">Bạn đã biết tiếng Nhật đến đâu?</h2><div class="stack" role="radiogroup" aria-labelledby="ob">' + [['Mới bắt đầu', 'Chưa biết kana. Mochi sẽ dẫn từ bảng chữ cái.'], ['Biết kana', 'Đọc được hiragana/katakana, muốn học từ và ngữ pháp N5.'], ['Đã học N5–N4', 'Muốn đọc manga và xem anime có phụ đề.']].map(function (o, i) { return '<label class="flat row" style="cursor:pointer;min-height:64px"><input type="radio" name="lv" ' + (i === 0 ? 'checked' : '') + ' style="width:1.4rem;height:1.4rem;accent-color:var(--accent-gfx)"><span class="stack" style="gap:0"><strong>' + o[0] + '</strong><span class="muted">' + o[1] + '</span></span></label>'; }).join('') + '</div>';
-      else if (n === 2) body = '<h2 class="h2" id="ob">Mỗi ngày bạn học bao lâu?</h2><div class="grid3" role="radiogroup" aria-labelledby="ob">' + [['5 phút', '10 thẻ'], ['10 phút', '25 thẻ'], ['20 phút', '50 thẻ'], ['30 phút', '80 thẻ']].map(function (o, i) { return '<label class="flat stack" style="cursor:pointer;gap:0"><span class="row"><input type="radio" name="goal" ' + (i === 1 ? 'checked' : '') + ' style="width:1.4rem;height:1.4rem;accent-color:var(--accent-gfx)"><strong>' + o[0] + '</strong></span><span class="muted">' + o[1] + '</span></label>'; }).join('') + '</div><p class="muted">Đổi bất cứ lúc nào trong Cài đặt.</p>';
-      else if (n === 3) body = '<h2 class="h2" id="ob">Làm cho dễ đọc với bạn</h2><div class="card">' + sw('furigana', st.furigana, 'Hiện furigana', 'Chữ nhỏ trên kanji') + sw('contrast', st.contrast, 'Tương phản cao', 'Chữ đậm màu, viền rõ') + '<div class="setrow"><div><strong>Giao diện</strong></div>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']], st.theme) + '</div><div class="setrow"><div><strong>Cỡ chữ</strong><span class="muted">Hiện tại ' + st.scale + '%</span></div>' + seg('Cỡ chữ', 'scale', [['100', '100%'], ['125', '125%'], ['150', '150%'], ['200', '200%']], String(st.scale)) + '</div></div>';
-      else body = '<h2 class="h2" id="ob">Cài nội dung ban đầu</h2><div class="card"><ul class="list">' + [['Từ điển JMdict (rút gọn)', '18 MB', true], ['Kanji KANJIDIC', '2 MB', true], ['Bộ thẻ N5 mẫu', '1 MB', true], ['Từ điển đầy đủ Jitendex', '95 MB', false]].map(function (p, i) { return '<li><input type="checkbox" id="p' + i + '" ' + (p[2] ? 'checked' : '') + ' style="width:1.4rem;height:1.4rem;accent-color:var(--accent-gfx)"><label class="grow" for="p' + i + '"><strong>' + p[0] + '</strong><span class="muted">' + p[1] + ' · tải một lần, dùng offline</span></label></li>'; }).join('') + '</ul></div><p class="muted">Yomineko không kèm manga, anime hay giáo trình có bản quyền. Bạn tự nạp tệp của mình ở mục Thư viện.</p>';
-      return '<div class="hello">' + mochi(84, 'cheer') + h1('Chào mừng đến Yomineko', 'Bước ' + n + ' / 4. Mất chưa tới 2 phút.') + '</div><div class="steps" role="progressbar" aria-label="Bước làm quen" aria-valuemin="1" aria-valuemax="4" aria-valuenow="' + n + '">' + [1,2,3,4].map(function (i) { return '<i class="' + (i <= n ? 'on' : '') + '"></i>'; }).join('') + '</div>' + body +
-      '<div class="row between"><button class="btn ghost" data-act="obback" ' + (n === 1 ? 'disabled' : '') + '>Quay lại</button><div class="row"><button class="btn ghost" data-go="home">Bỏ qua</button><button class="btn" data-act="obnext">' + (n === 4 ? 'Bắt đầu học' : 'Tiếp tục') + '</button></div></div>';
+      if (n === 1) body = '<h2 class="h2" id="ob">Bạn đã biết tiếng Nhật đến đâu?</h2><div class="stack" role="radiogroup" aria-labelledby="ob">' + [['Mới bắt đầu', 'Chưa biết kana. Mochi dẫn bạn từ bảng chữ cái.'], ['Biết kana', 'Đọc được hiragana/katakana, muốn học từ và ngữ pháp N5.'], ['Đã học N5–N4', 'Muốn đọc truyện và xem phim có phụ đề.']].map(function (o, i) { return '<label class="opt"><input type="radio" name="lv" ' + (i === 0 ? 'checked' : '') + '><span class="stack" style="gap:0"><strong>' + o[0] + '</strong><span class="muted">' + o[1] + '</span></span></label>'; }).join('') + '</div>';
+      else if (n === 2) body = '<h2 class="h2" id="ob">Mỗi ngày bạn học bao lâu?</h2><div class="grid3" role="radiogroup" aria-labelledby="ob">' + [['5 phút', '10 thẻ'], ['10 phút', '25 thẻ'], ['20 phút', '50 thẻ'], ['30 phút', '80 thẻ']].map(function (o, i) { return '<label class="opt"><input type="radio" name="goal" ' + (i === 1 ? 'checked' : '') + '><span class="stack" style="gap:0"><strong>' + o[0] + '</strong><span class="muted">' + o[1] + '</span></span></label>'; }).join('') + '</div><p class="muted">Đổi bất cứ lúc nào trong Cài đặt.</p>';
+      else if (n === 3) body = '<h2 class="h2" id="ob">Làm cho dễ đọc với bạn</h2><div class="card flat">' + sw('furigana', st.furigana, 'Hiện furigana', 'Chữ nhỏ trên kanji') + sw('contrast', st.contrast, 'Tương phản cao', 'Chữ đậm màu, viền rõ') + '<div class="setrow"><div><strong>Giao diện</strong></div>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Ngày'], ['dark', 'Đêm']], st.theme) + '</div><div class="setrow"><div><strong>Cỡ chữ</strong><span class="muted">Hiện tại ' + st.scale + '%</span></div>' + seg('Cỡ chữ', 'scale', [['100', '100%'], ['125', '125%'], ['150', '150%'], ['200', '200%']], String(st.scale)) + '</div></div>';
+      else body = '<h2 class="h2" id="ob">Cài nội dung ban đầu</h2><div class="card flat"><ul class="list">' + [['Từ điển JMdict (rút gọn)', '18 MB', true], ['Kanji KANJIDIC', '2 MB', true], ['Bộ thẻ N5 mẫu', '1 MB', true], ['Từ điển đầy đủ Jitendex', '95 MB', false]].map(function (p, i) { return '<li><input type="checkbox" id="p' + i + '" ' + (p[2] ? 'checked' : '') + ' style="width:1.4rem;height:1.4rem;accent-color:var(--primary)"><label class="grow" for="p' + i + '"><strong>' + p[0] + '</strong><span class="muted">' + p[1] + ' · tải một lần, dùng offline</span></label></li>'; }).join('') + '</ul></div><p class="muted">Yomineko không kèm truyện, phim hay giáo trình có bản quyền. Bạn tự nạp tệp của mình ở Thư viện.</p>';
+      return '<div class="row" style="gap:16px">' + mochi(92, 'cheer') + h1('ようこそ', 'Chào mừng đến Yomineko', 'Bước ' + n + ' / 4 · chưa tới 2 phút') + '</div><div class="steps" role="progressbar" aria-label="Bước làm quen" aria-valuemin="1" aria-valuemax="4" aria-valuenow="' + n + '">' + [1,2,3,4].map(function (i) { return '<i class="' + (i <= n ? 'on' : '') + '"></i>'; }).join('') + '</div>' + body +
+      '<div class="row between"><button class="btn ghost" data-act="obback" ' + (n === 1 ? 'disabled' : '') + '>Quay lại</button><div class="row"><button class="btn ghost" data-go="home">Bỏ qua</button><button class="btn alt" data-act="obnext">' + (n === 4 ? 'Bắt đầu học' : 'Tiếp tục') + '</button></div></div>';
     } },
-    srs: { label: 'Ôn tập', nav: 'cards', states: { skel: 'card', empty: ['Hôm nay hết thẻ rồi!', 'Bạn đã ôn xong mọi thẻ đến hạn. Thêm từ mới từ Từ điển hoặc từ lúc đọc manga, xem anime.', go_('dict', 'Mở Từ điển') + go_('decks', 'Xem bộ thẻ', 'soft')], err: ['Không mở được bộ thẻ', 'Dữ liệu ôn tập trong máy bị lỗi khi đọc. Tiến độ của bạn vẫn còn nguyên.', 'IDBError: userdata/srs.state transaction aborted'], errAlt: ['settings', 'Khôi phục từ bản sao lưu'] }, render: function () {
+    srs: { label: 'Ôn tập', states: { skel: 'card', empty: ['Hôm nay hết thẻ rồi!', 'Bạn đã ôn xong mọi thẻ đến hạn. Thêm từ mới từ Từ điển, hoặc từ lúc đọc truyện và xem phim.', go_('dict', 'Mở Từ điển') + go_('decks', 'Xem bộ thẻ', 'ghost')], err: ['Không mở được bộ thẻ', 'Dữ liệu ôn tập trong máy bị lỗi khi đọc. Tiến độ của bạn vẫn còn nguyên.', 'IDBError: userdata/srs.state transaction aborted'], errAlt: ['settings', 'Khôi phục từ bản sao lưu'] }, render: function () {
       var back = st.revealed;
-      return h1('Ôn tập · N5 Từ vựng') + '<div class="row between"><span class="chip pink num">Thẻ 13 / 24</span><div class="tools"><button class="btn ghost sm" data-act="undo" ' + (st.undo ? '' : 'disabled') + '>Hoàn tác (Ctrl Z)</button><button class="btn ghost sm" data-act="flag">Đánh dấu</button><button class="btn ghost sm" data-act="suspend">Tạm ẩn thẻ</button></div></div><div class="bar" role="progressbar" aria-label="Tiến độ phiên ôn" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100"><i style="width:54%"></i></div>' +
-      '<section class="card srs-card" aria-label="Thẻ ôn tập"><div class="row" style="justify-content:center"><span class="chip mint">Học lại</span><span class="chip">N5</span><span class="chip sky">Từ manga: Tập 2</span></div><div class="jp srs-word" lang="ja">' + (back ? r('勉強', 'べんきょう') : '勉強') + '</div>' +
-      (back ? '<div class="stack" style="justify-items:center;gap:4px"><strong class="h2" lang="vi">học tập, học bài</strong><span class="muted">danh từ · động từ する</span><button class="btn ghost sm" data-act="speak" aria-label="Nghe phát âm">Nghe</button></div><div class="ex jp vt-wrap" lang="ja">毎日' + r('日本語', 'にほんご') + 'を' + r('勉強', 'べんきょう') + 'しています。<div class="muted" lang="vi" style="line-height:1.4">Tôi học tiếng Nhật mỗi ngày.</div></div>' : '<p class="muted">Nghĩa của từ này là gì? Hãy nhớ lại trước khi hiện đáp án.</p><button class="btn ghost sm" data-act="hint">Gợi ý: bắt đầu bằng "học"</button>') + '</section>' +
-      (back ? '<div class="grades" role="group" aria-label="Bạn nhớ thẻ này thế nào?"><button class="g-again" data-act="grade"><span>1 · Quên</span><small>10 phút</small></button><button class="g-hard" data-act="grade"><span>2 · Khó</span><small>2 ngày</small></button><button class="g-good" data-act="grade"><span>3 · Được</span><small>6 ngày</small></button><button class="g-easy" data-act="grade"><span>4 · Dễ</span><small>15 ngày</small></button></div>' : '<button class="btn lg" data-act="reveal">Hiện đáp án · Space</button>');
+      return '<div class="deckhead"><span class="vlabel" aria-hidden="true">REVIEW</span>' + h1('復習', 'N5 Từ vựng') + '<div class="big-num" style="font-size:calc(2.2rem*var(--font-scale))" aria-label="Thẻ 13 trên 24">013<small>/024</small></div></div>' + bar(54, 'Tiến độ phiên ôn') +
+      '<div class="row between"><div class="row" style="gap:6px"><span class="chip mint">Học lại</span><span class="chip">N5</span><span class="chip sky">Từ truyện: Tập 2</span></div><div class="tools"><button class="btn ghost sm" data-act="undo" ' + (st.undo ? '' : 'disabled') + '>Hoàn tác</button><button class="btn ghost sm">Đánh dấu</button><button class="btn ghost sm">Tạm ẩn</button></div></div>' +
+      '<section class="srs-card" aria-label="Thẻ ôn tập"><span class="corner" aria-hidden="true">CARD · ' + (back ? 'BACK' : 'FRONT') + '</span><div class="jp srs-word" lang="ja">' + (back ? r('勉強', 'べんきょう') : '勉強') + '</div>' +
+      (back ? '<div class="stack" style="justify-items:center;gap:6px"><strong class="h2" lang="vi">học tập, học bài</strong><span class="muted">danh từ · động từ する</span><button class="btn ghost sm" aria-label="Nghe phát âm">' + ico('sound') + 'Nghe</button></div><div class="ex jp" lang="ja" style="max-width:32rem">毎日' + r('日本語', 'にほんご') + 'を' + r('勉強', 'べんきょう') + 'しています。<div class="muted vi" lang="vi">Tôi học tiếng Nhật mỗi ngày.</div></div>' : '<p class="muted">Nghĩa của từ này là gì? Nhớ lại trước khi lật thẻ.</p><button class="btn ghost sm">Gợi ý: bắt đầu bằng "học"</button>') + '</section>' +
+      (back ? '<div class="grades" role="group" aria-label="Bạn nhớ thẻ này thế nào?"><button class="g-again" data-act="grade"><span class="k" aria-hidden="true">[1]</span><span>Quên</span><small>10 phút</small></button><button class="g-hard" data-act="grade"><span class="k" aria-hidden="true">[2]</span><span>Khó</span><small>2 ngày</small></button><button class="g-good" data-act="grade"><span class="k" aria-hidden="true">[3]</span><span>Được</span><small>6 ngày</small></button><button class="g-easy" data-act="grade"><span class="k" aria-hidden="true">[4]</span><span>Dễ</span><small>15 ngày</small></button></div>' : '<div class="row" style="justify-content:center"><button class="btn alt lg" data-act="reveal">Lật thẻ</button><span class="muted">hoặc nhấn <kbd>Space</kbd></span></div>');
     } },
-    decks: { label: 'Bộ thẻ', nav: 'cards', states: { skel: 'list', empty: ['Chưa có bộ thẻ nào', 'Cài bộ thẻ mẫu hoặc tạo bộ thẻ riêng từ các từ bạn gặp khi đọc và xem.', go_('packs', 'Cài bộ thẻ mẫu') + '<button class="btn soft">Tạo bộ thẻ</button>'], err: ['Không tải được danh sách bộ thẻ', 'Thử lại sau vài giây. Nếu vẫn lỗi, mở Cài đặt để kiểm tra dữ liệu.', 'DBError: decks collection missing index'] }, render: function () {
-      var d = [['N5 Từ vựng', 24, 8, 112, 'sky'], ['N5 Kanji', 6, 0, 80, 'mint'], ['Từ manga: Tập 2', 9, 5, 21, 'pink'], ['Câu từ anime', 3, 2, 14, 'butter']];
-      return h1('Bộ thẻ', 'Mới, đang học và đến hạn của từng bộ.') + '<div class="row between"><label class="search" style="flex:1;min-width:14rem"><span class="sr">Tìm bộ thẻ</span><input placeholder="Tìm bộ thẻ hoặc thẻ…"></label><button class="btn">Tạo bộ thẻ</button></div>' +
-      '<div class="card"><ul class="list">' + d.map(function (x) { return '<li><div class="grow"><strong>' + x[0] + '</strong><span class="muted">' + x[3] + ' thẻ · mới ' + x[2] + ' · đến hạn ' + x[1] + '</span></div><span class="chip ' + x[4] + '">' + x[1] + ' đến hạn</span><button class="btn soft sm" data-go="srs">Ôn bộ này</button><button class="btn ghost sm" aria-label="Tuỳ chọn bộ ' + x[0] + '">⋯</button></li>'; }).join('') + '</ul></div>' +
-      '<div class="card pink stack"><h2 class="h2">Cách Yomineko lên lịch ôn</h2><p>Thuật toán FSRS đoán lúc bạn sắp quên để nhắc đúng lúc. Đặt mức nhớ mong muốn trong Cài đặt học, mặc định 90%.</p></div>';
+    decks: { label: 'Bộ thẻ', states: { skel: 'list', empty: ['Chưa có bộ thẻ nào', 'Cài bộ thẻ mẫu hoặc tạo bộ thẻ riêng từ các từ bạn gặp khi đọc và xem.', go_('packs', 'Cài bộ thẻ mẫu') + '<button class="btn ghost">Tạo bộ thẻ</button>'], err: ['Không tải được danh sách bộ thẻ', 'Thử lại sau vài giây. Nếu vẫn lỗi, mở Cài đặt để kiểm tra dữ liệu.', 'DBError: decks collection missing index'] }, render: function () {
+      var d = [['N5 Từ vựng', 24, 8, 112, 'sky'], ['N5 Kanji', 6, 0, 80, 'mint'], ['Từ truyện: Tập 2', 9, 5, 21, 'coral'], ['Câu từ phim', 3, 2, 14, 'mustard']];
+      return h1('デッキ', 'Bộ thẻ', 'Số thẻ mới, đang học và đến hạn của từng bộ.') + '<div class="row"><label class="search" style="flex:1;min-width:min(100%,14rem)">' + ico('search') + '<span class="sr">Tìm bộ thẻ</span><input placeholder="Tìm bộ thẻ hoặc thẻ…"></label><button class="btn alt">' + ico('plus') + 'Tạo bộ thẻ</button></div>' +
+      '<div class="grid2">' + d.map(function (x, i) { return '<article class="card ' + x[4] + ' stack"><div class="row between"><span class="num muted">DECK ' + pad(i + 1) + '</span><span class="chip ' + x[4] + '">' + x[1] + ' đến hạn</span></div><h2 class="h2">' + x[0] + '</h2><span class="muted num">' + x[3] + ' THẺ · ' + x[2] + ' MỚI</span>' + bar(Math.round(100 - x[1] / x[3] * 100), 'Đã ôn ' + x[0]) + '<div class="row"><button class="btn sm" data-go="srs">Ôn bộ này</button><button class="btn ghost sm" aria-label="Tuỳ chọn bộ ' + x[0] + '">Tuỳ chọn</button></div></article>'; }).join('') + '</div>' +
+      '<div class="ticket"><strong>Cách Yomineko lên lịch ôn</strong><p class="muted">Thuật toán FSRS đoán lúc bạn sắp quên để nhắc đúng lúc. Mức nhớ mong muốn mặc định 90%, chỉnh trong Cài đặt › Học.</p></div>';
     } },
-    dict: { label: 'Từ điển', nav: 'book', states: { skel: 'list', empty: ['Không tìm thấy "ねこねこ"', 'Thử bỏ bớt bộ lọc, gõ bằng romaji (neko) hoặc tìm theo nghĩa tiếng Việt.', '<button class="btn" data-act="clearfilt">Bỏ bộ lọc</button>'], err: ['Từ điển chưa sẵn sàng', 'Gói JMdict chưa được cài hoặc bị hỏng. Cài lại gói để tra từ offline.', 'PackError: jmdict sha256 mismatch'], errAlt: ['packs', 'Mở Kho nội dung'] }, render: function () {
+    dict: { label: 'Từ điển', states: { skel: 'list', empty: ['Không tìm thấy "ねこねこ"', 'Thử bỏ bớt bộ lọc, gõ bằng romaji (neko) hoặc tìm theo nghĩa tiếng Việt.', '<button class="btn" data-act="clearfilt">Bỏ bộ lọc</button>'], err: ['Từ điển chưa sẵn sàng', 'Gói JMdict chưa được cài hoặc bị hỏng. Cài lại gói để tra từ offline.', 'PackError: jmdict sha256 mismatch'], errAlt: ['packs', 'Mở Kho nội dung'] }, render: function () {
       var f = st.filt;
       function fc(k, t) { return '<button class="fchip" aria-pressed="' + f[k] + '" data-filt="' + k + '">' + t + '</button>'; }
-      return h1('Từ điển') + '<div class="search" role="search"><label class="sr" for="q">Tìm từ</label><input id="q" placeholder="Gõ tiếng Nhật, romaji hoặc tiếng Việt" value="ねこ"><button class="btn soft sm">Tìm</button></div><div class="filters" role="group" aria-label="Bộ lọc">' + fc('common', 'Thông dụng') + fc('n5', 'JLPT N5') + fc('verb', 'Động từ') + '</div>' +
-      '<div class="grid2" style="align-items:start"><section class="card" aria-labelledby="rs"><h2 class="h2" id="rs">3 kết quả</h2><ul class="list">' + [['cat', '猫', 'ねこ', 'con mèo'], ['again', '子猫', 'こねこ', 'mèo con'], ['read', '猫舌', 'ねこじた', 'người sợ đồ nóng']].map(function (x, i) { return '<li><button class="word" style="min-height:44px" data-word="' + (words[x[0]] ? x[0] : 'cat') + '"><span class="jp" lang="ja" style="font-size:var(--text-lg)">' + x[1] + '</span></button><span class="grow"><span lang="ja" class="muted">' + x[2] + '</span><strong lang="vi">' + x[3] + '</strong></span><button class="btn ghost sm" aria-label="Lưu ' + x[1] + ' vào yêu thích">☆ Lưu</button></li>'; }).join('') + '</ul><p class="muted">Gần đây: <button class="word">犬</button> <button class="word">学校</button> <button class="word">食べる</button></p></section>' +
-      '<div class="stack">' + (st.popup ? '<div class="card">' + tabs('Chi tiết từ', 'dtab', [['nghia', 'Nghĩa'], ['kanji', 'Kanji'], ['vidu', 'Ví dụ'], ['nguphap', 'Ngữ pháp']], st.dtab) + '<div role="tabpanel" style="padding-top:12px">' + (st.dtab === 'kanji' ? '<dl class="kv"><dt>Âm On</dt><dd lang="ja">ビョウ</dd><dt>Âm Kun</dt><dd lang="ja">ねこ</dd><dt>Số nét</dt><dd>11</dd><dt>Bộ</dt><dd lang="ja">犭 (bộ khuyển)</dd></dl>' : st.dtab === 'vidu' ? '<p class="jp" lang="ja">猫が窓の外を見ている。<br><span class="muted" lang="vi">Con mèo đang nhìn ra ngoài cửa sổ.</span></p>' : st.dtab === 'nguphap' ? '<p>Trợ từ <span lang="ja">が</span> đánh dấu chủ ngữ mới được nhắc đến.</p>' : dictSheet(st.popup).replace('<section class="sheet"', '<section class="sheet" style="border:0;box-shadow:none;padding:0"')) + '</div></div>' : dictSheet(null)) + '</div></div>';
+      return h1('辞書', 'Từ điển') + '<div class="search" role="search">' + ico('search') + '<label class="sr" for="q">Tìm từ</label><input id="q" placeholder="Gõ tiếng Nhật, romaji hoặc tiếng Việt" value="ねこ"><button class="btn sm">Tìm</button></div><div class="filters" role="group" aria-label="Bộ lọc">' + fc('common', 'Thông dụng') + fc('n5', 'JLPT N5') + fc('verb', 'Động từ') + '</div>' +
+      '<div class="grid2" style="align-items:start"><section class="card" aria-labelledby="rs">' + kick('検索結果', '3 kết quả') + '<h2 class="sr" id="rs">3 kết quả</h2><ul class="list">' + [['猫', 'ねこ', 'con mèo', 'N5'], ['子猫', 'こねこ', 'mèo con', 'N4'], ['猫舌', 'ねこじた', 'người sợ đồ nóng', '—']].map(function (x, i) { return '<li><span class="num muted" aria-hidden="true">' + pad(i + 1) + '</span><button class="word" style="min-height:44px;text-decoration:none" data-word="cat" aria-label="Xem ' + x[0] + '"><span class="jp" lang="ja" style="font-size:var(--t-lg);font-weight:700">' + x[0] + '</span></button><span class="grow"><span lang="ja" class="muted">' + x[1] + '</span><strong lang="vi">' + x[2] + '</strong></span><span class="chip">' + x[3] + '</span></li>'; }).join('') + '</ul><p class="muted" style="margin-top:10px">Gần đây: <span lang="ja">犬 · 学校 · 食べる</span></p></section>' +
+      '<div class="stack">' + (st.popup ? '<section class="sheet stack"><span class="tab" aria-hidden="true">辞書</span>' + tabs('Chi tiết từ', 'dtab', [['nghia', 'Nghĩa'], ['kanji', 'Kanji'], ['vidu', 'Ví dụ'], ['nguphap', 'Ngữ pháp']], st.dtab) + '<div role="tabpanel">' + (st.dtab === 'kanji' ? '<dl class="kv"><dt>Âm On</dt><dd lang="ja">ビョウ</dd><dt>Âm Kun</dt><dd lang="ja">ねこ</dd><dt>Số nét</dt><dd class="num">11</dd><dt>Bộ</dt><dd><span lang="ja">犭</span> (bộ khuyển)</dd></dl>' : st.dtab === 'vidu' ? '<p class="jp" lang="ja">猫が窓の外を見ている。</p><p class="muted" lang="vi">Con mèo đang nhìn ra ngoài cửa sổ.</p>' : st.dtab === 'nguphap' ? '<p>Trợ từ <span lang="ja">が</span> đánh dấu chủ ngữ mới được nhắc đến.</p>' : dictSheet(st.popup, true)) + '</div></section>' : dictSheet(null)) + '</div></div>';
     } },
-    kana: { label: 'Kana & Kanji', nav: 'kana', states: { skel: 'grid', empty: ['Chưa có kanji nào', 'Cài gói Kanji N5 để xem thứ tự nét, âm đọc và từ ví dụ.', go_('packs', 'Cài gói kanji')], err: ['Không tải được dữ liệu kanji', 'Gói KANJIDIC không đọc được. Kana vẫn dùng bình thường.', 'PackError: kanji pack version mismatch'] }, render: function () {
+    kana: { label: 'Kana & Kanji', states: { skel: 'grid', empty: ['Chưa có kanji nào', 'Cài gói Kanji N5 để xem thứ tự nét, âm đọc và từ ví dụ.', go_('packs', 'Cài gói kanji')], err: ['Không tải được dữ liệu kanji', 'Gói KANJIDIC không đọc được. Kana vẫn dùng bình thường.', 'PackError: kanji pack version mismatch'] }, render: function () {
       var hira = 'あいうえおかきくけこさしすせそたちつてとなにぬねの'.split(''), rom = 'a i u e o ka ki ku ke ko sa shi su se so ta chi tsu te to na ni nu ne no'.split(' '), lv = [3,3,3,3,3,3,2,2,3,1,2,2,1,0,0,1,0,0,0,0,0,0,0,0,0], sym = ['○', '◔', '◑', '●'], nm = ['chưa học', 'hay quên', 'đang nhớ', 'đã thuộc'];
       var ch = function (i) { return st.kana === 'kata' ? String.fromCharCode(hira[i].charCodeAt(0) + 96) : hira[i]; };
-      return h1('Kana & Kanji') + '<div class="row between">' + seg('Bảng chữ', 'kana', [['hira', 'ひらがな'], ['kata', 'カタカナ'], ['kanji', '漢字']], st.kana) + '<div class="row"><span class="chip mint">● thuộc</span><span class="chip butter">◑ đang nhớ</span><span class="chip warn">◔ hay quên</span><span class="chip">○ chưa học</span></div></div>' +
-      (st.kana === 'kanji' ? '<div class="grid2" style="align-items:start"><section class="card"><h2 class="h2">Kanji N5 · 96 / 103</h2><div class="kgrid" style="margin-top:10px">' + '日月火水木金土人大小'.split('').map(function (k, i) { return '<button class="m' + (i % 4) + '" aria-pressed="' + (i === 0) + '" aria-label="' + k + ', ' + nm[i % 4] + '"><em aria-hidden="true">' + sym[i % 4] + '</em>' + k + '</button>'; }).join('') + '</div></section><section class="card stack"><div class="row between"><div class="jp word-big" lang="ja">日</div><div class="tools"><button class="btn soft sm">Tập viết</button><button class="btn sm">Thêm thẻ</button></div></div><dl class="kv"><dt>Nghĩa</dt><dd lang="vi">mặt trời; ngày</dd><dt>Âm On</dt><dd lang="ja">ニチ, ジツ</dd><dt>Âm Kun</dt><dd lang="ja">ひ, か</dd><dt>Số nét</dt><dd>4</dd><dt>Từ hay gặp</dt><dd lang="ja">' + r('日本', 'にほん') + ' · ' + r('毎日', 'まいにち') + '</dd></dl></section></div>' :
+      var legend = '<div class="legend"><span class="chip mint">● thuộc</span><span class="chip mustard">◑ đang nhớ</span><span class="chip coral">◔ hay quên</span><span class="chip">○ chưa học</span></div>';
+      return h1('かな・漢字', 'Kana & Kanji') + '<div class="row between">' + seg('Bảng chữ', 'kana', [['hira', 'ひらがな'], ['kata', 'カタカナ'], ['kanji', '漢字']], st.kana) + legend + '</div>' +
+      (st.kana === 'kanji' ? '<div class="grid2" style="align-items:start"><section class="card">' + kick('N5', 'Kanji N5 · 096/103') + '<div class="kgrid" style="margin-top:12px">' + '日月火水木金土人大小'.split('').map(function (k, i) { return '<button class="m' + (i % 4) + '" aria-pressed="' + (i === 0) + '" aria-label="' + k + ', ' + nm[i % 4] + '"><em aria-hidden="true">' + sym[i % 4] + '</em><span lang="ja">' + k + '</span></button>'; }).join('') + '</div></section><section class="card stack"><div class="row between"><div class="word-big jp" lang="ja" style="font-size:calc(4rem*var(--font-scale))">日</div><div class="tools"><button class="btn ghost sm">Tập viết</button><button class="btn sm">' + ico('plus') + 'Thêm thẻ</button></div></div><dl class="kv"><dt>Nghĩa</dt><dd lang="vi">mặt trời; ngày</dd><dt>Âm On</dt><dd lang="ja">ニチ, ジツ</dd><dt>Âm Kun</dt><dd lang="ja">ひ, か</dd><dt>Số nét</dt><dd class="num">4</dd><dt>Từ hay gặp</dt><dd lang="ja">' + r('日本', 'にほん') + ' · ' + r('毎日', 'まいにち') + '</dd></dl></section></div>' :
       '<div class="grid2" style="align-items:start"><section class="card" aria-label="Bảng ' + (st.kana === 'kata' ? 'katakana' : 'hiragana') + '"><div class="kgrid">' + hira.map(function (c, i) { return '<button class="m' + lv[i] + '" aria-pressed="' + (i === st.kanaSel) + '" data-kana="' + i + '" aria-label="' + ch(i) + ', ' + rom[i] + ', ' + nm[lv[i]] + '"><em aria-hidden="true">' + sym[lv[i]] + '</em><span lang="ja">' + ch(i) + '</span><small>' + rom[i] + '</small></button>'; }).join('') + '</div></section>' +
-      '<section class="card stack" aria-labelledby="wr"><div class="row between"><h2 class="h2" id="wr">Tập viết · <span lang="ja">' + ch(st.kanaSel) + '</span> (' + rom[st.kanaSel] + ')</h2><span class="chip">Nét 1 / 3</span></div><div class="draw" role="img" aria-label="Khung tập viết chữ ' + rom[st.kanaSel] + '. Dùng ngón tay hoặc chuột, hoặc bấm Xem nét mẫu."><span class="jp" lang="ja">' + ch(st.kanaSel) + '</span><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 38c12 3 28 3 40 0M50 18c-2 22 0 44 4 64M66 52c8 8 8 22-6 28"/></svg></div><div class="row" style="justify-content:center"><button class="btn ghost">Xoá</button><button class="btn soft">Xem nét mẫu</button><button class="btn">Kiểm tra</button></div><p class="muted">Không thể vẽ? Chọn "Trắc nghiệm" thay cho tập viết trong Cài đặt học.</p></section></div>');
+      '<section class="card stack" aria-labelledby="wr"><div class="row between"><h2 class="h2" id="wr">Tập viết <span lang="ja">' + ch(st.kanaSel) + '</span> · ' + rom[st.kanaSel] + '</h2><span class="chip mustard num">NÉT 1/3</span></div><div class="draw" role="img" aria-label="Khung tập viết chữ ' + rom[st.kanaSel] + '. Dùng ngón tay hoặc chuột, hoặc bấm Xem nét mẫu."><span lang="ja">' + ch(st.kanaSel) + '</span><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 38c12 3 28 3 40 0M50 18c-2 22 0 44 4 64M66 52c8 8 8 22-6 28"/></svg></div><div class="row" style="justify-content:center"><button class="btn ghost">Xoá</button><button class="btn ghost">Xem nét mẫu</button><button class="btn alt">Kiểm tra</button></div><p class="muted">Không vẽ được? Đổi sang "Trắc nghiệm" trong Cài đặt › Học.</p></section></div>');
     } },
-    path: { label: 'Lộ trình', nav: 'path', states: { skel: 'list', empty: ['Chưa chọn mục tiêu', 'Chọn trình độ JLPT bạn nhắm tới để Mochi gợi ý bài học theo thứ tự.', '<button class="btn">Chọn mục tiêu</button>'], err: ['Không tải được lộ trình', 'Danh sách bài học chưa đọc được. Thử lại hoặc cài lại gói lộ trình.', 'PackError: lessons collection empty'] }, render: function () {
-      var u = [['done', '✓', 'Hiragana & katakana', 'Hoàn thành · 46/46 chữ'], ['done', '✓', 'Chào hỏi và giới thiệu', '12 từ · 3 mẫu câu'], ['now', '4', 'Số đếm và thời gian', '8/20 từ · bài đang học'], ['', '5', 'Động từ nhóm 1', 'Chưa mở'], ['', '6', 'Tính từ い và な', 'Chưa mở']];
-      return h1('Lộ trình JLPT', 'Nội dung giáo trình do bạn nạp từ sách của mình. Yomineko chỉ cung cấp khung và bài luyện.') + '<div class="path5" role="group" aria-label="Cấp độ">' + ['N5:78', 'N4:22', 'N3:0', 'N2:0', 'N1:0'].map(function (x) { var p = x.split(':'); return '<div class="' + (p[0] === 'N4' ? 'cur' : '') + '"' + (p[0] === 'N4' ? ' aria-current="true"' : '') + '><span class="muted">' + p[0] + '</span><b>' + p[1] + '%</b></div>'; }).join('') + '</div>' +
-      '<section class="card" aria-labelledby="un"><h2 class="h2" id="un">N5 · Đơn vị học</h2>' + u.map(function (x) { return '<div class="unit ' + x[0] + '"><span class="st" aria-hidden="true">' + x[1] + '</span><div class="grow"><strong>' + x[2] + '</strong><span class="muted">' + x[3] + '</span></div>' + (x[0] === 'now' ? go_('srs', 'Học tiếp') : x[0] === 'done' ? '<button class="btn ghost sm">Ôn lại</button>' : '<button class="btn ghost sm" disabled>Chưa mở</button>') + '</div>'; }).join('') + '</section>' +
-      '<section class="card pink stack"><h2 class="h2">Ngữ pháp trong tuần</h2><p lang="ja" class="jp">〜ています <span class="muted" style="font-family:var(--font-ui)">· đang làm / trạng thái kéo dài</span></p><div class="row"><button class="btn soft sm">Xem giải thích</button><button class="btn ghost sm">Làm 5 câu luyện</button></div></section>';
+    path: { label: 'Lộ trình', states: { skel: 'list', empty: ['Chưa chọn mục tiêu', 'Chọn trình độ JLPT bạn nhắm tới để Mochi gợi ý bài học theo thứ tự.', '<button class="btn">Chọn mục tiêu</button>'], err: ['Không tải được lộ trình', 'Danh sách bài học chưa đọc được. Thử lại hoặc cài lại gói lộ trình.', 'PackError: lessons collection empty'] }, render: function () {
+      var u = [['done', '✓', 'Hiragana & katakana', 'Hoàn thành · 46/46 chữ'], ['done', '✓', 'Chào hỏi và giới thiệu', '12 từ · 3 mẫu câu'], ['now', '003', 'Số đếm và thời gian', '8/20 từ · đang học'], ['', '004', 'Động từ nhóm 1', 'Chưa mở'], ['', '005', 'Tính từ い và な', 'Chưa mở']];
+      return h1('学習ルート', 'Lộ trình JLPT', 'Nội dung giáo trình do bạn nạp từ sách của mình. Yomineko cung cấp khung và bài luyện.') + '<div class="levels" role="group" aria-label="Cấp độ JLPT">' + ['N5:78', 'N4:22', 'N3:0', 'N2:0', 'N1:0'].map(function (x) { var p = x.split(':'); return '<div class="' + (p[0] === 'N4' ? 'cur' : '') + '"' + (p[0] === 'N4' ? ' aria-current="true"' : '') + '><span class="l">' + p[0] + '</span><b>' + p[1] + '%</b></div>'; }).join('') + '</div>' +
+      '<div class="grid2" style="align-items:start"><section class="card" aria-labelledby="un">' + kick('N5', 'Đơn vị học') + '<h2 class="sr" id="un">N5 · Đơn vị học</h2><div>' + u.map(function (x) { return '<div class="unit ' + x[0] + '"><span class="st" aria-hidden="true">' + x[1] + '</span><div class="grow"><strong>' + x[2] + '</strong><span class="muted">' + x[3] + '</span></div>' + (x[0] === 'now' ? go_('srs', 'Học tiếp', 'sm') : x[0] === 'done' ? '<button class="btn ghost sm">Ôn lại</button>' : '<button class="btn ghost sm" disabled>Chưa mở</button>') + '</div>'; }).join('') + '</div></section>' +
+      '<section class="card mustard stack">' + kick('今週の文法', 'Ngữ pháp trong tuần') + '<p lang="ja" style="font:400 var(--t-xl)/1.5 var(--f-jp-disp)">〜ています</p><p>Diễn tả hành động đang diễn ra, hoặc trạng thái kéo dài.</p><div class="ex jp" lang="ja">' + r('本', 'ほん') + 'を' + r('読', 'よ') + 'んでいます。<div class="muted vi" lang="vi">Tôi đang đọc sách.</div></div><div class="row"><button class="btn sm">Xem giải thích</button><button class="btn ghost sm">Làm 5 câu luyện</button></div></section></div>';
     } },
-    library: { label: 'Thư viện', nav: 'lib', states: { skel: 'grid', empty: ['Thư viện còn trống', 'Nạp truyện hoặc tập phim của riêng bạn. Tệp ở lại trong máy, Yomineko không tải lên đâu cả.', '<button class="btn">Nạp truyện (CBZ, ZIP, PDF)</button><button class="btn soft">Nạp video + phụ đề</button>'], err: ['Không đọc được tệp "tap2.cbz"', 'Tệp bị hỏng hoặc không đủ quyền đọc. Chọn lại tệp hoặc thử định dạng khác.', 'ZipError: end of central directory not found'], errAlt: ['library', 'Chọn tệp khác'] }, render: function () {
-      var item = function (t, sub, v, tag, p) { return '<article class="stack" style="gap:6px"><div class="cover' + (v ? ' v' : '') + '" role="img" aria-label="Bìa ' + t + '">' + mochi(v ? 56 : 64, 'happy') + '<span class="chip ' + (v ? 'sky' : 'pink') + ' tag">' + tag + '</span></div><strong>' + t + '</strong><span class="muted">' + sub + '</span><div class="bar" role="progressbar" aria-label="Tiến độ ' + t + '" aria-valuenow="' + p + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + p + '%"></i></div><button class="btn soft sm" data-go="' + (v ? 'anime' : 'manga') + '">' + (v ? 'Xem' : 'Đọc') + '</button></article>'; };
-      return h1('Thư viện của bạn', 'Mọi tệp nằm trong máy và dùng được offline.') + '<div class="drop"><strong>Kéo thả tệp vào đây</strong><span class="muted">Truyện: CBZ, ZIP, PDF, thư mục ảnh · Video: MP4, MKV + phụ đề SRT, ASS</span><div class="row" style="justify-content:center"><button class="btn">Chọn tệp</button><button class="btn ghost">Chọn thư mục</button></div></div>' +
-      '<div class="row between"><div class="filters" role="group" aria-label="Lọc thư viện"><button class="fchip" aria-pressed="true">Tất cả</button><button class="fchip" aria-pressed="false">Truyện</button><button class="fchip" aria-pressed="false">Phim</button></div><div class="field" style="min-width:11rem"><label class="sr" for="so">Sắp xếp</label><select class="select" id="so"><option>Mở gần đây</option><option>Tên A–Z</option><option>Tiến độ</option></select></div></div>' +
-      '<div class="grid3" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,10rem),1fr))">' + item('Truyện mẫu · Tập 2', '14/32 trang', 0, 'Truyện', 44) + item('Truyện mẫu · Tập 3', 'Chưa đọc', 0, 'Truyện', 0) + item('Tập mẫu 3', '12:40 / 24:10', 1, 'Phim', 52) + item('Tập mẫu 4', 'Chưa xem', 1, 'Phim', 0) + '</div>';
+    library: { label: 'Thư viện', states: { skel: 'grid', empty: ['Thư viện còn trống', 'Nạp truyện hoặc tập phim của riêng bạn. Tệp ở lại trong máy, Yomineko không tải lên đâu cả.', '<button class="btn">Nạp truyện (CBZ, ZIP, PDF)</button><button class="btn ghost">Nạp video + phụ đề</button>'], err: ['Không đọc được tệp "tap2.cbz"', 'Tệp bị hỏng hoặc không đủ quyền đọc. Chọn lại tệp hoặc thử định dạng khác.', 'ZipError: end of central directory not found'], errAlt: ['library', 'Chọn tệp khác'] }, render: function () {
+      var item = function (t, sub, v, p, bg) { return '<article class="item stack" style="gap:8px"><div class="cover' + (v ? ' v' : '') + '" style="background:var(--' + bg + ')" role="img" aria-label="Bìa ' + t + '">' + (v ? night() : mochi(70, 'happy')) + '<span class="chip ' + (v ? 'sky' : 'coral') + ' tag">' + (v ? 'Phim' : 'Truyện') + '</span></div><strong>' + t + '</strong><span class="muted num">' + sub + '</span>' + bar(p, 'Tiến độ ' + t, v ? 'sky' : 'mustard') + '<div><button class="btn ghost sm" data-go="' + (v ? 'anime' : 'manga') + '">' + (v ? 'Xem' : 'Đọc') + '</button></div></article>'; };
+      return h1('本棚', 'Thư viện của bạn', 'Mọi tệp nằm trong máy và dùng được offline.') + '<div class="drop"><div class="stripes" style="width:56px;height:12px;border:2px solid var(--ink);border-radius:99px" aria-hidden="true"></div><strong class="h2">Kéo thả tệp vào đây</strong><span class="muted">Truyện: CBZ, ZIP, PDF, thư mục ảnh · Phim: MP4, MKV + phụ đề SRT, ASS</span><div class="row" style="justify-content:center"><button class="btn alt">Chọn tệp</button><button class="btn ghost">Chọn thư mục</button></div></div>' +
+      '<div class="row between"><div class="filters" role="group" aria-label="Lọc thư viện">' + [['all', 'Tất cả'], ['m', 'Truyện'], ['v', 'Phim']].map(function (x) { return '<button class="fchip" aria-pressed="' + (st.lib === x[0]) + '" data-lib="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div><div style="min-width:min(100%,11rem)"><label class="sr" for="so">Sắp xếp</label><select class="select" id="so"><option>Mở gần đây</option><option>Tên A–Z</option><option>Tiến độ</option></select></div></div>' +
+      '<div class="shelf">' + (st.lib !== 'v' ? item('Truyện mẫu · Tập 2', '014/032 TRANG', 0, 44, 'coral-soft') + item('Truyện mẫu · Tập 3', 'CHƯA ĐỌC', 0, 0, 'sky-soft') : '') + (st.lib !== 'm' ? item('Tập mẫu 3', '12:40/24:10', 1, 52, 'mint-soft') + item('Tập mẫu 4', 'CHƯA XEM', 1, 0, 'mustard-soft') : '') + '</div>';
     } },
-    manga: { label: 'Đọc truyện', nav: 'lib', states: { skel: 'card', empty: ['Chưa mở truyện nào', 'Chọn một truyện trong Thư viện để bắt đầu đọc.', go_('library', 'Mở Thư viện')], err: ['Trang 15 không hiển thị được', 'Ảnh trang này bị lỗi. Các trang khác vẫn đọc được.', 'ImageDecodeError: page_015.webp'], errAlt: ['library', 'Về Thư viện'] }, render: function () {
-      var cat = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M24 44 28 16 46 30Q50 29 54 30L72 16 76 44Q82 54 80 66 76 84 50 86 24 84 20 66 18 54 24 44Z"/><circle cx="40" cy="58" r="3" fill="var(--ink)"/><circle cx="62" cy="58" r="3" fill="var(--ink)"/><path d="M46 68Q50 72 54 68"/></svg>';
-      return h1('Truyện mẫu · Tập 2', 'Trang 14 / 32 · đọc từ phải sang trái') + '<div class="row between"><div class="row">' + seg('Kiểu đọc', 'mode', [['single', 'Một trang'], ['double', 'Hai trang'], ['scroll', 'Cuộn dọc']], st.mode) + '</div><div class="tools"><button class="btn ghost sm" aria-pressed="false">Đánh dấu trang</button><button class="btn ghost sm">Mục lục</button><button class="btn ghost sm" data-go="settings">Hiển thị</button></div></div>' +
-      '<div class="grid2" style="align-items:start"><div class="reader"><div class="page" role="img" aria-label="Trang 14. Mèo trắng nói: Hôm nay trời đẹp nhỉ. Ô dưới: Mai cùng đọc nhé."><div class="pn">' + cat + '<span class="bubble" style="top:8%;left:8%"><span class="vt jp" lang="ja">' + wordBtn('again', r('今日', 'きょう')) + 'もいい' + wordBtn('again', r('天気', 'てんき')) + 'だね</span></span></div><div class="pn"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="26"/><path d="M36 44h6M58 44h6M44 60q6 5 12 0"/></svg></div><div class="pn wide">' + cat + '<span class="bubble" style="bottom:10%;right:8%"><span class="vt jp" lang="ja">' + wordBtn('again', r('明日', 'あした')) + 'も' + wordBtn('read', r('読', 'よ')) + 'もう。</span></span></div></div>' +
-      '<div class="toolbar"><button class="btn ghost" aria-label="Trang sau (phím mũi tên trái)">‹</button><label class="sr" for="pg">Trang</label><input id="pg" type="range" min="1" max="32" value="14" aria-valuetext="Trang 14 trên 32"><span class="num">14 / 32</span><button class="btn ghost" aria-label="Trang trước (phím mũi tên phải)">›</button></div><div class="toolbar"><button class="btn ghost sm">Thu nhỏ</button><button class="btn ghost sm">Phóng to</button><button class="btn ghost sm">Vừa chiều rộng</button><button class="btn soft sm">Nhận chữ (OCR)</button></div></div>' +
-      '<div class="stack">' + dictSheet(st.popup) + '<div class="card"><h2 class="h2">Trang này có 2 từ mới</h2><p class="muted">Gửi vào bộ thẻ "Từ manga: Tập 2" để ôn sau.</p><button class="btn soft sm" data-act="addsrs">Thêm cả 2 từ</button></div></div></div>';
+    manga: { label: 'Đọc truyện', states: { skel: 'card', empty: ['Chưa mở truyện nào', 'Chọn một truyện trong Thư viện để bắt đầu đọc.', go_('library', 'Mở Thư viện')], err: ['Trang 15 không hiển thị được', 'Ảnh trang này bị lỗi. Các trang khác vẫn đọc được.', 'ImageDecodeError: page_015.webp'], errAlt: ['library', 'Về Thư viện'] }, render: function () {
+      return h1('漫画', 'Truyện mẫu · Tập 2', 'Trang 14/32 · đọc từ phải sang trái') + '<div class="row between">' + seg('Kiểu đọc', 'mode', [['single', 'Một trang'], ['double', 'Hai trang'], ['scroll', 'Cuộn dọc']], st.mode) + '<div class="tools"><button class="btn ghost sm" aria-pressed="false">Đánh dấu</button><button class="btn ghost sm">Mục lục</button><button class="btn ghost sm" data-go="settings">Hiển thị</button></div></div>' +
+      '<div class="grid2" style="align-items:start"><div class="reader"><div class="page" role="img" aria-label="Trang 14. Mèo trắng nói: Hôm nay trời đẹp nhỉ. Ô dưới: Mai cùng đọc nhé."><div class="pn">' + panelCat() + '<span class="bubble" style="top:8%;left:8%"><span class="vt jp" lang="ja">' + wordBtn('again', r('今日', 'きょう')) + 'もいい' + r('天気', 'てんき') + 'だね</span></span></div><div class="pn b"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="24" fill="#ffd35a"/></svg></div><div class="pn wide">' + panelCat() + '<span class="bubble" style="bottom:10%;right:8%"><span class="vt jp" lang="ja">' + wordBtn('again', r('明日', 'あした')) + 'も' + wordBtn('read', r('読', 'よ')) + 'もう。</span></span></div></div>' +
+      '<div class="toolbar"><button class="btn ghost sm" aria-label="Trang sau (phím mũi tên trái)">‹ Sau</button><label class="sr" for="pg">Trang</label><input id="pg" type="range" min="1" max="32" value="14" aria-valuetext="Trang 14 trên 32"><span class="num">014/032</span><button class="btn ghost sm" aria-label="Trang trước (phím mũi tên phải)">Trước ›</button></div><div class="toolbar"><button class="btn ghost sm">Thu nhỏ</button><button class="btn ghost sm">Phóng to</button><button class="btn ghost sm">Vừa chiều rộng</button><button class="btn alt sm">Nhận chữ (OCR)</button></div></div>' +
+      '<div class="stack">' + dictSheet(st.popup) + '<div class="ticket"><strong>Trang này có 2 từ mới</strong><p class="muted">Gửi vào bộ thẻ "Từ truyện: Tập 2" để ôn sau.</p><button class="btn sm" data-act="addsrs" style="margin-top:8px">Thêm cả 2 từ</button></div></div></div>';
     } },
-    anime: { label: 'Xem phim', nav: 'lib', states: { skel: 'card', empty: ['Chưa có phụ đề', 'Video này chưa có tệp phụ đề. Nạp tệp SRT hoặc ASS để học theo từng câu.', '<button class="btn">Nạp phụ đề</button>'], err: ['Không phát được video', 'Định dạng hoặc codec của tệp chưa được hỗ trợ trên thiết bị này.', 'MediaError: NotSupported (HEVC 10-bit)'], errAlt: ['library', 'Chọn tệp khác'] }, render: function () {
+    anime: { label: 'Xem phim', states: { skel: 'card', empty: ['Chưa có phụ đề', 'Video này chưa có tệp phụ đề. Nạp tệp SRT hoặc ASS để học theo từng câu.', '<button class="btn">Nạp phụ đề</button>'], err: ['Không phát được video', 'Định dạng hoặc codec của tệp chưa được hỗ trợ trên thiết bị này.', 'MediaError: NotSupported (HEVC 10-bit)'], errAlt: ['library', 'Chọn tệp khác'] }, render: function () {
       var lines = [['00:12', 'また' + r('明日', 'あした') + 'ね。', 'Mai gặp lại nhé.'], ['00:15', '今日もいい' + r('天気', 'てんき') + 'だね。', 'Hôm nay trời đẹp nhỉ.'], ['00:19', '一緒に' + r('本', 'ほん') + 'を' + r('読', 'よ') + 'もう。', 'Cùng đọc sách nhé.']], L = lines[st.line];
-      return h1('Tập mẫu 3', 'Video và phụ đề là tệp bạn tự nạp') + '<div class="grid2" style="align-items:start"><div class="stack"><div class="player"><div class="video" role="img" aria-label="Khung hình video. Phụ đề hiện tại: ' + L[2] + '"><span class="moon"></span><span class="ground"></span><div class="cat">' + mochi(100, 'happy').replace('width="100" height="100"', 'width="100%"') + '</div>' + (st.sub ? '<div class="subs jp" lang="ja">' + wordBtn('again', L[1]) + (st.subVi ? '<span class="vi" lang="vi">' + L[2] + '</span>' : '') + '</div>' : '') + '</div>' +
-      '<div class="pctl"><button class="btn soft" data-act="play" aria-label="' + (st.playing ? 'Tạm dừng' : 'Phát') + ' (K)">' + (st.playing ? 'Dừng' : 'Phát') + '</button><span class="num muted">00:' + (12 + st.line * 3) + '</span><label class="sr" for="seek">Tua video</label><input id="seek" type="range" min="0" max="100" value="' + (30 + st.line * 10) + '"><span class="num muted">24:10</span></div>' +
-      '<div class="pctl" style="padding-top:0"><button class="btn ghost sm" data-act="prevline">Câu trước (J)</button><button class="btn ghost sm" data-act="nextline">Câu sau (L)</button><button class="btn ghost sm" data-act="sub" aria-pressed="' + st.sub + '">Phụ đề Nhật: ' + (st.sub ? 'Bật' : 'Tắt') + '</button><button class="btn ghost sm" data-act="subvi" aria-pressed="' + st.subVi + '">Phụ đề Việt: ' + (st.subVi ? 'Bật' : 'Tắt') + '</button><button class="btn ghost sm">Tốc độ 0.75×</button><button class="btn ghost sm">Lặp câu (R)</button><button class="btn ghost sm">Lặp A–B</button></div></div>' +
-      '<div class="card stack"><h2 class="h2">Phụ đề</h2><div class="row between"><span>Cỡ chữ phụ đề</span><div class="row"><button class="btn ghost sm" aria-label="Giảm cỡ chữ phụ đề">A−</button><button class="btn ghost sm" aria-label="Tăng cỡ chữ phụ đề">A+</button></div></div><p class="muted">Nền phụ đề luôn đậm để đủ tương phản trên mọi cảnh.</p></div></div>' +
-      '<div class="stack"><section class="card" aria-labelledby="lt"><h2 class="h2" id="lt">Lời thoại</h2><div class="tr jp" lang="ja" style="margin-top:6px">' + lines.map(function (l, i) { return '<button data-line="' + i + '" aria-current="' + (i === st.line) + '"><time>' + l[0] + '</time><span>' + l[1] + '</span></button>'; }).join('') + '</div></section>' + dictSheet(st.popup) + '<button class="btn soft" data-act="addsrs">Tạo thẻ từ câu này</button></div></div>';
+      return h1('アニメ', 'Tập mẫu 3', 'Video và phụ đề là tệp bạn tự nạp') + '<div class="grid2" style="align-items:start"><div class="stack"><div class="player"><div class="video" role="img" aria-label="Khung hình video. Phụ đề hiện tại: ' + L[2] + '">' + night() + (st.sub ? '<div class="subs jp" lang="ja">' + wordBtn('again', L[1]) + (st.subVi ? '<span class="vi" lang="vi">' + L[2] + '</span>' : '') + '</div>' : '') + '</div>' +
+      '<div class="pctl"><button class="btn alt" data-act="play" aria-label="' + (st.playing ? 'Tạm dừng' : 'Phát') + ' (phím K)">' + (st.playing ? 'Dừng' : ico('play') + 'Phát') + '</button><span class="num muted">00:' + (12 + st.line * 3) + '</span><label class="sr" for="seek">Tua video</label><input id="seek" type="range" min="0" max="100" value="' + (30 + st.line * 10) + '"><span class="num muted">24:10</span></div>' +
+      '<div class="pctl"><button class="btn ghost sm" data-act="prevline">‹ Câu trước</button><button class="btn ghost sm" data-act="nextline">Câu sau ›</button><button class="btn ghost sm" data-act="sub" aria-pressed="' + st.sub + '">Phụ đề Nhật</button><button class="btn ghost sm" data-act="subvi" aria-pressed="' + st.subVi + '">Phụ đề Việt</button><button class="btn ghost sm">0.75×</button><button class="btn ghost sm">Lặp câu</button><button class="btn ghost sm">Lặp A–B</button></div></div>' +
+      '<div class="card flat stack"><div class="row between"><strong>Cỡ chữ phụ đề</strong><div class="row"><button class="btn ghost sm" aria-label="Giảm cỡ chữ phụ đề">A−</button><button class="btn ghost sm" aria-label="Tăng cỡ chữ phụ đề">A+</button></div></div><p class="muted">Nền phụ đề luôn đậm để đủ tương phản trên mọi cảnh.</p></div></div>' +
+      '<div class="stack"><section class="card" aria-labelledby="lt">' + kick('台詞', 'Lời thoại') + '<h2 class="sr" id="lt">Lời thoại</h2><div class="tr jp" lang="ja" style="margin-top:8px">' + lines.map(function (l, i) { return '<button data-line="' + i + '" aria-current="' + (i === st.line) + '"><time>' + l[0] + '</time><span>' + l[1] + '</span></button>'; }).join('') + '</div></section>' + dictSheet(st.popup) + '<button class="btn alt" data-act="addsrs">' + ico('plus') + 'Tạo thẻ từ câu này</button></div></div>';
     } },
-    progress: { label: 'Tiến độ', nav: 'chart', states: { skel: 'list', empty: ['Chưa có dữ liệu học', 'Học vài thẻ đầu tiên rồi quay lại: Mochi sẽ vẽ biểu đồ cho bạn.', go_('srs', 'Bắt đầu ôn tập')], err: ['Không tính được thống kê', 'Lịch sử học không đọc được lúc này. Tiến độ vẫn được lưu an toàn.', 'StatsError: userdata/history parse failed'] }, render: function () {
+    progress: { label: 'Tiến độ', states: { skel: 'list', empty: ['Chưa có dữ liệu học', 'Học vài thẻ đầu tiên rồi quay lại: Mochi sẽ vẽ biểu đồ cho bạn.', go_('srs', 'Bắt đầu ôn tập')], err: ['Không tính được thống kê', 'Lịch sử học không đọc được lúc này. Tiến độ vẫn được lưu an toàn.', 'StatsError: userdata/history parse failed'] }, render: function () {
       var days = [['T2', 62], ['T3', 80], ['T4', 45], ['T5', 31], ['T6', 0], ['T7', 0], ['CN', 0]], heat = '';
       for (var i = 0; i < 91; i++) { var v = (i * 7 + (i % 5) * 3) % 10; heat += '<i class="' + (i > 84 ? '' : v > 7 ? 'l3' : v > 4 ? 'l2' : v > 2 ? 'l1' : '') + '"></i>'; }
-      return h1('Tiến độ của bạn') + '<div class="path5" role="group" aria-label="Tiến độ theo cấp JLPT">' + ['N5:78:ok', 'N4:22:', 'N3:0:', 'N2:0:', 'N1:0:'].map(function (x) { var p = x.split(':'); return '<div class="' + (p[0] === 'N4' ? 'cur' : '') + '"><span class="muted">' + p[0] + '</span><b>' + p[1] + '%</b><div class="bar ' + p[2] + '" role="progressbar" aria-label="' + p[0] + '" aria-valuenow="' + p[1] + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + p[1] + '%"></i></div></div>'; }).join('') + '</div>' +
-      '<div class="stats"><div class="flat"><span class="muted">Từ đã học</span><span class="big">412</span></div><div class="flat"><span class="muted">Kanji</span><span class="big">96</span></div><div class="flat"><span class="muted">Giờ đọc/xem</span><span class="big">38</span></div><div class="flat"><span class="muted">Độ nhớ</span><span class="big">91%</span></div></div>' +
-      '<div class="grid2"><section class="card"><h2 class="h2">Tuần này</h2><span class="muted">Số thẻ mỗi ngày</span><div class="bars" role="img" aria-label="Biểu đồ cột: T2 62, T3 80, T4 45, T5 31, T6 đến CN chưa có">' + days.map(function (d, i) { return '<div class="' + (i === 3 ? 'today' : '') + '"><span class="num">' + d[1] + '</span><i style="height:' + d[1] * 1.1 + 'px"></i>' + d[0] + '</div>'; }).join('') + '</div></section>' +
-      '<section class="card"><h2 class="h2">13 tuần gần nhất</h2><div class="heat" style="margin-top:10px" role="img" aria-label="Lịch học 13 tuần, ô đậm là ngày học nhiều">' + heat + '</div><p class="muted" style="margin-top:8px">Ô đậm hơn là ngày học nhiều hơn.</p></section></div>' +
-      '<section class="card"><h2 class="h2">Cần ôn kỹ</h2><ul class="list">' + [['見る', 'みる', 'nhìn', '62%'], ['聞く', 'きく', 'nghe, hỏi', '67%'], ['待つ', 'まつ', 'đợi', '70%']].map(function (x) { return '<li><span class="jp" lang="ja" style="font-size:var(--text-lg)">' + r(x[0], x[1]) + '</span><span class="grow" lang="vi">' + x[2] + '</span><span class="chip warn">nhớ ' + x[3] + '</span><button class="btn soft sm">Ôn riêng</button></li>'; }).join('') + '</ul></section>';
+      return h1('進捗', 'Tiến độ của bạn') + '<div class="levels" role="group" aria-label="Tiến độ theo cấp JLPT">' + ['N5:78', 'N4:22', 'N3:0', 'N2:0', 'N1:0'].map(function (x) { var p = x.split(':'); return '<div class="' + (p[0] === 'N4' ? 'cur' : '') + '"><span class="l">' + p[0] + '</span><b>' + p[1] + '%</b>' + bar(+p[1], 'Cấp ' + p[0], p[0] === 'N5' ? 'mint' : '') + '</div>'; }).join('') + '</div>' +
+      '<div class="stats">' + [['Từ đã học', '412'], ['Kanji', '096'], ['Giờ đọc/xem', '038'], ['Độ nhớ', '91%']].map(function (s) { return '<div class="stat"><span class="kick">' + s[0] + '</span><span class="big-num">' + s[1] + '</span></div>'; }).join('') + '</div>' +
+      '<div class="grid2"><section class="card">' + kick('今週', 'Tuần này · số thẻ mỗi ngày') + '<div class="bars" style="margin-top:12px" role="img" aria-label="Biểu đồ cột: T2 62, T3 80, T4 45, T5 31, T6 đến CN chưa có">' + days.map(function (d, i) { return '<div class="' + (i === 3 ? 'today' : '') + '"><span class="v">' + (d[1] || '') + '</span><i style="height:' + d[1] * 1.6 + 'px;' + (d[1] ? '' : 'border:0') + '"></i></div>'; }).join('') + '</div><div class="days" aria-hidden="true">' + days.map(function (d) { return '<span>' + d[0] + '</span>'; }).join('') + '</div></section>' +
+      '<section class="card">' + kick('記録', '13 tuần gần nhất') + '<div class="heat" style="margin-top:12px" role="img" aria-label="Lịch học 13 tuần, ô đậm là ngày học nhiều">' + heat + '</div><div class="key" style="margin-top:10px" aria-hidden="true">Ít <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i> Nhiều</div></section></div>' +
+      '<section class="card">' + kick('苦手', 'Cần ôn kỹ') + '<ul class="list">' + [['見る', 'みる', 'nhìn', '62%'], ['聞く', 'きく', 'nghe, hỏi', '67%'], ['待つ', 'まつ', 'đợi', '70%']].map(function (x) { return '<li><span class="jp" lang="ja" style="font-size:var(--t-lg);font-weight:700">' + r(x[0], x[1]) + '</span><span class="grow" lang="vi">' + x[2] + '</span><span class="chip coral num">nhớ ' + x[3] + '</span><button class="btn ghost sm">Ôn riêng</button></li>'; }).join('') + '</ul></section>';
     } },
-    packs: { label: 'Kho nội dung', nav: 'pack', states: { skel: 'list', empty: ['Chưa cài gói nào', 'Cài từ điển và bộ thẻ để dùng offline. Chỉ tải một lần, sau đó chỉ cập nhật phần thay đổi.', '<button class="btn">Cài gói khuyên dùng</button>'], err: ['Cập nhật không thành công', 'Gói JMdict tải về bị sai mã kiểm tra nên không được cài. Nội dung cũ vẫn dùng bình thường.', 'sha256 expected 9f2c… got 41ab…'] }, render: function () {
-      var p = [['JMdict (rút gọn)', 'v2026.10.22', '18 MB', 'CC BY-SA 4.0', 'Có bản mới v2026.10.29 · 1,4 MB (chỉ phần thay đổi)'], ['KANJIDIC', 'v2026.10.01', '2 MB', 'CC BY-SA 4.0', 'Đã mới nhất'], ['Bộ thẻ N5 mẫu', 'v1.3.0', '1 MB', 'CC0', 'Có bản mới v1.4.0 · 0,3 MB']];
-      return h1('Kho nội dung', 'Cập nhật từng phần nhỏ. Học liệu của bạn không bao giờ bị mất khi cập nhật hay gỡ gói.') +
-      '<div class="alert" style="background:var(--success-soft);border-color:var(--success)" role="status"><span class="mk" style="background:var(--success)" aria-hidden="true">✓</span><div><strong>Đang dùng offline</strong><br><span class="muted">Đã dùng 31 MB trong máy · còn trống 12 GB</span></div></div>' +
-      '<div class="row between"><div class="muted">Lần kiểm tra cuối: hôm nay 09:40</div><div class="row"><button class="btn ghost">Kiểm tra cập nhật</button><button class="btn" data-act="updateall">Cập nhật tất cả (1,7 MB)</button></div></div>' +
-      '<div class="card"><ul class="list">' + p.map(function (x, i) { var upd = i !== 1; return '<li><div class="grow"><strong>' + x[0] + '</strong><span class="muted">' + x[1] + ' · ' + x[2] + ' · giấy phép ' + x[3] + '</span><span class="' + (upd ? '' : 'muted') + '" style="' + (upd ? 'color:var(--info);font-weight:700' : '') + '">' + x[4] + '</span></div>' + (upd ? '<button class="btn soft sm">Cập nhật</button>' : '<span class="chip mint">Mới nhất</span>') + '<button class="btn ghost sm" aria-label="Gỡ ' + x[0] + '">Gỡ</button></li>'; }).join('') + '</ul></div>' +
-      (st.toast ? '<div class="card stack" role="status"><strong>' + st.toast + '</strong><div class="bar" role="progressbar" aria-label="Đang cập nhật" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><i style="width:60%"></i></div><span class="muted">Đang tải gói 2/3 · có thể dùng app trong lúc chờ</span></div>' : '') +
-      '<div class="card pink stack"><h2 class="h2">Cập nhật ứng dụng</h2><p>Bản Windows và Android tự báo khi có phiên bản mới. Bản web cập nhật khi mở lại.</p><div class="row"><span class="chip">Phiên bản 0.1.0</span><button class="btn ghost sm">Kiểm tra bản mới</button></div></div>';
+    packs: { label: 'Kho nội dung', states: { skel: 'list', empty: ['Chưa cài gói nào', 'Cài từ điển và bộ thẻ để dùng offline. Chỉ tải một lần, sau đó chỉ cập nhật phần thay đổi.', '<button class="btn">Cài gói khuyên dùng</button>'], err: ['Cập nhật không thành công', 'Gói JMdict tải về bị sai mã kiểm tra nên không được cài. Nội dung cũ vẫn dùng bình thường.', 'sha256 expected 9f2c… got 41ab…'] }, render: function () {
+      var p = [['JMdict (rút gọn)', 'v2026.10.22', '18 MB', 'CC BY-SA 4.0', 'Bản mới v2026.10.29 · 1,4 MB'], ['KANJIDIC', 'v2026.10.01', '2 MB', 'CC BY-SA 4.0', ''], ['Bộ thẻ N5 mẫu', 'v1.3.0', '1 MB', 'CC0', 'Bản mới v1.4.0 · 0,3 MB']];
+      return h1('コンテンツ', 'Kho nội dung', 'Cập nhật từng phần nhỏ. Tiến độ học của bạn không bao giờ mất khi cập nhật hay gỡ gói.') +
+      '<div class="alert ok" role="status"><span class="mk" aria-hidden="true">✓</span><div><strong>Đang dùng offline</strong><br><span class="muted">Đã dùng 31 MB trong máy · còn trống 12 GB</span></div></div>' +
+      '<div class="row between"><span class="muted num">KIỂM TRA LÚC 09:40</span><div class="row"><button class="btn ghost">Kiểm tra cập nhật</button><button class="btn alt" data-act="updateall">Cập nhật tất cả · 1,7 MB</button></div></div>' +
+      (st.toast ? '<div class="card mustard stack" role="status"><strong>' + st.toast + '</strong>' + bar(60, 'Đang cập nhật') + '<span class="muted">Đang tải gói 2/3 · vẫn dùng app được trong lúc chờ</span></div>' : '') +
+      '<div class="grid2">' + p.map(function (x, i) { var upd = !!x[4]; return '<article class="card' + (upd ? ' sky' : '') + ' stack"><div class="row between"><span class="num muted">PACK ' + pad(i + 1) + '</span>' + (upd ? '<span class="chip sky">Có bản mới</span>' : '<span class="chip mint">✓ Mới nhất</span>') + '</div><h2 class="h2">' + x[0] + '</h2><span class="muted num">' + x[1] + ' · ' + x[2] + ' · ' + x[3] + '</span>' + (upd ? '<strong>' + x[4] + ' (chỉ phần thay đổi)</strong>' : '') + '<div class="row">' + (upd ? '<button class="btn sm">Cập nhật</button>' : '') + '<button class="btn ghost sm" aria-label="Gỡ ' + x[0] + '">Gỡ</button></div></article>'; }).join('') + '</div>' +
+      '<div class="ticket stack"><strong>Cập nhật ứng dụng</strong><p class="muted">Bản Windows và Android tự báo khi có phiên bản mới. Bản web cập nhật khi mở lại.</p><div class="row"><span class="chip num">v0.1.0</span><button class="btn ghost sm">Kiểm tra bản mới</button></div></div>';
     } },
-    settings: { label: 'Cài đặt', nav: 'gear', render: function () {
+    settings: { label: 'Cài đặt', render: function () {
       var t = st.setTab;
-      var body = t === 'hien-thi' ? '<div class="grid2" style="align-items:start"><div class="card">' + '<div class="setrow"><div><strong>Giao diện</strong><span class="muted">Sáng, tối hoặc theo máy</span></div>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']], st.theme) + '</div>' + sw('furigana', st.furigana, 'Hiện furigana (ふりがな)', 'Chữ nhỏ trên kanji') + sw('vertical', st.vertical, 'Chữ dọc', 'Cho bóng thoại và câu ví dụ') + '</div>' +
-        '<div class="card pink stack"><h2 class="h2">Xem trước</h2><div class="row" style="flex-wrap:nowrap;align-items:flex-start;gap:14px"><p class="jp vt" lang="ja" style="font-size:var(--text-jp);' + (st.vertical ? 'height:11rem' : '') + '">' + r('猫', 'ねこ') + 'は' + r('静', 'しず') + 'かに' + r('本', 'ほん') + 'を' + r('読', 'よ') + 'む。</p></div><div class="row"><button class="btn">Nút chính</button><button class="btn soft">Nút phụ</button><span class="chip pink">Thẻ</span></div></div></div>'
-        : t === 'tro-nang' ? '<div class="grid2" style="align-items:start"><div class="card">' + '<div class="setrow"><div><strong>Cỡ chữ: ' + st.scale + '%</strong><span class="muted">Từ 100% đến 200%, giao diện tự giãn theo</span></div><div style="flex:1;min-width:11rem"><label class="sr" for="scl">Cỡ chữ</label><input id="scl" type="range" min="100" max="200" step="25" value="' + st.scale + '" aria-valuetext="' + st.scale + ' phần trăm" style="width:100%;min-height:44px;accent-color:var(--accent-gfx)"></div></div>' + sw('contrast', st.contrast, 'Tương phản cao', 'Chữ đen/trắng thuần, viền đậm') + sw('motion', st.motion, 'Giảm chuyển động', 'Tắt hiệu ứng trượt, nhấp nháy. Tự bật nếu hệ điều hành yêu cầu') + sw('vertical', st.vertical, 'Chữ dọc', 'Cho văn bản tiếng Nhật') + sw('furigana', st.furigana, 'Furigana', 'Hiện cách đọc trên kanji') + '</div>' +
-        '<div class="card stack"><h2 class="h2">Cam kết trợ năng</h2><ul class="gloss"><li>Mọi chữ đạt tương phản WCAG AA (4,5:1), cả sáng và tối.</li><li>Dùng được hoàn toàn bằng bàn phím; vòng focus hai lớp luôn thấy rõ.</li><li>Màn hình đọc: nhãn tiếng Việt, ngôn ngữ Nhật gắn đúng <span lang="ja">lang="ja"</span>.</li><li>Trạng thái không chỉ dựa vào màu: luôn có biểu tượng hoặc chữ.</li><li>Nút và vùng bấm tối thiểu 44 px.</li></ul><button class="btn soft sm" data-go="keys">Xem phím tắt</button></div></div>'
-        : t === 'hoc' ? '<div class="card">' + '<div class="setrow"><div><strong>Mục tiêu mỗi ngày</strong><span class="muted">Số thẻ mới + ôn</span></div><select class="select" aria-label="Mục tiêu mỗi ngày" style="max-width:11rem"><option>25 thẻ</option><option>50 thẻ</option><option>80 thẻ</option></select></div><div class="setrow"><div><strong>Mức nhớ mong muốn</strong><span class="muted">Cao hơn = ôn nhiều hơn</span></div><select class="select" aria-label="Mức nhớ mong muốn" style="max-width:11rem"><option>85%</option><option selected>90%</option><option>95%</option></select></div>' + sw('audio', true, 'Tự phát âm', 'Đọc to từ khi hiện đáp án') + sw('kanawrite', true, 'Luyện viết nét cho kana', 'Có thể thay bằng trắc nghiệm') + '</div>'
-        : t === 'du-lieu' ? '<div class="card stack"><h2 class="h2">Sao lưu & chuyển máy</h2><p>Xuất toàn bộ tiến độ thành một tệp để giữ an toàn hoặc chuyển sang máy khác. Không cần tài khoản.</p><div class="row"><button class="btn">Xuất sao lưu</button><button class="btn ghost">Nhập sao lưu</button></div><hr style="border:0;border-top:1px solid var(--border);width:100%"><h2 class="h2">Xoá dữ liệu</h2><p class="muted">Hành động này không hoàn tác được. App sẽ hỏi lại một lần nữa trước khi xoá.</p><div class="row"><button class="btn ghost">Xoá lịch sử tra từ</button><button class="btn ghost" style="color:var(--warn);border-color:var(--warn)">Xoá toàn bộ tiến độ…</button></div></div>'
-        : '<div class="card stack"><h2 class="h2">Giấy phép & ghi công</h2><div class="scroll-x"><table><thead><tr><th scope="col">Nội dung</th><th scope="col">Nguồn</th><th scope="col">Giấy phép</th></tr></thead><tbody><tr><td>Từ điển</td><td>JMdict (EDRDG)</td><td>CC BY-SA 4.0</td></tr><tr><td>Kanji</td><td>KANJIDIC2 (EDRDG)</td><td>CC BY-SA 4.0</td></tr><tr><td>Từ điển bổ sung</td><td>Jitendex</td><td>CC BY-SA 4.0</td></tr></tbody></table></div><p class="muted">Yomineko 0.1.0 · Mochi do nhóm vẽ, nguyên bản.</p></div>';
-      return h1('Cài đặt') + tabs('Nhóm cài đặt', 'setTab', [['hien-thi', 'Hiển thị'], ['tro-nang', 'Trợ năng'], ['hoc', 'Học'], ['du-lieu', 'Dữ liệu'], ['gioi-thieu', 'Giấy phép']], t) + '<div role="tabpanel">' + body + '</div>';
+      var body = t === 'hien-thi' ? '<div class="grid2" style="align-items:start"><div class="card">' + '<div class="setrow"><div><strong>Giao diện</strong><span class="muted">Ngày, đêm hoặc theo máy</span></div>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Ngày'], ['dark', 'Đêm']], st.theme) + '</div>' + sw('furigana', st.furigana, 'Hiện furigana (ふりがな)', 'Chữ nhỏ trên kanji') + sw('vertical', st.vertical, 'Chữ dọc', 'Cho bóng thoại và câu ví dụ') + '</div>' +
+        '<div class="card mustard stack">' + kick('プレビュー', 'Xem trước') + '<p class="jp vt" lang="ja" style="font-size:var(--t-jp);' + (st.vertical ? 'height:11rem' : '') + '">' + r('猫', 'ねこ') + 'は' + r('静', 'しず') + 'かに' + r('本', 'ほん') + 'を' + r('読', 'よ') + 'む。</p><div class="row"><button class="btn">Nút chính</button><button class="btn alt">Nút phụ</button><span class="chip coral">Nhãn</span></div></div></div>'
+        : t === 'tro-nang' ? '<div class="grid2" style="align-items:start"><div class="card">' + '<div class="setrow"><div><strong>Cỡ chữ · <span class="num">' + st.scale + '%</span></strong><span class="muted">100% đến 200%, giao diện tự giãn theo</span></div><div style="flex:1;min-width:min(100%,11rem)"><label class="sr" for="scl">Cỡ chữ</label><input id="scl" type="range" min="100" max="200" step="25" value="' + st.scale + '" aria-valuetext="' + st.scale + ' phần trăm" style="width:100%"></div></div>' + sw('contrast', st.contrast, 'Tương phản cao', 'Chữ đen/trắng thuần, viền đậm') + sw('motion', st.motion, 'Giảm chuyển động', 'Tắt hiệu ứng. Tự bật nếu máy yêu cầu') + sw('vertical', st.vertical, 'Chữ dọc', 'Cho văn bản tiếng Nhật') + sw('furigana', st.furigana, 'Furigana', 'Hiện cách đọc trên kanji') + '</div>' +
+        '<div class="card sky stack">' + kick('約束', 'Cam kết trợ năng') + '<ul class="gloss"><li>Mọi chữ đạt tương phản WCAG AA (4,5:1), cả ngày và đêm.</li><li>Dùng hết bằng bàn phím; vòng focus luôn thấy rõ.</li><li>Trình đọc màn hình: nhãn tiếng Việt, chữ Nhật gắn đúng ngôn ngữ.</li><li>Trạng thái không chỉ dựa vào màu: luôn có ký hiệu hoặc chữ.</li><li>Vùng bấm tối thiểu 44 px.</li></ul><div><button class="btn ghost sm" data-go="keys">Xem phím tắt</button></div></div></div>'
+        : t === 'hoc' ? '<div class="card">' + '<div class="setrow"><div><strong>Mục tiêu mỗi ngày</strong><span class="muted">Số thẻ mới + ôn</span></div><select class="select" aria-label="Mục tiêu mỗi ngày" style="max-width:11rem"><option>25 thẻ</option><option>50 thẻ</option><option>80 thẻ</option></select></div><div class="setrow"><div><strong>Mức nhớ mong muốn</strong><span class="muted">Cao hơn = ôn nhiều hơn</span></div><select class="select" aria-label="Mức nhớ mong muốn" style="max-width:11rem"><option>85%</option><option selected>90%</option><option>95%</option></select></div>' + sw('xaudio', st.xaudio, 'Tự phát âm', 'Đọc to từ khi lật thẻ') + sw('xwrite', st.xwrite, 'Luyện viết nét cho kana', 'Tắt để dùng trắc nghiệm') + '</div>'
+        : t === 'du-lieu' ? '<div class="grid2" style="align-items:start"><div class="card stack">' + kick('バックアップ', 'Sao lưu & chuyển máy') + '<p>Xuất toàn bộ tiến độ thành một tệp để giữ an toàn hoặc chuyển sang máy khác. Không cần tài khoản.</p><div class="row"><button class="btn">Xuất sao lưu</button><button class="btn ghost">Nhập sao lưu</button></div></div><div class="card coral stack">' + kick('注意', 'Xoá dữ liệu') + '<p>Không hoàn tác được. App sẽ hỏi lại một lần trước khi xoá.</p><div class="row"><button class="btn ghost">Xoá lịch sử tra từ</button><button class="btn ghost">Xoá toàn bộ tiến độ…</button></div></div></div>'
+        : '<div class="card stack">' + kick('ライセンス', 'Giấy phép & ghi công') + '<div class="scroll-x"><table><thead><tr><th scope="col">Nội dung</th><th scope="col">Nguồn</th><th scope="col">Giấy phép</th></tr></thead><tbody><tr><td>Từ điển</td><td>JMdict (EDRDG)</td><td>CC BY-SA 4.0</td></tr><tr><td>Kanji</td><td>KANJIDIC2 (EDRDG)</td><td>CC BY-SA 4.0</td></tr><tr><td>Từ điển bổ sung</td><td>Jitendex</td><td>CC BY-SA 4.0</td></tr></tbody></table></div><p class="muted">Yomineko v0.1.0 · Mochi và mọi hình vẽ là nguyên bản.</p></div>';
+      return h1('設定', 'Cài đặt') + tabs('Nhóm cài đặt', 'setTab', [['hien-thi', 'Hiển thị'], ['tro-nang', 'Trợ năng'], ['hoc', 'Học'], ['du-lieu', 'Dữ liệu'], ['gioi-thieu', 'Giấy phép']], t) + '<div role="tabpanel">' + body + '</div>';
     } },
-    keys: { label: 'Phím tắt', nav: 'key', render: function () {
-      var groups = [['Chung', [['Mở tìm kiếm', ['Ctrl', 'K'], 'g1'], ['Về trang chủ', ['G', 'H'], 'g2'], ['Xem danh sách phím tắt', ['?'], 'g3']]], ['Ôn tập', [['Hiện đáp án', ['Space'], 'a1'], ['Quên / Khó', ['1', '2'], 'a2'], ['Được / Dễ', ['3', '4'], 'a3'], ['Hoàn tác', ['Ctrl', 'Z'], 'a4']]], ['Đọc truyện', [['Trang sau', ['←'], 'm1'], ['Trang trước', ['→'], 'm2'], ['Tra từ đang trỏ', ['D'], 'm3'], ['Phóng to / thu nhỏ', ['+', '−'], 'm4']]], ['Xem phim', [['Phát / dừng', ['K'], 'v1'], ['Câu trước / sau', ['J', 'L'], 'v2'], ['Bật/tắt phụ đề', ['C'], 'v3'], ['Lặp câu', ['R'], 'v4']]]];
-      return h1('Phím tắt', 'Bấm "Đổi", rồi nhấn phím mới. Nhấn Esc để huỷ. Trùng phím sẽ có cảnh báo.') + '<div class="row between"><span class="chip sky">Dùng được bằng bàn phím, tay cầm và màn hình đọc</span><div class="row"><button class="btn ghost sm" data-act="clash">Thử trường hợp trùng phím</button><button class="btn ghost" data-act="resetkeys">Đặt lại mặc định</button></div></div>' +
-      (st.clash ? '<div class="alert" role="alert"><span class="mk" aria-hidden="true">!</span><div><strong>Phím K đã dùng cho "Phát / dừng"</strong><br>Bạn muốn gán lại cho "Mở tìm kiếm"? Phím cũ sẽ bị bỏ.<div class="row" style="margin-top:8px"><button class="btn sm" data-act="clash">Gán lại</button><button class="btn ghost sm" data-act="clash">Giữ nguyên</button></div></div></div>' : '') +
-      '<div class="grid2" style="align-items:start">' + groups.map(function (g, gi) { return '<section class="card" aria-labelledby="kg' + gi + '"><h2 class="h2" id="kg' + gi + '">' + g[0] + '</h2><div>' + g[1].map(function (k) { var on = st.bind === k[2]; return '<div class="keyrow' + (on ? ' listen' : '') + '"><span>' + k[0] + '</span><span class="kk">' + (on ? '<span role="status">Nhấn phím mới…</span>' : '<span aria-label="Phím ' + k[1].join(' cộng ') + '">' + k[1].map(function (x) { return '<kbd>' + x + '</kbd>'; }).join(' ') + '</span>') + '<button class="btn soft sm" data-bind="' + k[2] + '" aria-label="' + (on ? 'Huỷ đổi phím' : 'Đổi phím cho ' + k[0]) + '">' + (on ? 'Huỷ' : 'Đổi') + '</button></span></div>'; }).join('') + '</div></section>'; }).join('') + '</div>';
+    keys: { label: 'Phím tắt', render: function () {
+      var groups = [['全般', 'Chung', [['Mở tìm kiếm', ['Ctrl', 'K'], 'g1'], ['Về trang chủ', ['G', 'H'], 'g2'], ['Xem phím tắt', ['?'], 'g3']]], ['復習', 'Ôn tập', [['Lật thẻ', ['Space'], 'a1'], ['Quên / Khó', ['1', '2'], 'a2'], ['Được / Dễ', ['3', '4'], 'a3'], ['Hoàn tác', ['Ctrl', 'Z'], 'a4']]], ['漫画', 'Đọc truyện', [['Trang sau', ['←'], 'm1'], ['Trang trước', ['→'], 'm2'], ['Tra từ đang trỏ', ['D'], 'm3'], ['Phóng to / nhỏ', ['+', '−'], 'm4']]], ['アニメ', 'Xem phim', [['Phát / dừng', ['K'], 'v1'], ['Câu trước / sau', ['J', 'L'], 'v2'], ['Bật/tắt phụ đề', ['C'], 'v3'], ['Lặp câu', ['R'], 'v4']]]];
+      return h1('ショートカット', 'Phím tắt', 'Bấm "Đổi", rồi nhấn phím mới. Nhấn Esc để huỷ.') + '<div class="row between"><span class="chip sky">Bàn phím · tay cầm · trình đọc màn hình</span><div class="row"><button class="btn ghost sm" data-act="clash">Thử trùng phím</button><button class="btn ghost sm" data-act="resetkeys">Đặt lại mặc định</button></div></div>' +
+      (st.clash ? '<div class="alert" role="alert"><span class="mk" aria-hidden="true">!</span><div><strong>Phím K đang dùng cho "Phát / dừng"</strong><br>Gán lại cho "Mở tìm kiếm"? Phím cũ sẽ bị bỏ.<div class="row" style="margin-top:8px"><button class="btn sm" data-act="clash">Gán lại</button><button class="btn ghost sm" data-act="clash">Giữ nguyên</button></div></div></div>' : '') +
+      '<div class="grid2" style="align-items:start">' + groups.map(function (g, gi) { return '<section class="card" aria-labelledby="kg' + gi + '">' + kick(g[0], g[1]) + '<h2 class="sr" id="kg' + gi + '">' + g[1] + '</h2><div>' + g[2].map(function (k) { var on = st.bind === k[2]; return '<div class="keyrow' + (on ? ' listen' : '') + '"><span>' + k[0] + '</span><span class="kk">' + (on ? '<span role="status">Nhấn phím mới…</span>' : '<span aria-label="Phím ' + k[1].join(' cộng ') + '">' + k[1].map(function (x) { return '<kbd>' + x + '</kbd>'; }).join(' ') + '</span>') + '<button class="btn ghost sm" data-bind="' + k[2] + '" aria-label="' + (on ? 'Huỷ đổi phím' : 'Đổi phím cho ' + k[0]) + '">' + (on ? 'Huỷ' : 'Đổi') + '</button></span></div>'; }).join('') + '</div></section>'; }).join('') + '</div>';
     } },
-    more: { label: 'Thêm', nav: 'more', render: function () {
-      return h1('Thêm') + '<div class="card"><ul class="list">' + [['kana', 'kana', 'Kana & Kanji', 'Bảng chữ, tập viết'], ['path', 'path', 'Lộ trình JLPT', 'N5 đến N1'], ['decks', 'cards', 'Bộ thẻ', 'Quản lý thẻ ôn'], ['progress', 'chart', 'Tiến độ', 'Báo cáo, lịch học'], ['packs', 'pack', 'Kho nội dung & cập nhật', '2 bản mới'], ['settings', 'gear', 'Cài đặt & trợ năng', 'Giao diện, chữ, tương phản'], ['keys', 'key', 'Phím tắt', 'Tuỳ chỉnh bàn phím']].map(function (x) { return '<li><button class="tile" style="width:100%;grid-template-columns:auto 1fr;align-items:center;background:transparent;border:0" data-go="' + x[0] + '">' + badge(x[1], 'badge-sky') + '<span class="stack" style="gap:0"><strong>' + x[2] + '</strong><span class="muted">' + x[3] + '</span></span></button></li>'; }).join('') + '</ul></div>';
+    more: { label: 'Thêm', render: function () {
+      return h1('その他', 'Thêm') + '<div class="grid3">' + [['kana', 'kana', 'Kana & Kanji', 'Bảng chữ, tập viết', 'mint'], ['path', 'path', 'Lộ trình JLPT', 'N5 đến N1', 'sky'], ['decks', 'cards', 'Bộ thẻ', 'Quản lý thẻ ôn', 'coral'], ['progress', 'chart', 'Tiến độ', 'Báo cáo, lịch học', 'mustard'], ['packs', 'pack', 'Kho nội dung', '2 bản cập nhật', 'teal'], ['settings', 'gear', 'Cài đặt & trợ năng', 'Giao diện, chữ, tương phản', 'coral'], ['keys', 'key', 'Phím tắt', 'Tuỳ chỉnh bàn phím', 'sky']].map(function (x, i) { return '<button class="tile" data-go="' + x[0] + '"><span class="idx" aria-hidden="true">' + pad(i + 1) + '</span>' + badge(x[1], x[4]) + '<strong>' + x[2] + '</strong><span class="muted">' + x[3] + '</span></button>'; }).join('') + '</div>';
     } }
   };
   var ORDER = ['home', 'onboarding', 'srs', 'decks', 'dict', 'kana', 'path', 'library', 'manga', 'anime', 'progress', 'packs', 'settings', 'keys', 'more'];
-  var NAV = [['home', 'Nhà', 'home', 'both'], ['srs', 'Ôn tập', 'cards', 'both'], ['dict', 'Từ điển', 'book', 'both'], ['kana', 'Kana', 'kana', 'wide'], ['path', 'Lộ trình', 'path', 'wide'], ['library', 'Thư viện', 'lib', 'both'], ['progress', 'Tiến độ', 'chart', 'wide'], ['packs', 'Nội dung', 'pack', 'wide'], ['settings', 'Cài đặt', 'gear', 'wide'], ['more', 'Thêm', 'more', 'narrow']];
+  var SIDE = [['Học', [['home', 'Trang chủ', 'home'], ['srs', 'Ôn tập', 'cards', '24'], ['dict', 'Từ điển', 'book'], ['kana', 'Kana & Kanji', 'kana'], ['path', 'Lộ trình', 'path']]], ['Đọc & xem', [['library', 'Thư viện', 'lib']]], ['Của bạn', [['progress', 'Tiến độ', 'chart'], ['packs', 'Kho nội dung', 'pack', '2'], ['settings', 'Cài đặt', 'gear']]]];
+  var TABS = [['home', 'Nhà', 'home'], ['dict', 'Từ điển', 'book'], ['srs', 'Ôn tập', 'cards', 1], ['library', 'Thư viện', 'lib'], ['more', 'Thêm', 'more']];
   var GROUP = { home: 'home', onboarding: 'home', srs: 'srs', decks: 'srs', dict: 'dict', kana: 'kana', path: 'path', library: 'library', manga: 'library', anime: 'library', progress: 'progress', packs: 'packs', settings: 'settings', keys: 'settings', more: 'more' };
+  var TGROUP = { kana: 'more', path: 'more', progress: 'more', packs: 'more', settings: 'more', keys: 'more' };
   var cur = (location.hash || '#home').slice(1); if (!screens[cur]) cur = 'home';
-  var picker = document.getElementById('picker'), rail = document.getElementById('rail'), mainEl = document.getElementById('main'), ctl = document.getElementById('ctl');
+  var $ = function (id) { return document.getElementById(id); };
+  var logo = '<div class="logo">' + mochi(44, 'happy') + '<span>Yomineko<small lang="ja">読み猫</small></span></div>';
 
   function draw(focusHeading) {
     var ae = document.activeElement, sig = ae && ae !== document.body ? sigOf(ae) : null;
     var sc = screens[cur];
-    var body = (st.view !== 'normal' && sc.states) ? h1(sc.label) + stateView(sc.states) : sc.render();
-    mainEl.innerHTML = body + (st.toast && cur !== 'packs' ? '<div class="toast" role="status">' + st.toast + '</div>' : '');
-    ctl.innerHTML = '<div><span class="lbl" id="ltheme">Giao diện</span>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']], st.theme) + '</div>' +
-      '<div><span class="lbl">Trạng thái màn hình</span>' + seg('Trạng thái màn hình', 'view', [['normal', 'Bình thường'], ['empty', 'Trống'], ['loading', 'Đang tải'], ['error', 'Lỗi']], st.view) + '</div>' +
+    $('main').innerHTML = ((st.view !== 'normal' && sc.states) ? h1('', sc.label) + stateView(sc.states) : sc.render()) + (st.toast && cur !== 'packs' ? '<div class="toast" role="status">' + st.toast + '</div>' : '');
+    $('ctl').innerHTML = '<div><span class="lbl">Giao diện</span>' + seg('Giao diện', 'theme', [['system', 'Theo máy'], ['light', 'Ngày'], ['dark', 'Đêm']], st.theme) + '</div>' +
+      '<div><span class="lbl">Trạng thái</span>' + seg('Trạng thái màn hình', 'view', [['normal', 'Bình thường'], ['empty', 'Trống'], ['loading', 'Đang tải'], ['error', 'Lỗi']], st.view) + '</div>' +
       '<div><span class="lbl">Cỡ chữ</span>' + seg('Cỡ chữ', 'scale', [['100', '100%'], ['150', '150%'], ['200', '200%']], String(st.scale)) + '</div>' +
       '<div><span class="lbl">Tương phản</span>' + seg('Tương phản', 'contrast', [['off', 'Thường'], ['on', 'Cao']], st.contrast ? 'on' : 'off') + '</div>';
-    picker.innerHTML = ORDER.map(function (id) { return '<button data-go="' + id + '" aria-current="' + (id === cur) + '">' + screens[id].label + '</button>'; }).join('');
-    rail.innerHTML = NAV.map(function (n) { var cls = n[3] === 'wide' ? 'wide-only' : n[3] === 'narrow' ? 'narrow-only' : ''; return '<button class="' + cls + '" data-go="' + n[0] + '"' + (GROUP[cur] === n[0] ? ' aria-current="page"' : '') + '>' + ico(n[2]) + '<span>' + n[1] + '</span></button>'; }).join('');
+    $('picker').innerHTML = ORDER.map(function (id) { return '<button data-go="' + id + '" aria-current="' + (id === cur) + '">' + screens[id].label + '</button>'; }).join('');
+    $('side').innerHTML = logo + SIDE.map(function (g) { return '<h2>' + g[0] + '</h2>' + g[1].map(function (n) { return '<button class="navi" data-go="' + n[0] + '"' + (GROUP[cur] === n[0] ? ' aria-current="page"' : '') + '>' + ico(n[2]) + '<span>' + n[1] + '</span>' + (n[3] ? '<span class="n" aria-label="' + n[3] + ' mục mới">' + n[3] + '</span>' : '') + '</button>'; }).join(''); }).join('') + '<div class="help">' + mochi(40, 'cheer') + '<strong>Mẹo của Mochi</strong><span class="muted">Chạm vào chữ có gạch chấm để tra nghĩa ngay.</span></div>';
+    $('top').innerHTML = logo + '<label class="search gsearch">' + ico('search') + '<span class="sr">Tìm kiếm</span><input placeholder="Tìm từ, kanji, bộ thẻ…  (Ctrl K)"></label><div class="meta"><span class="counter" role="img" aria-label="Chuỗi 12 ngày"><span class="dot">' + ico('flame') + '</span><b>012</b><span lang="ja">日</span></span><span class="chip coral" style="min-height:40px;font-size:var(--t-sm)">N4</span></div>';
+    $('tabbar').innerHTML = TABS.map(function (n) { var on = (TGROUP[cur] || GROUP[cur]) === n[0]; return '<button class="' + (n[3] ? 'fab' : '') + '" data-go="' + n[0] + '"' + (on ? ' aria-current="page"' : '') + '><span class="ic">' + ico(n[2]) + '</span><span>' + n[1] + '</span></button>'; }).join('');
     apply();
-    if (focusHeading) { var h = document.getElementById('h1'); if (h) h.focus({ preventScroll: true }); }
+    if (focusHeading) { var h = $('h1'); if (h) h.focus({ preventScroll: true }); }
     else if (sig) { var el = findSig(sig); if (el) el.focus({ preventScroll: true }); }
   }
-  function sigOf(el) { return el.tagName + '|' + (el.id || '') + '|' + JSON.stringify(Object.assign({}, el.dataset)) + '|' + (el.getAttribute('aria-label') || el.textContent.slice(0, 24)); }
+  function sigOf(el) { var n = el.closest && el.closest('nav,header,main'); return el.tagName + '|' + (el.id || '') + '|' + JSON.stringify(Object.assign({}, el.dataset)) + '|' + (el.getAttribute('aria-label') || el.textContent.slice(0, 24)) + '|' + (n ? n.id || n.tagName : ''); }
   function findSig(s) { var all = document.querySelectorAll('button,input,select,a'); for (var i = 0; i < all.length; i++) if (sigOf(all[i]) === s) return all[i]; return null; }
-  function go(id) { cur = id; st.view = 'normal'; st.toast = ''; try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = id; } draw(true); say('Đã mở màn hình ' + screens[id].label); window.scrollTo({ top: 0 }); }
+  function go(id) { cur = id; st.view = 'normal'; st.toast = ''; try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = id; } draw(true); say('Đã mở màn hình ' + screens[id].label); }
   window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (screens[h] && h !== cur) { cur = h; draw(true); } });
 
   document.addEventListener('click', function (e) {
@@ -422,19 +574,20 @@ table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding
     var d = t.dataset;
     if (d.go) return go(d.go);
     if (d.word) { st.popup = d.word; draw(); return say('Đã mở nghĩa của ' + words[d.word].jp); }
-    if (d.toggle) { st[d.toggle === 'audio' || d.toggle === 'kanawrite' ? 'x' + d.toggle : d.toggle] = !st[d.toggle === 'audio' || d.toggle === 'kanawrite' ? 'x' + d.toggle : d.toggle]; save(); draw(); return say('Đã đổi cài đặt'); }
+    if (d.toggle) { st[d.toggle] = !st[d.toggle]; save(); draw(); return say('Đã đổi cài đặt'); }
     if (d.seg) {
       if (d.seg === 'theme') { st.theme = d.v; save(); } else if (d.seg === 'scale') { st.scale = +d.v; save(); } else if (d.seg === 'contrast') { st.contrast = d.v === 'on'; save(); } else st[d.seg] = d.v;
       draw(); return say('Đã chọn ' + t.textContent);
     }
     if (d.tab) { st[d.tab] = d.v; return draw(); }
     if (d.filt) { st.filt[d.filt] = !st.filt[d.filt]; return draw(); }
+    if (d.lib) { st.lib = d.lib; return draw(); }
     if (d.kana) { st.kanaSel = +d.kana; return draw(); }
     if (d.line) { st.line = +d.line; return draw(); }
     if (d.bind) { st.bind = st.bind === d.bind ? null : d.bind; return draw(); }
     var a = d.act;
     if (a === 'reveal') { st.revealed = true; draw(); say('Đáp án: học tập, học bài'); }
-    else if (a === 'grade') { st.revealed = false; st.undo = true; st.toast = 'Đã chấm. Hoàn tác bằng Ctrl+Z.'; draw(); say('Đã chấm thẻ, sang thẻ tiếp theo'); setTimeout(function () { st.toast = ''; draw(); }, 2500); }
+    else if (a === 'grade') { st.revealed = false; st.undo = true; st.toast = 'Đã chấm thẻ · Hoàn tác bằng Ctrl+Z'; draw(); say('Đã chấm thẻ, sang thẻ tiếp theo'); setTimeout(function () { st.toast = ''; draw(); }, 2500); }
     else if (a === 'undo') { st.undo = false; draw(); say('Đã hoàn tác'); }
     else if (a === 'play') { st.playing = !st.playing; draw(); }
     else if (a === 'nextline') { st.line = (st.line + 1) % 3; draw(); }
@@ -456,7 +609,6 @@ table { border-collapse:collapse; width:100%; } th,td { text-align:left; padding
     var t = e.target;
     if (st.bind) { e.preventDefault(); st.bind = null; draw(); return say('Đã đổi phím tắt'); }
     if (e.key === 'Escape' && st.popup && (cur === 'dict' || cur === 'manga' || cur === 'anime')) { st.popup = null; draw(true); return say('Đã đóng bảng tra từ'); }
-    // radio groups and tab lists: arrow keys move + select (roving tabindex)
     if (t.getAttribute && (t.getAttribute('role') === 'radio' || t.getAttribute('role') === 'tab') && /^Arrow(Left|Right|Up|Down)$/.test(e.key)) {
       var sibs = Array.prototype.slice.call(t.parentElement.querySelectorAll('[role="' + t.getAttribute('role') + '"]')), i = sibs.indexOf(t), dir = /Right|Down/.test(e.key) ? 1 : -1;
       e.preventDefault(); sibs[(i + dir + sibs.length) % sibs.length].click(); return;
