@@ -109,6 +109,19 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — `saveNewCards` chép thẻ mới sang SRS qua `syncAnimeCards` (xem mục "Nối với SRS"); `anime.position:<tên>:<kích thước>` (vị trí xem dở).
 - `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
 
+## Lộ trình & onboarding (`src/features/roadmap/`)
+- Lần mở đầu tiên app hỏi 6 câu (trình độ, mục tiêu, phút/ngày, nội dung yêu thích, điểm yếu, kiểu học); có nút bỏ qua. Câu trả lời + đồng hồ + dữ liệu học thật sinh ra lộ trình bằng `generateRoadmap` (hàm thuần, theo luật, **chạy offline**, cùng đầu vào cho cùng kết quả).
+- AI chỉ là phần tuỳ chọn (`ai.ts`): viết lại lời tóm tắt và lời khuyên, **không đổi lịch**. Dùng chung cổng riêng tư của trợ lý (tắt mặc định, cần đồng ý đúng host); lỗi hoặc không mạng thì giữ bản theo luật.
+- userdata: `roadmap.answers`, `roadmap.plan`, `roadmap.skipped`, `roadmap.ticks:<ngày>`.
+- Nối với nơi khác: đọc `srs.stats`, `progress.*` (tiến độ giai đoạn, mục tiêu tuần, tự tick buổi SRS), collection `tb-lessons` + `textbooks` (đọc qua `loadLessons`; có thì nhiệm vụ "bài giáo trình" trỏ tới bài thật). Chỉ **ghi** `srs.settings` / `progress.settings` khi người học bấm "Áp dụng".
+- Nhiệm vụ mở màn hình qua `LinkTarget`; `openTarget` trong `App.svelte` xử lý. Kanji → Kana & Kanji, manga → trình đọc, bài học → Giáo trình.
+
+## Tổng kết & AI nâng cao (`src/features/insights/`)
+- `summary.ts`: tổng kết theo ngày/tuần/tháng từ `progress.day:*`, `progress.learned`, `srs.stats:*`; xuất text/Markdown. `weakness.ts`: phân loại lỗi (trợ từ, chia động từ, On/Kun, ...) bằng nhãn hoặc `tag` tuỳ chọn trong `StudiedItem`; điểm giảm một nửa sau 7 ngày. `adaptive.ts`: gợi ý độ khó từ 7 ngày gần nhất. Tất cả là hàm thuần, chạy offline.
+- `rewrite.ts`: viết lại tổng kết theo phong cách. Bản offline dùng mẫu câu; bản AI đi qua `aiBlockedReason` của trợ lý nên cần đúng sự đồng ý theo host, và chỉ gửi văn bản tổng kết (`aiPayload`).
+- SRS: `buildQueue` nhận `boost` (cardId → điểm yếu) để hỏi từ sai lặp lại trước; `SrsReview` lấy từ `loadBoost`.
+- Userdata: `insights.settings` (`adaptiveAuto` mặc định tắt, `lastAuto`). Hướng dẫn: `docs/HUONG-DAN-TONG-KET-AI.md`.
+
 ## Giáo trình (`src/features/textbook/`)
 - Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
 - **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
