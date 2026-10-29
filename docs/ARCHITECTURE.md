@@ -39,7 +39,8 @@ Quy tắc: **nội dung vào `records` qua gói; dữ liệu của người họ
 | Từ điển | `words` (JMdict), `examples` | `dict.history` |
 | Kana/Kanji | `kana`, `kanji` (KANJIDIC) | `kanji.known` |
 | SRS | `cards`, `decks` | `srs.state:<cardId>`, `srs.settings` |
-| Tiến độ | `lessons` | `progress.*` |
+| Tiến độ | (không có) | `progress.*` |
+| Giáo trình | `textbooks`, `tb-lessons` | `textbook.progress:<lessonId>`, `textbook.notes:<id>`, `textbook.audio:<id>:<key>`, `srs.inbox:<lessonId>` |
 | Manga / Anime | không bán nội dung; người dùng nạp file | `library.*`, `reader.position:<id>` |
 
 ## Quy ước
@@ -56,3 +57,8 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
+
+## Giáo trình (`src/features/textbook/`)
+- Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
+- **Nối với SRS:** bài ghi thẻ dựng sẵn vào `srs.inbox:<lessonId>` (xem `srs.ts`). Thread SRS đọc mọi khoá `srs.inbox:*` để tạo thẻ; id thẻ ổn định nên thêm lại không bị trùng.
+- **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
