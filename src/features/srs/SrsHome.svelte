@@ -5,10 +5,11 @@
   import { countQueue } from './session';
   import { dayKey, loadCards, loadSettings, loadStates, loadStats, saveSettings } from './store';
   import { ALL_TYPES, DEFAULT_SETTINGS, type QuestionType, type SrsSettings } from './types';
+  import type { SessionSummary } from '../progress/types';
   import SrsReview from './SrsReview.svelte';
   import demoCards from '../../../packs-example/demo-cards.pack.json';
 
-  let { db }: { db: DB } = $props();
+  let { db, onsession }: { db: DB; onsession?: (summary: SessionSummary) => void } = $props();
 
   let mode = $state<'home' | 'review' | 'quick'>('home');
   let cardsTotal = $state(0);
@@ -39,7 +40,7 @@
     settings.types = settings.types.includes(t) ? settings.types.filter((x) => x !== t) : [...settings.types, t];
     save();
   }
-  async function leave() { mode = 'home'; await refresh(); }
+  async function leave(summary?: SessionSummary) { mode = 'home'; if (summary) onsession?.(summary); await refresh(); }
 </script>
 
 {#if mode !== 'home'}

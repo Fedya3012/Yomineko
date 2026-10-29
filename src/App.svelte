@@ -5,10 +5,16 @@
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
+  import ProgressView from './features/progress/ProgressView.svelte';
+  import { recordSession } from './features/progress/store';
+  import type { SessionSummary } from './features/progress/types';
   import demoPack from '../packs-example/demo-hiragana.pack.json';
 
   let settings = $state<Settings>(loadSettings());
-  let db = $state.raw<DB>();
+  let db: DB | undefined;
+  let readyDb = $state.raw<DB>();
+  let lastSummary = $state<SessionSummary>();
+  let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
 
@@ -30,6 +36,7 @@
 
   onMount(async () => {
     db = await openDatabase();
+    readyDb = db;
     await refresh();
   });
 
@@ -41,6 +48,20 @@
       status = e instanceof Error ? e.message : String(e);
     }
     await refresh();
+  }
+
+  // Demo only: the SRS thread will call recordSession itself when a real session ends.
+  async function demoSession() {
+    lastSummary = await recordSession(db!, {
+      endedAt: Date.now(), seconds: 420, source: 'Học thử',
+      items: [
+        { kind: 'word', id: 'neko', label: '猫 (ねこ)', correct: true, learned: true },
+        { kind: 'word', id: 'inu', label: '犬 (いぬ)', correct: false },
+        { kind: 'kanji', id: '本', label: '本', correct: true, learned: true },
+        { kind: 'grammar', id: 'wa', label: 'は (chủ đề)', correct: true }
+      ]
+    });
+    progressKey++;
   }
 
   const themes: [ThemeChoice, string][] = [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']];
@@ -55,7 +76,7 @@
     </div>
   </header>
 
-  {#if db}<SrsHome {db} />{/if}
+  {#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}
 
   <section class="grid" aria-label="Tính năng">
     {#each features as f}
@@ -65,6 +86,12 @@
         <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' ? 'Đã có' : `Sắp có · ${f.note}`}</span>
       </div>
     {/each}
+  </section>
+
+  <section aria-label="Tiến độ học">
+    <h2 class="section-title">Tiến độ học</h2>
+    <p><button class="btn soft" onclick={demoSession} disabled={!readyDb}>Học thử 1 buổi (dữ liệu mẫu)</button></p>
+    {#if readyDb}<ProgressView db={readyDb} summary={lastSummary} refreshKey={progressKey} />{/if}
   </section>
 
   <section class="card">
@@ -108,6 +135,7 @@
   header { display: flex; align-items: center; gap: var(--space-3); }
   h1 { margin: 0; font-size: var(--text-xl); color: var(--accent-strong); }
   h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+  .section-title { margin: 0 0 var(--space-2); font-size: var(--text-lg); color: var(--accent-strong); }
   .muted { color: var(--text-muted); margin: 0; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
   .feature { display: grid; gap: var(--space-2); justify-items: start; background: var(--surface-2); }

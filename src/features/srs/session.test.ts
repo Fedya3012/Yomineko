@@ -126,6 +126,25 @@ describe('undo', () => {
   });
 });
 
+describe('answer log for Progress', () => {
+  it('records correctness and drops the entry on undo', async () => {
+    const s = await start();
+    await s.answer(1, T0); await s.answer(4, T0 + 1000);
+    expect(s.answerLog.map((a) => [a.cardId, a.correct, a.learned])).toEqual([['a', false, false], ['b', true, false]]);
+    await s.undo(T0 + 1500);
+    expect(s.answerLog).toHaveLength(1);
+  });
+  it('marks a card learned once its memory should last 3+ weeks', async () => {
+    const s = await start({ settings: { newPerDay: 1 } });
+    await s.answer(4, T0); // Easy on a new card: ~15 days
+    expect(s.answerLog[0].learned).toBe(false);
+    const t = T0 + 20 * DAY;
+    const s2 = await start({ now: t, settings: { newPerDay: 0 } });
+    await s2.answer(4, t);
+    expect(s2.answerLog[0].learned).toBe(true);
+  });
+});
+
 describe('quick 5-minute review', () => {
   it('ends when five minutes are over, even with cards left', async () => {
     const s = await start({ quick: true });

@@ -9,6 +9,7 @@ export const QUICK_SESSION_MS = 5 * 60_000;
 const DAY = 86_400_000;
 /** After Again, the card comes back after this many other cards. */
 const REQUEUE_GAP = 3;
+export const LEARNED_STABILITY_DAYS = 21;
 
 export interface Persist {
   saveState(state: CardState): Promise<void>;
@@ -49,6 +50,8 @@ export class ReviewSession {
   private readonly byId: Map<string, CardContent>;
   readonly deadline?: number;
   answered = 0;
+  /** What was answered this session, for the Progress feature (Undo removes the last entry). */
+  readonly answerLog: { cardId: string; correct: boolean; learned: boolean }[] = [];
 
   constructor(
     private cards: CardContent[],
@@ -92,6 +95,8 @@ export class ReviewSession {
     this.states.set(cardId, next);
     this.stats = stats;
     this.answered += 1;
+    // "Learned" = the memory is now expected to last 3+ weeks.
+    this.answerLog.push({ cardId, correct: rating > 1, learned: rating > 1 && next.stability >= LEARNED_STABILITY_DAYS });
     await this.persist.saveState(next);
     await this.persist.saveStats(dayKey(now), stats);
     return next;
@@ -121,7 +126,7 @@ export class ReviewSession {
     this.stats = e.prevStats;
     await this.persist.saveStats(dayKey(e.at), e.prevStats);
     this.queue = e.prevQueue;
-    if (e.wasAnswer) this.answered = Math.max(0, this.answered - 1);
+    if (e.wasAnswer) { this.answered = Math.max(0, this.answered - 1); this.answerLog.pop(); }
     this.undoEntry = undefined;
     return true;
   }

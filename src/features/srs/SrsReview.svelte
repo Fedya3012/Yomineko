@@ -7,9 +7,11 @@
   import { deleteState, dayKey, loadCards, loadSettings, loadStates, loadStats, saveState, saveStats } from './store';
   import type { CardContent } from './types';
   import { canSpeak, speak } from './tts';
+  import { recordSession } from '../progress/store';
+  import type { SessionSummary } from '../progress/types';
   import Handwriting from './Handwriting.svelte';
 
-  let { db, quick = false, onexit }: { db: DB; quick?: boolean; onexit: () => void } = $props();
+  let { db, quick = false, onexit }: { db: DB; quick?: boolean; onexit: (summary?: SessionSummary) => void } = $props();
 
   let session = $state.raw<ReviewSession>();
   let pool: CardContent[] = [];
@@ -19,6 +21,7 @@
   let now = $state(Date.now());
   let total = $state(0);
   let ticker: ReturnType<typeof setInterval>;
+  let startedAt = Date.now();
 
   const labels: [Rating, string, string][] = [[1, 'Quên', 'again'], [2, 'Khó', 'hard'], [3, 'Tốt', 'good'], [4, 'Dễ', 'easy']];
 
@@ -31,6 +34,7 @@
       deleteState: (id) => deleteState(db, id),
       saveStats: async (day, s) => { await saveStats(db, day, s); }
     }, { now: t, quick });
+    startedAt = t;
     total = session.remaining;
     next();
     ticker = setInterval(() => (now = Date.now()), 250);
@@ -67,12 +71,28 @@
   async function rate(r: Rating) { await session!.answer(r, Date.now()); await next(); }
   async function skip() { await session!.bury(Date.now()); await next(); }
   async function undo() { if (await session!.undo(Date.now())) await next(); }
+  /** Hands the finished session to the Progress feature (streak, goal, history), then leaves. */
+  async function leave() {
+    let summary: SessionSummary | undefined;
+    if (session?.answerLog.length) {
+      const byId = new Map(pool.map((c) => [c.id, c]));
+      const end = Date.now();
+      summary = await recordSession(db, {
+        endedAt: end, seconds: Math.round((end - startedAt) / 1000), source: 'SRS',
+        items: session.answerLog.map((a) => {
+          const c = byId.get(a.cardId)!;
+          return { kind: 'word' as const, id: a.cardId, label: `${c.word} (${c.reading})`, correct: a.correct, learned: a.learned };
+        })
+      });
+    }
+    onexit(summary);
+  }
   const pick = (i: number) => { if (picked === undefined) picked = i; };
 </script>
 
 <section class="review" aria-live="polite">
   <div class="top">
-    <button class="btn soft" onclick={onexit}>← Thoát</button>
+    <button class="btn soft" onclick={leave}>← Thoát</button>
     {#if session}
       <span class="chip pink">Còn {session.remaining} thẻ</span>
       {#if secondsLeft !== undefined}
@@ -91,7 +111,7 @@
         {#if session.remaining > 0}Còn {session.remaining} thẻ, mai Mochi sẽ nhắc tiếp.{/if}</p>
       <div class="row">
         {#if undoLeft > 0}<button class="btn soft" onclick={undo}>↶ Hoàn tác ({Math.ceil(undoLeft / 1000)}s)</button>{/if}
-        <button class="btn" onclick={onexit}>Về trang chính</button>
+        <button class="btn" onclick={leave}>Về trang chính</button>
       </div>
     </div>
   {:else if question}
