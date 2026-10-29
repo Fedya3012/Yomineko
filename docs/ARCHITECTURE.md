@@ -134,3 +134,8 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - Manga và anime đọc `words` qua `dictionary/flat.ts` (`loadFlatEntries`), nhận cả bản ghi JMdict lẫn gói mẫu phẳng, và giữ id để mở đúng popup.
 - `syncAnimeCards` cũng chạy mỗi lần mở màn Ôn tập, nên thẻ anime tạo từ trước cũng vào hàng ôn.
 - Màn hình chính: "Lối tắt" gồm các ô đánh số; mỗi ô dẫn tới một màn hình hoặc cuộn tới mục tương ứng.
+
+## Cộng đồng (`src/features/community/`)
+- Opt-in, offline-first: không gì rời máy trừ khi người học bấm xuất file (`share.ts`, định dạng `yomineko-community` v1; nhập vào được kiểm tra chặt, không ghi đè dữ liệu của chính mình).
+- Userdata: `community.profile`, `community.group:<id>`, `community.challenge:<id>`, `community.person:<id>`, `community.post:<id>`. Số liệu của mình đọc từ `progress.*` (`buildMyPerson`).
+- Hàm thuần xếp hạng/khung thời gian: `logic.ts`. Hướng dẫn: `docs/CONG-DONG.md`.

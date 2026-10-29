@@ -72,3 +72,7 @@ Bản Windows cần thêm [Rust](https://rustup.rs): `npm run tauri build`. Thô
 ## Tình trạng
 
 Đây là **bộ khung**: giao diện, màu sáng/tối, furigana, kho dữ liệu offline, định dạng gói nội dung, và quy trình build tự động. Các tính năng (SRS, từ điển, kana/kanji, manga, anime, tiến độ) sẽ được làm ở các nhánh riêng, dựa trên bộ khung này.
+
+
+## Cộng đồng (nhóm học, thử thách, xếp hạng)
+Tuỳ chọn, tắt mặc định, chạy offline bằng file xuất/nhập. Xem [docs/CONG-DONG.md](docs/CONG-DONG.md), có cả phần "muốn có máy chủ thật thì cần gì".

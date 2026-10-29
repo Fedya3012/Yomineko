@@ -13,6 +13,7 @@
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
   import MangaReader from './features/manga/MangaReader.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
+  import CommunityView from './features/community/CommunityView.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
   import InsightsView from './features/insights/InsightsView.svelte';
   import { recordSession } from './features/progress/store';
@@ -31,7 +32,7 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'roadmap' | 'onboarding'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'roadmap' | 'onboarding' | 'community'>('home');
   let roadmapKey = $state(0);
 
   // Home shortcuts: every tile leads somewhere real. `go` opens a screen, `jump` scrolls to a section of this page.
@@ -43,7 +44,8 @@
     { tone: 'mint', name: 'Kana & Kanji', note: 'Luyện viết nét', go: 'kana', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
     { tone: 'sky', name: 'Đọc manga', note: 'Chạm chữ để tra và tạo thẻ', go: 'manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
     { tone: 'coral', name: 'Xem anime', note: 'Chạm phụ đề để tra và tạo thẻ', go: 'anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
-    { tone: 'mint', name: 'Tiến độ', note: 'Chuỗi ngày, mục tiêu, lịch sử', jump: 'sec-progress', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' }
+    { tone: 'mint', name: 'Tiến độ', note: 'Chuỗi ngày, mục tiêu, lịch sử', jump: 'sec-progress', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' },
+    { tone: 'sky', name: 'Cộng đồng', note: 'Nhóm học, thử thách, xếp hạng', go: 'community', d: 'M35 40a12 12 0 1 0 0-.1M65 40a12 12 0 1 0 0-.1M15 78c0-14 9-22 20-22s20 8 20 22M45 78c0-14 9-22 20-22s20 8 20 22' }
   ];
   const pad = (n: number) => String(n).padStart(3, '0');
   function openTile(t: Tile) {
@@ -113,6 +115,8 @@
     <MangaReader db={readyDb} onBack={() => (view = 'home')} />
   {:else if view === 'anime' && readyDb}
     <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
+  {:else if view === 'community' && readyDb}
+    <CommunityView db={readyDb} onback={() => (view = 'home')} />
   {:else if view === 'onboarding' && readyDb}
     <Onboarding db={readyDb} ondone={() => { roadmapKey++; view = 'roadmap'; }} oncancel={() => { roadmapKey++; view = 'home'; }} />
   {:else if view === 'roadmap' && readyDb}
