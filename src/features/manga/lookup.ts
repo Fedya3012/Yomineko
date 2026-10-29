@@ -1,6 +1,7 @@
 // Tap-to-translate: from a tapped character, find the word that starts there and its meaning.
 // Words come from the `words` collection of the offline database (filled by the dictionary pack).
-import { listCollection, type DB } from '../../lib/db';
+import type { DB } from '../../lib/db';
+import { loadFlatEntries } from '../dictionary/flat';
 import type { OcrBlock } from './ocr/types';
 
 export interface WordEntry {
@@ -31,7 +32,7 @@ export function buildWordIndex(records: WordEntry[]): WordIndex {
 }
 
 export async function loadWordIndex(db: DB): Promise<WordIndex> {
-  return buildWordIndex((await listCollection(db, 'words')) as unknown as WordEntry[]);
+  return buildWordIndex(await loadFlatEntries(db));
 }
 
 export interface LookupResult {

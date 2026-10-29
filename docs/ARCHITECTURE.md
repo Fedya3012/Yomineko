@@ -106,14 +106,34 @@ Màn hình Credits (thread sau) nên liệt kê các dòng này.
 - `subtitles.ts` đọc SRT/VTT/ASS; `tokenizer.ts` + `deinflect.ts` tách từ (khớp từ điển dài nhất, có đưa động từ/tính từ về dạng gốc, dự phòng `Intl.Segmenter`).
 - Từ điển đọc từ collection `words` (`kanji`, `reading`, `meaning`, `id`): khi thread Từ điển nạp JMdict, trình phát tự dùng.
 - `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
-- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
+- Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — `saveNewCards` chép thẻ mới sang SRS qua `syncAnimeCards` (xem mục "Nối với SRS"); `anime.position:<tên>:<kích thước>` (vị trí xem dở).
 - `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
+
+## Lộ trình & onboarding (`src/features/roadmap/`)
+- Lần mở đầu tiên app hỏi 6 câu (trình độ, mục tiêu, phút/ngày, nội dung yêu thích, điểm yếu, kiểu học); có nút bỏ qua. Câu trả lời + đồng hồ + dữ liệu học thật sinh ra lộ trình bằng `generateRoadmap` (hàm thuần, theo luật, **chạy offline**, cùng đầu vào cho cùng kết quả).
+- AI chỉ là phần tuỳ chọn (`ai.ts`): viết lại lời tóm tắt và lời khuyên, **không đổi lịch**. Dùng chung cổng riêng tư của trợ lý (tắt mặc định, cần đồng ý đúng host); lỗi hoặc không mạng thì giữ bản theo luật.
+- userdata: `roadmap.answers`, `roadmap.plan`, `roadmap.skipped`, `roadmap.ticks:<ngày>`.
+- Nối với nơi khác: đọc `srs.stats`, `progress.*` (tiến độ giai đoạn, mục tiêu tuần, tự tick buổi SRS), collection `tb-lessons` + `textbooks` (đọc qua `loadLessons`; có thì nhiệm vụ "bài giáo trình" trỏ tới bài thật). Chỉ **ghi** `srs.settings` / `progress.settings` khi người học bấm "Áp dụng".
+- Nhiệm vụ mở màn hình qua `LinkTarget`; `openTarget` trong `App.svelte` xử lý. Kanji → Kana & Kanji, manga → trình đọc, bài học → Giáo trình.
+
+## Tổng kết & AI nâng cao (`src/features/insights/`)
+- `summary.ts`: tổng kết theo ngày/tuần/tháng từ `progress.day:*`, `progress.learned`, `srs.stats:*`; xuất text/Markdown. `weakness.ts`: phân loại lỗi (trợ từ, chia động từ, On/Kun, ...) bằng nhãn hoặc `tag` tuỳ chọn trong `StudiedItem`; điểm giảm một nửa sau 7 ngày. `adaptive.ts`: gợi ý độ khó từ 7 ngày gần nhất. Tất cả là hàm thuần, chạy offline.
+- `rewrite.ts`: viết lại tổng kết theo phong cách. Bản offline dùng mẫu câu; bản AI đi qua `aiBlockedReason` của trợ lý nên cần đúng sự đồng ý theo host, và chỉ gửi văn bản tổng kết (`aiPayload`).
+- SRS: `buildQueue` nhận `boost` (cardId → điểm yếu) để hỏi từ sai lặp lại trước; `SrsReview` lấy từ `loadBoost`.
+- Userdata: `insights.settings` (`adaptiveAuto` mặc định tắt, `lastAuto`). Hướng dẫn: `docs/HUONG-DAN-TONG-KET-AI.md`.
 
 ## Giáo trình (`src/features/textbook/`)
 - Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
 - **Nối với SRS:** "Đưa vào thẻ ôn" cài một gói cá nhân `tb-srs-<lessonId>` chứa thẻ (từ vựng + kanji) vào collection `cards`, nên SRS dùng được ngay. Id thẻ ổn định (không trùng khi thêm lại); gỡ gói không mất lịch sử ôn (`srs.state:*`). Mẫu ngữ pháp chưa thành thẻ.
 - **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
 - **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).
+
+## Nối từ điển / manga / anime với SRS (`src/features/srs/bridge.ts`)
+- SRS chỉ đọc collection `cards`. Mọi thẻ người học tự thêm nằm trong **một gói cá nhân `user-srs`** (cùng cách với `tb-srs-<bài>`); id ổn định (`word:<idTừ>` từ từ điển/manga, `anime:<idTừ>` từ phụ đề) nên thêm hai lần không bị trùng, và lịch sử ôn (`srs.state:*`) không bị đụng tới. `addWordToSrs` xếp hàng các lần ghi để không đè nhau.
+- Popup từ điển có nút **Thêm vào thẻ ôn**. Nơi nào có chữ Nhật chạy (manga OCR, phụ đề anime) gọi `openWord(id, { sentence, kind, origin, surface })`: câu đó trở thành câu điền chỗ trống của thẻ.
+- Manga và anime đọc `words` qua `dictionary/flat.ts` (`loadFlatEntries`), nhận cả bản ghi JMdict lẫn gói mẫu phẳng, và giữ id để mở đúng popup.
+- `syncAnimeCards` cũng chạy mỗi lần mở màn Ôn tập, nên thẻ anime tạo từ trước cũng vào hàng ôn.
+- Màn hình chính: "Lối tắt" gồm các ô đánh số; mỗi ô dẫn tới một màn hình hoặc cuộn tới mục tương ứng.
 
 ## Cộng đồng (`src/features/community/`)
 - Opt-in, offline-first: không gì rời máy trừ khi người học bấm xuất file (`share.ts`, định dạng `yomineko-community` v1; nhập vào được kiểm tra chặt, không ghi đè dữ liệu của chính mình).

@@ -13,6 +13,8 @@ export interface StudiedItem {
   correct: boolean;
   /** True when the item just became "learned" (e.g. graduated in SRS). Counted once. */
   learned?: boolean;
+  /** Optional exact error category (see insights/weakness.ts); when absent it is guessed from the label. */
+  tag?: string;
 }
 
 /** What a feature thread hands over when a study session ends. */
@@ -26,7 +28,7 @@ export interface SessionInput {
 }
 
 /** Compact per-item stats inside one day. */
-export interface DayItem { kind: ItemKind; id: string; label: string; seen: number; missed: number }
+export interface DayItem { kind: ItemKind; id: string; label: string; seen: number; missed: number; tag?: string }
 
 /** `progress.day:<YYYY-MM-DD>` */
 export interface DayLog {

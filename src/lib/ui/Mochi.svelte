@@ -1,19 +1,37 @@
 <script lang="ts">
-  // Mochi the white cat. Original artwork, easy to swap. `mood` changes the face only.
+  // Mochi the white cat. Original artwork, easy to swap; standalone copies live in src/assets/illustrations.
+  // `mood` changes the face only. Mochi stays white in both themes; dark mode adds a cream halo so the ink outline still reads.
   // Decorative by default (aria-hidden); pass `label` when Mochi carries meaning.
-  let { size = 96, mood = 'happy', label = '' }: { size?: number; mood?: 'happy' | 'sleepy' | 'cheer'; label?: string } = $props();
+  let { size = 96, mood = 'happy', label = '' }: { size?: number; mood?: 'happy' | 'sleepy' | 'cheer' | 'sad'; label?: string } = $props();
+  const head = 'M22 50 26 12 52 32Q64 29 76 32L102 12 106 50Q114 64 110 80 102 104 64 104 26 104 18 80 14 64 22 50Z';
 </script>
 
-<svg viewBox="0 0 128 128" width={size} height={size} role={label ? 'img' : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : true}>
-  <path d="M30 52 L34 22 L54 38 Q64 36 74 38 L94 22 L98 52 Q104 62 102 76 Q98 100 64 102 Q30 100 26 76 Q24 62 30 52Z" fill="var(--mochi-fur, #fffaf5)" stroke="var(--mochi-line, #e58aa5)" stroke-width="4" stroke-linejoin="round" />
-  <path d="M38 34 L48 42 L40 48Z M90 34 L80 42 L88 48Z" fill="#ffb8c9" opacity=".8" />
+<svg viewBox="0 0 128 112" width={size} height={Math.round(size * 0.875)} role={label ? 'img' : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : true}>
+  <path class="halo" d={head} fill="none" stroke-width="10" stroke-linejoin="round" />
+  <path d={head} fill="#fffdf8" stroke="#0f3640" stroke-width="4" stroke-linejoin="round" />
+  <path d="M31 24 46 36 34 42ZM97 24 82 36 94 42Z" fill="#f4b6c2" />
   {#if mood === 'sleepy'}
-    <path d="M42 68 Q50 74 58 68 M70 68 Q78 74 86 68" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M40 62q7 6 14 0M74 62q7 6 14 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round" />
   {:else if mood === 'cheer'}
-    <path d="M42 70 Q50 60 58 70 M70 70 Q78 60 86 70" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M40 64q7-8 14 0M74 64q7-8 14 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round" />
   {:else}
-    <circle cx="50" cy="68" r="5" fill="var(--ink)" /><circle cx="78" cy="68" r="5" fill="var(--ink)" />
+    <ellipse cx="47" cy="62" rx="5" ry="6" fill="#0f3640" /><ellipse cx="81" cy="62" rx="5" ry="6" fill="#0f3640" />
+    <circle cx="49" cy="60" r="1.6" fill="#fff" /><circle cx="83" cy="60" r="1.6" fill="#fff" />
+    {#if mood === 'sad'}<path d="M38 56l12-5M90 56l-12-5" stroke="#0f3640" stroke-width="3.5" stroke-linecap="round" />{/if}
   {/if}
-  <path d="M60 80 Q64 85 68 80" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" />
-  <circle cx="40" cy="80" r="6" fill="#ffb8c9" opacity=".7" /><circle cx="88" cy="80" r="6" fill="#ffb8c9" opacity=".7" />
+  {#if mood === 'cheer'}
+    <path d="M57 72q7 10 14 0z" fill="#ee7d6c" stroke="#0f3640" stroke-width="3.5" stroke-linejoin="round" />
+  {:else if mood === 'sad'}
+    <path d="M58 76q6-5 12 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round" />
+  {:else}
+    <path d="M58 74q6 6 12 0" fill="none" stroke="#0f3640" stroke-width="4" stroke-linecap="round" />
+  {/if}
+  <ellipse cx="36" cy="76" rx="8" ry="5" fill="#f4b6c2" /><ellipse cx="92" cy="76" rx="8" ry="5" fill="#f4b6c2" />
+  <path class="whisk" d="M6 70h16M8 82l14-5M122 70h-16M120 82l-14-5" stroke-width="3" stroke-linecap="round" />
 </svg>
+
+<style>
+  .halo { stroke: transparent; }
+  .whisk { stroke: var(--ink); }
+  :global(:root[data-theme='dark']) .halo { stroke: #e8dcc6; }
+</style>

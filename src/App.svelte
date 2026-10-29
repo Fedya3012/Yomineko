@@ -15,7 +15,13 @@
   import SrsHome from './features/srs/SrsHome.svelte';
   import CommunityView from './features/community/CommunityView.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
+  import InsightsView from './features/insights/InsightsView.svelte';
   import { recordSession } from './features/progress/store';
+  import Onboarding from './features/roadmap/Onboarding.svelte';
+  import RoadmapView from './features/roadmap/RoadmapView.svelte';
+  import TodayCard from './features/roadmap/TodayCard.svelte';
+  import { isSkipped, loadRoadmap } from './features/roadmap/store';
+  import type { LinkTarget } from './features/roadmap/types';
   import type { SessionSummary } from './features/progress/types';
   import demoPack from '../packs-src/demo-words/v1.json';
 
@@ -26,18 +32,26 @@
   let progressKey = $state(0);
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
-  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'community'>('home');
+  let view = $state<'home' | 'anime' | 'kana' | 'manga' | 'textbooks' | 'roadmap' | 'onboarding' | 'community'>('home');
+  let roadmapKey = $state(0);
 
-  // Feature areas. Each later thread replaces its placeholder card with a real screen.
-  const features = [
-    { tone: 'coral', name: 'Ôn tập SRS', note: 'Đã có', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
-    { tone: 'teal', name: 'Từ điển', note: 'Ở bên dưới ↓', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
-    { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
-    { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
-    { tone: 'coral', name: 'Xem anime', note: 'Thread Anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
-    { tone: 'mint', name: 'Tiến độ', note: 'Thread Tiến độ', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' },
-    { tone: 'sky', name: 'Cộng đồng', note: 'Nhóm học', d: 'M35 40a12 12 0 1 0 0-.1M65 40a12 12 0 1 0 0-.1M15 78c0-14 9-22 20-22s20 8 20 22M45 78c0-14 9-22 20-22s20 8 20 22' }
-  ] as const;
+  // Home shortcuts: every tile leads somewhere real. `go` opens a screen, `jump` scrolls to a section of this page.
+  type Tile = { tone: 'coral' | 'teal' | 'mint' | 'sky'; name: string; note: string; d: string; go?: typeof view; jump?: string };
+  const tiles: Tile[] = [
+    { tone: 'sky', name: 'Lộ trình', note: 'Kế hoạch JLPT của bạn', go: 'roadmap', d: 'M20 78c22 0 8-28 30-28s8-28 30-28M20 78h.1M80 22h.1' },
+    { tone: 'coral', name: 'Ôn tập SRS', note: 'Thẻ đến hạn hôm nay', jump: 'sec-srs', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
+    { tone: 'teal', name: 'Từ điển', note: 'Tra từ, kanji, câu ví dụ', jump: 'sec-dictionary', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
+    { tone: 'mint', name: 'Kana & Kanji', note: 'Luyện viết nét', go: 'kana', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
+    { tone: 'sky', name: 'Đọc manga', note: 'Chạm chữ để tra và tạo thẻ', go: 'manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
+    { tone: 'coral', name: 'Xem anime', note: 'Chạm phụ đề để tra và tạo thẻ', go: 'anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
+    { tone: 'mint', name: 'Tiến độ', note: 'Chuỗi ngày, mục tiêu, lịch sử', jump: 'sec-progress', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' },
+    { tone: 'sky', name: 'Cộng đồng', note: 'Nhóm học, thử thách, xếp hạng', go: 'community', d: 'M35 40a12 12 0 1 0 0-.1M65 40a12 12 0 1 0 0-.1M15 78c0-14 9-22 20-22s20 8 20 22M45 78c0-14 9-22 20-22s20 8 20 22' }
+  ];
+  const pad = (n: number) => String(n).padStart(3, '0');
+  function openTile(t: Tile) {
+    if (t.go) view = t.go;
+    else if (t.jump) document.getElementById(t.jump)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
 
   $effect(() => { applySettings(settings); saveSettings(settings); });
 
@@ -49,7 +63,21 @@
     db = await openDatabase();
     readyDb = db;
     await refresh();
+    // First launch: ask the onboarding questions once (unless the learner skipped them).
+    if (!(await loadRoadmap(db)) && !(await isSkipped(db))) view = 'onboarding';
   });
+
+  // Roadmap tasks open the matching screen.
+  const homeAnchors: Partial<Record<LinkTarget, string>> = { srs: 'sec-srs', dictionary: 'sec-dictionary', assistant: 'sec-assistant', progress: 'sec-progress' };
+  function openTarget(target: LinkTarget): string | void {
+    const screens: Partial<Record<LinkTarget, typeof view>> = { anime: 'anime', kanji: 'kana', manga: 'manga', lesson: 'textbooks' };
+    const screen = screens[target];
+    if (screen) { view = screen; return; }
+    const anchor = homeAnchors[target];
+    if (!anchor) return 'Không mở được màn hình này.';
+    view = 'home';
+    setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' }), 50);
+  }
 
   async function loadDemo() {
     try {
@@ -81,14 +109,18 @@
 <main>
   {#if view === 'textbooks'}
     {#if readyDb}<TextbookView db={readyDb} onback={() => (view = 'home')} />{:else}<p class="muted">Đang mở kho dữ liệu…</p>{/if}
-  {:else if view === 'community' && readyDb}
-    <CommunityView db={readyDb} onback={() => (view = 'home')} />
   {:else if view === 'kana'}
     <KanaKanjiApp onback={() => (view = 'home')} />
   {:else if view === 'manga' && readyDb}
     <MangaReader db={readyDb} onBack={() => (view = 'home')} />
   {:else if view === 'anime' && readyDb}
     <AnimePlayer db={readyDb} onclose={() => (view = 'home')} />
+  {:else if view === 'community' && readyDb}
+    <CommunityView db={readyDb} onback={() => (view = 'home')} />
+  {:else if view === 'onboarding' && readyDb}
+    <Onboarding db={readyDb} ondone={() => { roadmapKey++; view = 'roadmap'; }} oncancel={() => { roadmapKey++; view = 'home'; }} />
+  {:else if view === 'roadmap' && readyDb}
+    <RoadmapView db={readyDb} onclose={() => (view = 'home')} onopen={openTarget} onchange={() => roadmapKey++} />
   {:else}
   <header>
     <img src="favicon.svg" alt="Mochi, chú mèo trắng" width="56" height="56" />
@@ -99,7 +131,8 @@
   </header>
 
   {#if readyDb}<UpdateCenter db={readyDb} onContentChanged={refresh} />{/if}
-  {#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}
+  {#if readyDb}<TodayCard db={readyDb} refreshKey={roadmapKey + progressKey} onview={() => (view = 'roadmap')} oncreate={() => (view = 'onboarding')} />{/if}
+  <div id="sec-srs">{#if readyDb}<SrsHome db={readyDb} onsession={(s) => { lastSummary = s; progressKey++; }} />{/if}</div>
 
   <section class="card hero" aria-label="Học theo giáo trình">
     <Badge tone="coral" size={72}><svg viewBox="0 0 100 100"><path d="M22 20h46a10 10 0 0 1 10 10v50H32a10 10 0 0 1-10-10zM22 70a10 10 0 0 1 10-10h46M38 36h26M38 48h18" /></svg></Badge>
@@ -110,36 +143,31 @@
     <button class="btn" onclick={() => (view = 'textbooks')}>Mở giáo trình</button>
   </section>
 
-  <section class="grid" aria-label="Tính năng">
-    {#each features as f}
-      <div class="card feature">
-        <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
-        <strong>{f.name}</strong>
-        {#if f.name === 'Xem anime'}
-          <button class="btn" onclick={() => (view = 'anime')}>Mở trình phát</button>
-        {:else if f.name === 'Đọc manga'}
-          <button class="btn" onclick={() => (view = 'manga')}>Mở</button>
-        {:else if f.name === 'Cộng đồng'}
-          <button class="btn" onclick={() => (view = 'community')}>Mở</button>
-        {:else if f.name === 'Kana & Kanji'}
-          <button class="btn" onclick={() => (view = 'kana')}>Mở ra học</button>
-        {:else}
-          <span class="chip" class:mint={f.note === 'Đã có'}>{f.note === 'Đã có' || f.name === 'Từ điển' ? f.note : `Sắp có · ${f.note}`}</span>
-        {/if}
-      </div>
-    {/each}
+  <section aria-labelledby="shortcuts">
+    <h2 class="section-title" id="shortcuts"><span class="kick" lang="ja">メニュー</span> Lối tắt</h2>
+    <div class="grid">
+      {#each tiles as t, i}
+        <button class="tile" onclick={() => openTile(t)}>
+          <span class="idx" aria-hidden="true">{pad(i + 1)}</span>
+          <Badge tone={t.tone} size={64}><svg viewBox="0 0 100 100" aria-hidden="true"><path d={t.d} /></svg></Badge>
+          <strong>{t.name}</strong>
+          <span class="muted">{t.note}</span>
+        </button>
+      {/each}
+    </div>
   </section>
 
-  {#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}
+  <div id="sec-assistant">{#if readyDb}<Assistant db={readyDb} onSessionEnd={async (r) => { await recordSession(readyDb!, r); progressKey++; }} />{/if}</div>
 
   {#if readyDb}
-    <section class="card" aria-label="Từ điển"><DictionaryPanel db={readyDb} /></section>
+    <section class="card" id="sec-dictionary" aria-label="Từ điển"><DictionaryPanel db={readyDb} /></section>
   {/if}
 
-  <section aria-label="Tiến độ học">
+  <section id="sec-progress" aria-label="Tiến độ học">
     <h2 class="section-title">Tiến độ học</h2>
     <p><button class="btn soft" onclick={demoSession} disabled={!readyDb}>Học thử 1 buổi (dữ liệu mẫu)</button></p>
     {#if readyDb}<ProgressView db={readyDb} summary={lastSummary} refreshKey={progressKey} />{/if}
+    {#if readyDb}<InsightsView db={readyDb} refreshKey={progressKey} />{/if}
   </section>
 
   <section class="card">
@@ -193,7 +221,13 @@
   .hero { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; background: var(--surface-2); }
   .hero-text { flex: 1 1 14rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-3); }
-  .feature { display: grid; gap: var(--space-2); justify-items: start; background: var(--surface-2); }
+  .kick { font-size: var(--text-sm); color: var(--text-muted); font-weight: 600; margin-right: var(--space-2); }
+  /* flat, thin-bordered tiles with a big index number, as in docs/design/screens.html (home: "Lối tắt") */
+  .tile { position: relative; display: grid; gap: var(--space-1); justify-items: start; text-align: left; min-height: 44px; padding: var(--space-4); background: var(--surface-2); color: var(--text); border: 1.5px solid var(--border-strong); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .tile:hover { background: var(--accent-soft); }
+  .tile:focus-visible { outline: none; box-shadow: var(--focus); }
+  .tile .idx { position: absolute; top: var(--space-3); right: var(--space-4); font-variant-numeric: tabular-nums; font-size: var(--text-sm); color: var(--text-muted); letter-spacing: .1em; }
+  .tile .muted { font-size: var(--text-sm); }
   .sample { font-size: var(--text-jp-reading); margin: 0; }
   .row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }
   label { display: block; padding: var(--space-1) 0; }

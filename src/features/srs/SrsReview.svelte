@@ -7,6 +7,7 @@
   import { deleteState, dayKey, loadCards, loadSettings, loadStates, loadStats, saveState, saveStats } from './store';
   import type { CardContent } from './types';
   import { canSpeak, speak } from './tts';
+  import { loadBoost } from '../insights/store';
   import { recordSession } from '../progress/store';
   import type { SessionSummary } from '../progress/types';
   import Handwriting from './Handwriting.svelte';
@@ -33,7 +34,7 @@
       saveState: async (s) => { await saveState(db, s); },
       deleteState: (id) => deleteState(db, id),
       saveStats: async (day, s) => { await saveStats(db, day, s); }
-    }, { now: t, quick });
+    }, { now: t, quick, boost: await loadBoost(db, t) });
     startedAt = t;
     total = session.remaining;
     next();
