@@ -4,10 +4,12 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import Assistant from './features/assistant/Assistant.svelte';
+  let dbReady = $state(false);
   import demoPack from '../packs-example/demo-hiragana.pack.json';
 
   let settings = $state<Settings>(loadSettings());
-  let db: DB | undefined;
+  let db = $state.raw<DB>();
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
 
@@ -29,6 +31,7 @@
 
   onMount(async () => {
     db = await openDatabase();
+    dbReady = true;
     await refresh();
   });
 
@@ -63,6 +66,8 @@
       </div>
     {/each}
   </section>
+
+  {#if dbReady}<Assistant db={db!} />{/if}
 
   <section class="card">
     <h2>Xem thử chữ Nhật</h2>
