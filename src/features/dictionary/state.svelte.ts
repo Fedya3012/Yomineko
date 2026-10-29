@@ -18,7 +18,8 @@ let current: DB | undefined;
 /** (Re)build the index from whatever dictionary packs are installed. Call again after installing/removing a pack. */
 export async function loadDictionary(db: DB): Promise<void> {
   current = db;
-  const words = (await listCollection(db, 'words')) as unknown as Word[];
+  // Other packs (e.g. the tiny `demo-words` sample) also write to `words` in a simpler shape; skip anything that isn't a JMdict-style entry.
+  const words = ((await listCollection(db, 'words')) as unknown as Word[]).filter((w) => Array.isArray(w.kanji) && Array.isArray(w.kana) && Array.isArray(w.senses));
   dict.index = words.length ? new DictionaryIndex(words) : undefined;
   dict.count = words.length;
 }
