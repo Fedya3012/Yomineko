@@ -87,3 +87,10 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 - `comprehension.ts`: Điểm hiểu = % từ (không tính dấu câu, trợ từ 1 chữ) nằm trong tập "đã biết".
 - Userdata: `anime.known` (khoá từ đã biết), `anime.cards` (thẻ tạo từ phụ đề: word, reading, meaning, sentence) — **thread SRS đọc `anime.cards` để đưa vào ôn tập**; `anime.position:<tên>:<kích thước>` (vị trí xem dở).
 - `shadowing.ts` (toán thuần, có test) + `audio.ts` (micro, thu âm mẫu, nhận giọng nói; chỉ chạy trong trình duyệt).
+
+## Lộ trình & onboarding (`src/features/roadmap/`)
+- Lần mở đầu tiên app hỏi 6 câu (trình độ, mục tiêu, phút/ngày, nội dung yêu thích, điểm yếu, kiểu học); có nút bỏ qua. Câu trả lời + đồng hồ + dữ liệu học thật sinh ra lộ trình bằng `generateRoadmap` (hàm thuần, theo luật, **chạy offline**, cùng đầu vào cho cùng kết quả).
+- AI chỉ là phần tuỳ chọn (`ai.ts`): viết lại lời tóm tắt và lời khuyên, **không đổi lịch**. Dùng chung cổng riêng tư của trợ lý (tắt mặc định, cần đồng ý đúng host); lỗi hoặc không mạng thì giữ bản theo luật.
+- userdata: `roadmap.answers`, `roadmap.plan`, `roadmap.skipped`, `roadmap.ticks:<ngày>`.
+- Nối với nơi khác: đọc `srs.stats`, `progress.*` (tiến độ giai đoạn, mục tiêu tuần, tự tick buổi SRS), collection `lessons` (trường `id,title,level,order,book`; có thì nhiệm vụ "bài giáo trình" trỏ tới bài thật). Chỉ **ghi** `srs.settings` / `progress.settings` khi người học bấm "Áp dụng".
+- Nhiệm vụ mở màn hình qua `LinkTarget`; `openTarget` trong `App.svelte` xử lý. Kanji, manga, bài học báo "sắp có" cho tới khi thread đó nối vào.
