@@ -10,6 +10,9 @@ export const APP_REPO = 'Fedya3012/Yomineko';
 export const CATALOG_URL: string =
   (import.meta.env.VITE_CATALOG_URL as string | undefined) ?? 'https://fedya3012.github.io/Yomineko/content/catalog.json';
 
+/** Jitendex is big (~27 MB), so it has its own catalog next to the main one and is never installed unasked. */
+export const JITENDEX_CATALOG_URL: string = CATALOG_URL.replace(/catalog\.json$/, 'jitendex/catalog.json');
+
 export type Platform = 'windows' | 'android' | 'web';
 
 export function detectPlatform(): Platform {

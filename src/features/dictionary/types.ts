@@ -47,6 +47,22 @@ export interface KanjiEntry {
   jlptOld?: number;      // old 4-level JLPT scale (4 = easiest)
 }
 
-export type DictRecord = Word | Example | KanjiEntry;
+/** One meaning in a Jitendex entry. Jitendex numbers its senses and groups them by part of speech itself. */
+export interface JitendexSense {
+  pos: string[];
+  gloss: string[];
+  /** Usage tags: misc ("uk", "abbr"), field ("food") and dialect codes. */
+  tags?: string[];
+  /** Usage notes, e.g. "usu. ～にかかる". */
+  note?: string[];
+  /** Word origin, e.g. `English: "blue day"`. */
+  lang?: string;
+  ex?: { ja: string; en: string };
+}
+
+/** Collection `jitendex` (Jitendex). `id` is the JMdict entry number, i.e. the id of the matching `words` record. */
+export interface JitendexEntry { id: string; senses: JitendexSense[] }
+
+export type DictRecord = Word | Example | KanjiEntry | JitendexEntry;
 
 export interface SearchHit { word: Word; score: number; matched: 'form' | 'reading' | 'gloss' }

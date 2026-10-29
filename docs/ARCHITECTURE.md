@@ -78,6 +78,12 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 - Tìm kiếm chung: `searchAll(query)` gộp từ điển + thẻ/ghi chú của người học. Thread khác gắn nguồn của mình bằng `registerSearchSource`. Nguồn có sẵn đọc userdata `card:<id>` / `note:<id>` (trường `front`, `back`, `reading`, `title`, `text`, `tags`) và collection `cards`.
 - Giấy phép: `licenses.ts` là danh sách hiển thị trong app. **Thêm nguồn dữ liệu mới thì phải thêm vào đây.**
 
+### Jitendex: nguồn nghĩa thứ hai (tuỳ chọn)
+- Gói `dict-jitendex` (collection `jitendex`, CC BY-SA 4.0, Stephen Kraus) đứng cạnh JMdict, **không thay thế**. Mỗi bản ghi có `id` = số mục JMdict (cùng id với `words`), nên popup nối hai nguồn bằng id, không đoán theo chữ. Bản ghi giữ cách Jitendex chia nghĩa: `senses[]` gồm `pos`, `gloss`, `tags` (cách dùng, lĩnh vực, phương ngữ), `note`, `lang` (gốc từ), `ex` (một câu ví dụ).
+- Dựng gói: `scripts/build-jitendex-pack.mjs --zip jitendex-yomitan.zip` (bộ chuyển đổi thuần ở `scripts/jitendex-convert.mjs`, có test). Số phiên bản lấy từ ngày phát hành của Jitendex (20261003...). Gói ~27 MB nên **không** nằm trong `packs-src` hay catalog chính (catalog chính tự cài mọi gói); workflow Pages dựng nó vào `<site>/content/jitendex/catalog.json` (`JITENDEX_CATALOG_URL`), người học bấm cài trong màn Từ điển (`JitendexCard.svelte`, `jitendexPack.ts`).
+- Chọn nguồn: userdata `dict.source` = `both | jmdict | jitendex` (mặc định `both`), đọc trong `loadDictionary`, đổi bằng `setMeaningSource`. `visibleSources` (trong `jitendex.ts`) luôn rơi về JMdict khi chưa cài gói hoặc Jitendex không có từ đó, nên popup không bao giờ trống. Thẻ SRS lấy nghĩa của nguồn đang chọn.
+- Thread khác muốn đọc nghĩa Jitendex: `loadJitendex(wordId)` (trả `undefined` nếu chưa cài).
+
 
 ## Trình đọc manga + OCR (`src/features/manga/`)
 Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ảnh); app **không** kèm truyện nào và không tải file đi đâu.

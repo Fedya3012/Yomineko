@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { dict, closePopup, popupBack, openWord, loadExamples, loadKanji, currentDb } from './state.svelte';
+  import { dict, closePopup, popupBack, openWord, loadExamples, loadKanji, loadJitendex, setMeaningSource, currentDb } from './state.svelte';
+  import { Segmented } from '../../lib/ui';
+  import { groupSenses, jitendexGloss, MEANING_SOURCES, visibleSources, type MeaningSource } from './jitendex';
   import { addWordToSrs, cardIdFor, hasSrsCard, type AddWordInput } from '../srs/bridge';
   import { relatedWords } from './related';
   import { isKanji } from './kana';
-  import { freqLabel, jlptLabel, posLabels } from './labels';
-  import type { Example, KanjiEntry, Word } from './types';
+  import { freqLabel, jlptLabel, posLabels, tagLabel } from './labels';
+  import type { Example, JitendexEntry, KanjiEntry, Word } from './types';
 
   const word = $derived.by<Word | undefined>(() => {
     const id = dict.popup[dict.popup.length - 1];
@@ -15,13 +17,15 @@
 
   let examples = $state<Example[]>([]);
   let kanji = $state<KanjiEntry[]>([]);
+  let jitendex = $state<JitendexEntry | undefined>();
   let closeBtn = $state<HTMLButtonElement>();
 
   $effect(() => {
     const w = word;
-    examples = []; kanji = [];
+    examples = []; kanji = []; jitendex = undefined;
     if (!w) return;
     let stale = false;
+    loadJitendex(w.id).then((r) => { if (!stale) jitendex = r; });
     loadExamples((w.ex ?? []).slice(0, 5)).then((r) => { if (!stale) examples = r; });
     loadKanji([...(w.kanji[0]?.text ?? '')].filter(isKanji)).then((r) => { if (!stale) kanji = r; });
     return () => { stale = true; };
@@ -46,7 +50,7 @@
     if (!w || !db) return;
     const ctx = dict.context;
     const input: AddWordInput = {
-      wordId: w.id, word: spelling(w), reading: w.kana[0].text, meaning: gloss(w),
+      wordId: w.id, word: spelling(w), reading: w.kana[0].text, meaning: meaning(w),
       sentence: ctx?.sentence, blank: ctx?.surface, kind: ctx?.kind ?? 'dictionary', origin: ctx?.origin
     };
     try {
@@ -58,6 +62,8 @@
     }
   }
 
+  const shown = $derived(visibleSources(dict.source, jitendex));
+
   const tags = $derived(word ? [
     word.jlpt ? { text: jlptLabel(word.jlpt), tone: 'pink' } : null,
     freqLabel(word.common, word.rank) ? { text: freqLabel(word.common, word.rank)!, tone: 'mint' } : null
@@ -65,6 +71,8 @@
 
   const spelling = (w: Word) => w.kanji[0]?.text ?? w.kana[0].text;
   const gloss = (w: Word) => w.senses.flatMap((s) => s.gloss).slice(0, 3).join('; ');
+  // Cards and chips use the meaning of the source the learner picked (JMdict when Jitendex has nothing).
+  const meaning = (w: Word) => (shown.jitendex && !shown.jmdict && jitendex ? jitendexGloss(jitendex) : gloss(w));
   function onKey(e: KeyboardEvent) { if (e.key === 'Escape') closePopup(); }
 </script>
 
@@ -89,15 +97,42 @@
       {/if}
       <div class="chips">{#each tags as t}<span class="chip {t.tone}">{t.text}</span>{/each}</div>
 
-      <ol class="senses">
-        {#each word.senses as s}
-          <li>
-            <span class="pos">{posLabels(s.pos).join(' · ')}</span>
-            <span class="gloss">{s.gloss.join('; ')}</span>
-          </li>
+      {#if dict.hasJitendex}
+        <div class="source"><Segmented bind:value={() => dict.source, (v: MeaningSource) => void setMeaningSource(v)} options={MEANING_SOURCES} label="Nguồn nghĩa" /></div>
+      {/if}
+
+      {#if shown.jmdict}
+        {#if shown.jitendex}<h3>JMdict</h3>{/if}
+        <ol class="senses">
+          {#each word.senses as s}
+            <li>
+              <span class="pos">{posLabels(s.pos).join(' · ')}</span>
+              <span class="gloss">{s.gloss.join('; ')}</span>
+            </li>
+          {/each}
+        </ol>
+        <p class="muted small">Nghĩa lấy từ JMdict (tiếng Anh).</p>
+      {/if}
+      {#if shown.jitendex && jitendex}
+        {#if shown.jmdict}<h3>Jitendex</h3>{/if}
+        {#each groupSenses(jitendex.senses) as g}
+          <p class="pos group">{posLabels(g.pos).join(' · ')}</p>
+          <ol class="senses jx">
+            {#each g.senses as s}
+              <li>
+                {#if s.tags?.length}<span class="tagline">{#each s.tags as t}<span class="chip">{tagLabel(t)}</span>{/each}</span>{/if}
+                <span class="gloss">{s.gloss.join('; ')}</span>
+                {#if s.note?.length}<span class="muted small"> — {s.note.join('; ')}</span>{/if}
+                {#if s.lang}<span class="muted small"> · {s.lang}</span>{/if}
+                {#if s.ex}<span class="jx-ex"><span class="jp" lang="ja">{s.ex.ja}</span><span class="muted">{s.ex.en}</span></span>{/if}
+              </li>
+            {/each}
+          </ol>
         {/each}
-      </ol>
-      <p class="muted small">Nghĩa lấy từ JMdict (tiếng Anh).</p>
+        <p class="muted small">Nghĩa lấy từ Jitendex (CC BY-SA 4.0, dựa trên JMdict).</p>
+      {:else if dict.hasJitendex && dict.source !== 'jmdict'}
+        <p class="muted small">Jitendex chưa có từ này, đang hiện nghĩa JMdict.</p>
+      {/if}
       <div class="srs-row">
         <button class="btn" onclick={addToSrs} disabled={inSrs}>{inSrs ? '✓ Đã có trong thẻ ôn' : '+ Thêm vào thẻ ôn (SRS)'}</button>
         {#if srsMsg}<span role="status" class="muted small">{srsMsg}</span>{/if}
@@ -160,6 +195,11 @@
   .pos { font-size: var(--text-sm); color: var(--text-muted); margin-right: .4rem; }
   .plain { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-2); }
   .srs-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
+  .source { margin-top: var(--space-3); }
+  .group { margin: var(--space-3) 0 0; }
+  .jx { margin-top: .2rem; }
+  .tagline { display: inline-flex; flex-wrap: wrap; gap: .25rem; margin-right: .4rem; }
+  .jx-ex { display: grid; margin: .2rem 0 .3rem; font-size: var(--text-sm); }
   .kanji li { display: flex; gap: var(--space-3); align-items: center; }
   .big { font-size: 2rem; color: var(--accent-strong); min-width: 2.4rem; text-align: center; }
   .rel { border: 0; min-height: 44px; display: inline-flex; align-items: center; gap: .4rem; }

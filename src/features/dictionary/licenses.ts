@@ -17,6 +17,11 @@ export const DATA_LICENSES: DataLicense[] = [
     note: 'Từ vựng, cách đọc, nghĩa tiếng Anh, loại từ.'
   },
   {
+    id: 'jitendex', name: 'Jitendex', by: 'Stephen Kraus',
+    license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/', url: 'https://jitendex.org',
+    note: 'Từ điển tiếng Anh tuỳ chọn, dựng trên JMdict: nghĩa chia nhóm theo loại từ, ghi chú cách dùng và câu ví dụ cho từng nghĩa.'
+  },
+  {
     id: 'kanjidic', name: 'KANJIDIC2', by: 'Electronic Dictionary Research and Development Group (EDRDG)',
     license: 'CC BY-SA 4.0', licenseUrl: 'https://www.edrdg.org/edrdg/licence.html', url: 'https://www.edrdg.org/wiki/index.php/KANJIDIC_Project',
     note: 'Âm On/Kun, nghĩa, số nét, cấp lớp và độ thường gặp của chữ Hán.'
