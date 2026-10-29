@@ -4,19 +4,21 @@
   import { openDatabase, listCollection, type DB } from './lib/db';
   import { installPack } from './lib/packs/install';
   import Badge from './lib/Badge.svelte';
+  import MangaReader from './features/manga/MangaReader.svelte';
   import demoPack from '../packs-example/demo-hiragana.pack.json';
 
   let settings = $state<Settings>(loadSettings());
-  let db: DB | undefined;
+  let db = $state<DB>();
   let words = $state<{ id: string; kanji: string; reading: string; meaning: string }[]>([]);
   let status = $state('');
+  let screen = $state<'home' | 'manga'>('home');
 
   // Feature areas. Each later thread replaces its placeholder card with a real screen.
   const features = [
     { tone: 'coral', name: 'Ôn tập SRS', note: 'Thread SRS', d: 'M20 30h60v40H20zM30 20h40M35 45h30M35 58h18' },
     { tone: 'teal', name: 'Từ điển', note: 'Thread Từ điển', d: 'M50 28C40 20 25 20 15 26v50c10-6 25-6 35 2 10-8 25-8 35-2V26C75 20 60 20 50 28zM50 28v50' },
     { tone: 'mint', name: 'Kana & Kanji', note: 'Thread Kana/Kanji', d: 'M25 35h50M50 20v60M32 55c10 4 22 4 32 0M40 70c6 6 14 6 20 0' },
-    { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
+    { tone: 'sky', name: 'Đọc manga', note: 'Thread Manga', screen: 'manga' as const, d: 'M20 20h60v60H20zM20 50h60M50 20v30M50 50v30' },
     { tone: 'coral', name: 'Xem anime', note: 'Thread Anime', d: 'M20 28h60v44H20zM42 40l20 10-20 10z' },
     { tone: 'mint', name: 'Tiến độ', note: 'Thread Tiến độ', d: 'M18 78V22M18 78h64M28 62l16-16 12 10 22-26' }
   ] as const;
@@ -45,6 +47,9 @@
   const themes: [ThemeChoice, string][] = [['system', 'Theo máy'], ['light', 'Sáng'], ['dark', 'Tối']];
 </script>
 
+{#if screen === 'manga' && db}
+  <MangaReader {db} onBack={() => (screen = 'home')} />
+{:else}
 <main>
   <header>
     <img src="favicon.svg" alt="Mochi, chú mèo trắng" width="56" height="56" />
@@ -59,7 +64,11 @@
       <div class="card feature">
         <Badge tone={f.tone} size={64}><svg viewBox="0 0 100 100"><path d={f.d} /></svg></Badge>
         <strong>{f.name}</strong>
-        <span class="chip">Sắp có · {f.note}</span>
+        {#if 'screen' in f}
+          <button class="btn" onclick={() => (screen = f.screen)}>Mở</button>
+        {:else}
+          <span class="chip">Sắp có · {f.note}</span>
+        {/if}
       </div>
     {/each}
   </section>
@@ -99,6 +108,7 @@
     </ul>
   </section>
 </main>
+{/if}
 
 <style>
   main { max-width: 760px; margin: 0 auto; padding: var(--space-4); display: grid; gap: var(--space-4); }

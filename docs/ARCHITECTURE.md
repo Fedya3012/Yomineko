@@ -56,3 +56,23 @@ Huy hiệu tròn kiểu "sticker": viền lượn sóng vẽ tay, nét viền đ
 
 ## Màu & cảm giác chung (tham khảo thêm)
 Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-*`) và xanh trời (`--sky-*`) làm điểm nhấn; thẻ `.chip` có thêm biến thể `butter|sky|mint|pink`. Hình khối mềm hữu cơ (`.blob`) làm nền minh hoạ, góc bo lớn, nhiều khoảng trắng, chữ Nhật dùng font tròn (Zen Maru Gothic, nếu máy có). Thông tin dày (danh sách nhiệm vụ, tiến độ) dùng thẻ phẳng viền mảnh, số lớn kiểu "001/010".
+
+## Trình đọc manga + OCR (`src/features/manga/`)
+Người dùng tự nạp truyện (CBZ, CBR, PDF, thư mục ảnh, nhiều ảnh); app **không** kèm truyện nào và không tải file đi đâu.
+- `open.ts` nhận file, đoán định dạng theo **byte đầu** (`formats.ts`, vì nhiều file `.cbr` thực ra là ZIP), rồi gọi `sources/{cbz,cbr,pdf,folder}.ts`. Mỗi nguồn trả về danh sách `PageRef` (chỉ giải nén/vẽ trang khi cần). `pageCache.ts` chỉ giữ vài trang quanh trang đang đọc.
+- `spreads.ts` (1 trang / 2 trang, bìa riêng, trang ngang đứng riêng, chiều đọc phải→trái hoặc trái→phải), `zoom.ts` + `spreadMath.ts` (zoom, kéo, chạm đúp, pinch; đổi toạ độ màn hình → toạ độ trang). Toàn bộ là hàm thuần, có test.
+- OCR (`ocr/`): `engine.ts` chạy Tesseract.js trong Web Worker, **offline**. Chạy 2 model (`jpn` ngang, `jpn_vert` dọc), `normalize.ts` lọc nhiễu, nhận kiểu chữ theo hình dạng dòng, ghép kết quả và sắp thứ tự đọc manga (trên→dưới, phải→trái). Có thể quét cả trang hoặc chỉ một vùng người dùng kéo chọn (chính xác hơn).
+  - Ô của từng chữ được chia đều theo ô của **dòng**, vì ô theo từng ký tự của tesseract.js không đáng tin với chữ Nhật (chữ dọc trả về x = 0).
+- Tra nghĩa (`lookup.ts`): chạm chữ → `hit.ts` tìm ký tự → khớp từ dài nhất trong collection `words` (gói từ điển, xem bảng trên). Chưa có gói từ điển thì app báo rõ. **Thread Từ điển**: khi đổi cấu trúc bản ghi `words`, sửa `WordEntry`/`buildWordIndex` ở đây; chưa có tách đuôi động từ/tính từ (ví dụ 読んだ → 読む), nên là việc nên làm.
+- Vị trí đọc + tuỳ chọn hiển thị lưu ở `userdata` (`reader.position:<id>`, `reader.prefs`).
+- `scripts/copy-vendor-assets.mjs` (chạy tự động trước `dev`/`build`) chép engine OCR, model tiếng Nhật và bộ đọc RAR vào `public/ocr`, `public/vendor` (git bỏ qua). PWA chỉ cache chúng lần đầu dùng (khoảng 20 MB), bản .exe/APK thì có sẵn.
+
+### Giấy phép thành phần dùng cho manga/OCR (đều cho phép dùng thương mại)
+| Thành phần | Giấy phép | Dùng để |
+|---|---|---|
+| tesseract.js + tesseract.js-core | Apache-2.0 | OCR chạy trên máy |
+| Model Tesseract `jpn`, `jpn_vert` (gói `@tesseract.js-data/*`, bản best_int) | Apache-2.0 (dữ liệu Tesseract) | nhận dạng chữ Nhật ngang/dọc |
+| pdfjs-dist | Apache-2.0 | mở PDF |
+| libarchive.js (bọc libarchive) | MIT (libarchive: BSD-2) | mở CBR/RAR/7z |
+| fflate | MIT | mở CBZ/ZIP |
+Màn hình Credits (thread sau) nên liệt kê các dòng này.

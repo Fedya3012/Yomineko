@@ -27,7 +27,17 @@ export default defineConfig({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,svg,png,woff2}'] }
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // The OCR engine and Japanese models are ~20 MB: not downloaded with the app shell, but cached
+        // the first time OCR / RAR / PDF is used, and then work offline.
+        globIgnores: ['ocr/**', 'vendor/**'],
+        runtimeCaching: [{
+          urlPattern: ({ url }) => /\/(ocr|vendor)\/|pdf\.worker.*\.mjs$/.test(url.pathname),
+          handler: 'CacheFirst',
+          options: { cacheName: 'yomineko-engines', expiration: { maxEntries: 40 }, cacheableResponse: { statuses: [0, 200] } }
+        }]
+      }
     })
   ],
   test: { environment: 'node', include: ['src/**/*.test.ts'] }
