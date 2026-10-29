@@ -11,6 +11,7 @@
   import AnimePlayer from './features/anime/AnimePlayer.svelte';
   import SrsHome from './features/srs/SrsHome.svelte';
   import ProgressView from './features/progress/ProgressView.svelte';
+  import InsightsView from './features/insights/InsightsView.svelte';
   import { recordSession } from './features/progress/store';
   import type { SessionSummary } from './features/progress/types';
   import demoPack from '../packs-src/demo-words/v1.json';
@@ -112,6 +113,7 @@
     <h2 class="section-title">Tiến độ học</h2>
     <p><button class="btn soft" onclick={demoSession} disabled={!readyDb}>Học thử 1 buổi (dữ liệu mẫu)</button></p>
     {#if readyDb}<ProgressView db={readyDb} summary={lastSummary} refreshKey={progressKey} />{/if}
+    {#if readyDb}<InsightsView db={readyDb} refreshKey={progressKey} />{/if}
   </section>
 
   <section class="card">

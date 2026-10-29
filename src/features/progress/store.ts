@@ -65,6 +65,7 @@ export async function recordSession(db: DB, input: SessionInput, now = new Date(
     const key = `${it.kind}:${it.id}`;
     const d = (log.items[key] ??= { kind: it.kind, id: it.id, label: it.label, seen: 0, missed: 0 });
     d.label = it.label;
+    if (it.tag) d.tag = it.tag;
     d.seen++;
     if (it.correct) correct++;
     else {
