@@ -62,3 +62,4 @@ Giữ hồng sakura, kem và tối tím than. Thêm pastel vàng bơ (`--butter-
 - Nội dung vào `records` qua gói `kind: "lesson"`; định dạng bài ở `types.ts`. Sách có sẵn chỉ là khung (`scripts/make-textbook-packs.mjs`), không có chữ của nhà xuất bản.
 - **Nối với SRS:** bài ghi thẻ dựng sẵn vào `srs.inbox:<lessonId>` (xem `srs.ts`). Thread SRS đọc mọi khoá `srs.inbox:*` để tạo thẻ; id thẻ ổn định nên thêm lại không bị trùng.
 - **Nối với Tiến độ:** trả lời bài tập gọi `recordSession` (ở `answerExercise`) với `ref` của câu hỏi.
+- **File sách của người học** (`bookfile.ts`, `BookReader.svelte`, `epub.ts`): PDF/EPUB lưu ở `userdata` (`textbook.file:<bookId>`), PDF vẽ bằng pdf.js (tải khi cần), EPUB giải nén bằng fflate và hiển thị trong iframe `sandbox=""`. Liên kết bài↔trang: `bookRef` trong bài (từ gói) hoặc `textbook.bookref:<lessonId>` (người học tự gắn, ưu tiên hơn).

@@ -11,6 +11,9 @@
 // No copyrighted book text is shipped: books are "shells" (title + lesson numbers) and the
 // learner fills them with their own pack file. Audio is never shipped either.
 
+/** Where a lesson starts in the learner's own book file. `page` for PDF (1-based), `chapter` for EPUB (1-based). */
+export interface BookRef { page?: number; chapter?: number }
+
 /** Where an item came from, shown as a badge with a description. */
 export type SourceType = 'textbook' | 'anime' | 'music' | 'manga' | 'dictionary' | 'user';
 export interface Source {
@@ -59,6 +62,8 @@ export interface Lesson {
   order: number;
   title: string;
   titleJa?: string;
+  /** Optional link to the lesson's start in the learner's own PDF/EPUB. */
+  bookRef?: BookRef;
   /** Default source for items that do not state their own (falls back to "textbook"). */
   source?: Source;
   /** How-to-study guidance, one tip per entry. */

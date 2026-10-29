@@ -10,8 +10,8 @@
   import { loadNotes, loadProgress, resetLesson, saveNotes, setSectionDone } from './store';
   import { emptyProgress, type Lesson, type LessonProgress, type SectionId } from './types';
 
-  let { db, lesson, prev, next, onback, onopen, onprogress }: {
-    db: DB; lesson: Lesson; prev?: Lesson; next?: Lesson;
+  let { db, lesson, prev, next, onback, onopen, onprogress, hasBookFile = false, onreadbook }: {
+    db: DB; lesson: Lesson; hasBookFile?: boolean; onreadbook?: () => void; prev?: Lesson; next?: Lesson;
     onback: () => void; onopen: (l: Lesson) => void; onprogress: () => void;
   } = $props();
 
@@ -65,7 +65,10 @@
 </script>
 
 <div class="stack">
-  <button class="btn soft back" type="button" onclick={onback}>‹ Mục lục</button>
+  <div class="row">
+    <button class="btn soft back" type="button" onclick={onback}>‹ Mục lục</button>
+    {#if hasBookFile}<button class="btn soft" type="button" onclick={onreadbook}>Mở trang sách</button>{/if}
+  </div>
 
   <header class="head">
     <div>

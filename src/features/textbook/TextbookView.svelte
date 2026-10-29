@@ -3,6 +3,8 @@
   import type { DB } from '../../lib/db';
   import { installPack } from '../../lib/packs/install';
   import { validatePack } from '../../lib/packs/format';
+  import BookReader from './BookReader.svelte';
+  import { detectKind, loadBookMeta, removeBookFile, saveBookFile, type BookFileMeta } from './bookfile';
   import LessonView from './LessonView.svelte';
   import { bookRatio, isEmptyLesson, lessonRatio, nextLesson } from './logic';
   import { loadAllProgress, loadLessons, loadTextbooks } from './store';
@@ -16,9 +18,12 @@
   let progress = $state.raw<Map<string, LessonProgress>>(new Map());
   let bookId = $state<string>();
   let lessonId = $state<string>();
+  let reading = $state(false);
+  let bookMeta = $state<BookFileMeta>();
   let message = $state('');
   let failed = $state(false);
   let picker = $state<HTMLInputElement>();
+  let filePicker = $state<HTMLInputElement>();
 
   const colors = ['pink', 'sky', 'mint', 'butter'] as const;
   const book = $derived(books.find((b) => b.id === bookId));
@@ -44,6 +49,14 @@
     const f = input.files?.[0];
     if (!f) return;
     try {
+      if (detectKind(f.name, f.type)) {
+        const id = await createBookFromFile(f);
+        await reload();
+        openBook(id);
+        failed = false; message = '';
+        input.value = '';
+        return;
+      }
       const pack = validatePack(JSON.parse(await f.text()));
       await installPack(db, pack);
       await reload();
@@ -56,6 +69,28 @@
     input.value = '';
   }
 
+  /** A PDF/EPUB on its own becomes a book with no lessons yet; the file stays on this device. */
+  async function createBookFromFile(f: File): Promise<string> {
+    const base = f.name.replace(/\.[^.]+$/, '');
+    const slug = base.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sach';
+    const id = `file-${slug}-${Date.now().toString(36)}`;
+    await installPack(db, {
+      manifest: { format: 1, id: `user-${id}`, kind: 'lesson', title: base, version: 1, license: { name: 'Sách của người dùng, chỉ dùng cá nhân', url: 'https://example.org/personal-use' } },
+      upserts: { textbooks: [{ id, title: base, lessonIds: [] }] }
+    });
+    await saveBookFile(db, id, f);
+    return id;
+  }
+  async function attachFile(e: Event) {
+    const input = e.currentTarget as HTMLInputElement;
+    const f = input.files?.[0];
+    input.value = '';
+    if (!f || !book) return;
+    try { bookMeta = await saveBookFile(db, book.id, f); failed = false; message = ''; }
+    catch (err) { failed = true; message = err instanceof Error ? err.message : String(err); }
+  }
+  async function detachFile() { if (book) { await removeBookFile(db, book.id); bookMeta = undefined; } }
+
   function downloadTemplate() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(TEMPLATE_PACK, null, 2)], { type: 'application/json' }));
     const a = document.createElement('a');
@@ -63,8 +98,10 @@
     URL.revokeObjectURL(url);
   }
 
-  function openBook(id: string) { bookId = id; lessonId = undefined; }
-  function openLesson(l: Lesson) { bookId = l.textbookId; lessonId = l.id; }
+  function openBook(id: string) { bookId = id; lessonId = undefined; reading = false; loadBookMeta(db, id).then((m) => (bookMeta = m)); }
+  function openLesson(l: Lesson) { bookId = l.textbookId; lessonId = l.id; reading = false; loadBookMeta(db, l.textbookId).then((m) => (bookMeta = m)); }
+  let readFrom = $state<Lesson>();
+  function readBook(l?: Lesson) { readFrom = l; reading = true; }
   const stats = (b: Textbook) => {
     const ls = lessons.filter((l) => l.textbookId === b.id);
     return { ls, ratio: bookRatio(ls, progress), filled: ls.filter((l) => !isEmptyLesson(l)).length, next: nextLesson(ls, progress) };
@@ -72,8 +109,10 @@
 </script>
 
 <div class="stack">
-  {#if lesson}
-    <LessonView {db} {lesson} prev={bookLessons[idx - 1]} next={bookLessons[idx + 1]}
+  {#if reading && book}
+    <BookReader {db} {book} lessons={bookLessons} startLesson={readFrom} onback={() => (reading = false)} onopenlesson={openLesson} />
+  {:else if lesson}
+    <LessonView {db} {lesson} hasBookFile={!!bookMeta} onreadbook={() => readBook(lesson)} prev={bookLessons[idx - 1]} next={bookLessons[idx + 1]}
       onback={() => (lessonId = undefined)} onopen={openLesson} onprogress={reloadProgress} />
   {:else if book}
     {@const s = stats(book)}
@@ -83,7 +122,17 @@
       <h2>{book.title}</h2>
       <p class="muted">{book.level ?? ''} · {s.ls.length} bài · {s.filled} bài đã có nội dung · hoàn thành {Math.round(s.ratio * 100)}%</p>
       <progress max="1" value={s.ratio} aria-label={`Tiến độ ${book.title}`}></progress>
-      {#if s.next}<p><button class="btn" type="button" onclick={() => openLesson(s.next!)}>Học tiếp: Bài {s.next.order}</button></p>{/if}
+      <p class="row">
+        {#if s.next}<button class="btn" type="button" onclick={() => openLesson(s.next!)}>Học tiếp: Bài {s.next.order}</button>{/if}
+        {#if bookMeta}
+          <button class="btn soft" type="button" onclick={() => readBook()}>Đọc sách ({bookMeta.kind.toUpperCase()})</button>
+          <button class="link" type="button" onclick={detachFile}>Gỡ file “{bookMeta.name}”</button>
+        {:else}
+          <button class="btn soft" type="button" onclick={() => filePicker?.click()}>Mở file sách của bạn (PDF/EPUB)</button>
+        {/if}
+        <input bind:this={filePicker} type="file" accept=".pdf,.epub,application/pdf,application/epub+zip" hidden onchange={attachFile} />
+      </p>
+      {#if message}<p role="status" class:bad={failed}>{message}</p>{/if}
     </header>
     <section class="card" aria-label="Mục lục">
       <h3><span lang="ja">目次</span> · Mục lục</h3>
@@ -114,9 +163,9 @@
     </div>
 
     <div class="row">
-      <button class="btn" type="button" onclick={() => picker?.click()}>＋ Thêm giáo trình (nạp file)</button>
+      <button class="btn" type="button" onclick={() => picker?.click()}>＋ Thêm giáo trình (JSON, PDF, EPUB)</button>
       <button class="btn soft" type="button" onclick={downloadTemplate}>Tải file mẫu để điền</button>
-      <input bind:this={picker} type="file" accept=".json,application/json" hidden onchange={importFile} />
+      <input bind:this={picker} type="file" accept=".json,.pdf,.epub,application/json,application/pdf,application/epub+zip" hidden onchange={importFile} />
     </div>
     {#if message}<p role="status" class:bad={failed}>{message}</p>{/if}
 
@@ -167,5 +216,6 @@
   .unit.now { background: var(--surface-2); border-radius: var(--radius-sm); padding-inline: var(--space-2); }
   .st { width: 3rem; text-align: center; font-weight: 800; color: var(--text-muted); font-variant-numeric: tabular-nums; }
   .unit.done .st { color: var(--success); }
+  .link { background: none; border: 0; color: var(--text-muted); text-decoration: underline; min-height: 44px; }
   .grow { flex: 1 1 10rem; display: grid; gap: 2px; }
 </style>
