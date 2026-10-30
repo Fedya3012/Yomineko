@@ -178,7 +178,7 @@
     {#if settings.useAi}
       <h3>Chọn model AI</h3>
       <ModelPicker provider={settings.provider} ramGb={settings.deviceRamGb} onSelect={pickModel} onRam={(gb) => (settings.deviceRamGb = gb)} />
-      {#if settings.provider.kind !== 'webllm'}
+      {#if settings.provider.kind !== 'webllm' && settings.provider.kind !== 'llamacpp'}
       <h3>Nâng cao: dịch vụ khác</h3>
       <label>Dịch vụ
         <select onchange={(e) => choosePreset(e.currentTarget.value)}>
