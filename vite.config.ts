@@ -36,14 +36,18 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // The OCR engine and Japanese models are ~20 MB: not downloaded with the app shell, but cached
         // the first time OCR / RAR / PDF is used, and then work offline.
-        globIgnores: ['ocr/**', 'vendor/**'],
+        globIgnores: ['ocr/**', 'vendor/**', '**/webllm*'],
         runtimeCaching: [{
-          urlPattern: ({ url }) => /\/(ocr|vendor)\/|pdf\.worker.*\.mjs$/.test(url.pathname),
+          urlPattern: ({ url }) => /\/(ocr|vendor)\/|pdf\.worker.*\.mjs$|\/webllm[^/]*\.js$/.test(url.pathname),
           handler: 'CacheFirst',
           options: { cacheName: 'yomineko-engines', expiration: { maxEntries: 40 }, cacheableResponse: { statuses: [0, 200] } }
         }]
       }
     })
   ],
+  build: {
+    // WebLLM is ~6 MB and only needed once the user runs a model inside the app: keep it in its own chunk.
+    rollupOptions: { output: { manualChunks: (id) => (id.includes('@mlc-ai/web-llm') ? 'webllm-lib' : undefined) } }
+  },
   test: { environment: 'node', include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'] }
 });

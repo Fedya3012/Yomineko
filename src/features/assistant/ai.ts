@@ -1,5 +1,6 @@
 import { PHRASES, getPersona, STYLE_LABELS } from './personas';
 import { getScenario } from './scenarios';
+import { webChat } from '../models/webllm';
 import type { AssistMode, AssistantSettings, ChatMessage, ProviderConfig, ProviderKind, RoleplayState } from './types';
 
 export const PROVIDER_PRESETS: Record<string, ProviderConfig & { label: string }> = {
@@ -41,6 +42,7 @@ export async function callAi(
   cfg: ProviderConfig, apiKey: string, system: string, messages: ChatMessage[],
   fetchFn: FetchLike = (u, i) => fetch(u, i), timeoutMs = 25000
 ): Promise<string> {
+  if (cfg.kind === 'webllm') return webChat(cfg.model, system, messages);
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), timeoutMs);
   const msgs = messages.map((m) => ({ role: m.role, content: m.text }));

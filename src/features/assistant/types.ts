@@ -1,7 +1,7 @@
 export type Level = 'N5' | 'N4' | 'N3' | 'N2' | 'N1';
 export type Style = 'gentle' | 'cheerful' | 'strict';
 export type AssistMode = 'chat' | 'grammar' | 'correct' | 'roleplay';
-export type ProviderKind = 'anthropic' | 'openai-compatible';
+export type ProviderKind = 'anthropic' | 'openai-compatible' | 'webllm';
 
 export interface ChatMessage { role: 'user' | 'assistant'; text: string; source?: 'ai' | 'offline' }
 
