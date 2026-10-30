@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: { name: github-pages, url: "${{ steps.deployment.outputs.page_url }}" }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with: { node-version: 22, cache: npm }
       - run: npm ci
       # Full JMdict (all words, version 2) + KANJIDIC2 + examples go into the same content feed. If the open-data

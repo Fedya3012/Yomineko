@@ -20,6 +20,7 @@
     "packs:new": "vite-node scripts/packs-new.ts --"
   },
   "devDependencies": {
+    "@capacitor/android": "^7.6.10",
     "@capacitor/cli": "^7.6.10",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@tauri-apps/cli": "^2.12.4",
