@@ -18,6 +18,8 @@ export interface AssistantSettings {
   useAi: boolean;
   provider: ProviderConfig;
   consent?: Consent;
+  /** RAM the user told us (or the browser reported), used to label which models fit. */
+  deviceRamGb?: number;
 }
 
 export interface RoleplayState { scenarioId: string; step: number; done: boolean }

@@ -3,6 +3,7 @@
   import type { DB } from '../../lib/db';
   import { installPack } from '../../lib/packs/install';
   import { countQueue } from './session';
+  import { syncAnimeCards } from './bridge';
   import { dayKey, loadCards, loadSettings, loadStates, loadStats, saveSettings } from './store';
   import { ALL_TYPES, DEFAULT_SETTINGS, type QuestionType, type SrsSettings } from './types';
   import type { SessionSummary } from '../progress/types';
@@ -23,6 +24,7 @@
   };
 
   async function refresh() {
+    await syncAnimeCards(db).catch(() => 0); // cards made from anime subtitles join the review queue
     const [cards, states, s] = await Promise.all([loadCards(db), loadStates(db), loadSettings(db)]);
     const now = Date.now();
     const stats = await loadStats(db, dayKey(now));
