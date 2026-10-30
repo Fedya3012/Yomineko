@@ -1,5 +1,6 @@
 import { CHAT_REPLIES, CORRECTION_RULES, GRAMMAR, TOPIC_LIST } from './offline-data';
 import { PHRASES } from './personas';
+import { gradeAnswer, SIMPLE_GRADING_LABEL } from './grade';
 import { getScenario } from './scenarios';
 import type { RoleplayState, Style } from './types';
 
@@ -56,10 +57,11 @@ export function offlineRoleplay(text: string, state: RoleplayState, style: Style
   const sc = getScenario(state.scenarioId);
   if (!sc || state.done) throw new Error('Tình huống đã kết thúc');
   const turn = sc.turns[state.step];
-  const ok = turn.expect.some((k) => text.includes(k));
+  const { ok } = gradeAnswer(text, turn);
+  const label = `(${SIMPLE_GRADING_LABEL}: chỉ so khớp với câu mẫu, không hiểu ngữ pháp)`;
   const feedback = ok
-    ? pick(PHRASES[style].praise, rand)
-    : `${pick(PHRASES[style].retry, rand)}\nCâu mẫu: ${turn.model} (${turn.modelGloss})`;
+    ? `${pick(PHRASES[style].praise, rand)} ${label}`
+    : `${label}\n${pick(PHRASES[style].retry, rand)}\nCâu mẫu: ${turn.model} (${turn.modelGloss})`;
   const nextStep = state.step + 1;
   if (nextStep >= sc.turns.length) {
     return { ok, state: { ...state, step: nextStep, done: true }, text: `${feedback}\n\nKết thúc tình huống rồi! ${pick(PHRASES[style].cheer, rand)}` };
