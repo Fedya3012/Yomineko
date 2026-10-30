@@ -19,7 +19,7 @@ jobs:
         with: { workspaces: src-tauri }
       - name: Use the release tag as the app version
         if: startsWith(github.ref, 'refs/tags/v')
-        run: node scripts/set-version.mjs "${GITHUB_REF_NAME}"
+        run: node scripts/set-version.mjs "${{ github.ref_name }}"
       - run: npm ci
       - run: npm run tauri build
       - uses: actions/upload-artifact@v4
@@ -39,7 +39,7 @@ jobs:
       # "Failed to find package 'tools'", so it is not used.
       - name: Use the release tag as the app version
         if: startsWith(github.ref, 'refs/tags/v')
-        run: node scripts/set-version.mjs "${GITHUB_REF_NAME}"
+        run: node scripts/set-version.mjs "${{ github.ref_name }}"
       - run: npm ci
       - run: npm run build
       - name: Create Android project from the web build
@@ -81,7 +81,7 @@ jobs:
         with: { node-version: 22, cache: npm }
       - name: Use the release tag as the app version
         if: startsWith(github.ref, 'refs/tags/v')
-        run: node scripts/set-version.mjs "${GITHUB_REF_NAME}"
+        run: node scripts/set-version.mjs "${{ github.ref_name }}"
       - run: npm ci
       - run: npm run build
       - run: cd dist && zip -r ../Yomineko-web.zip .
