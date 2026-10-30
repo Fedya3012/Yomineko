@@ -47,7 +47,8 @@ jobs:
           npx cap add android
           npx cap sync android
           # Obtainium only offers an update when versionCode goes up.
-          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"${GITHUB_REF_NAME#v}\"/" android/app/build.gradle
+          VERSION=$(node -p "require('./package.json').version")
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"$VERSION\"/" android/app/build.gradle
       - name: Build APK
         working-directory: android
         run: ./gradlew assembleRelease
