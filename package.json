@@ -39,6 +39,7 @@
     "@fontsource/dela-gothic-one": "^5.3.0",
     "@fontsource/dm-mono": "^5.3.0",
     "@fontsource/zen-maru-gothic": "^5.3.1",
+    "@mlc-ai/web-llm": "^0.2.86",
     "@tauri-apps/plugin-opener": "^2.5.0",
     "@tesseract.js-data/jpn": "^1.0.0",
     "@tesseract.js-data/jpn_vert": "^1.0.0",

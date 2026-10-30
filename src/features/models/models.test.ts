@@ -53,3 +53,37 @@ describe('ollama client', () => {
     await expect(deleteModel('http://x', 't', async () => new Response('', { status: 404 }))).rejects.toThrow('404');
   });
 });
+
+import { vi } from 'vitest';
+import { WEB_BASE_URL, setEngineFactory, stripThinking, supportsWebGpu, webChat, webModelId } from './webllm';
+import { aiBlockedReason } from '../assistant/assistant';
+import { DEFAULT_ASSISTANT } from '../assistant/store';
+
+describe('in-app model (WebLLM)', () => {
+  it('maps catalog models to f16/f32 builds', () => {
+    const q = MODELS.find((m) => m.id === 'qwen3-1.7b')!;
+    expect(webModelId(q, true)).toBe('Qwen3-1.7B-q4f16_1-MLC');
+    expect(webModelId(q, false)).toBe('Qwen3-1.7B-q4f32_1-MLC');
+    expect(webModelId(MODELS.find((m) => m.id === 'gemma3-4b')!, true)).toBeUndefined();
+    expect(webModelId(MODELS.find((m) => m.id === 'gemma3-1b')!, false)).toBeUndefined();
+  });
+  it('detects WebGPU and strips reasoning tags', () => {
+    expect(supportsWebGpu({ gpu: {} })).toBe(true);
+    expect(supportsWebGpu({})).toBe(false);
+    expect(stripThinking('<think>hmm</think>\nこんにちは')).toBe('こんにちは');
+    expect(stripThinking('<think>cut off')).toBe('');
+  });
+  it('chats through the engine and loads each model once', async () => {
+    const create = vi.fn(async () => ({ choices: [{ message: { content: '<think>x</think>はい' } }] }));
+    const factory = vi.fn(async () => ({ chat: { completions: { create } }, unload: async () => {} }));
+    setEngineFactory(factory);
+    expect(await webChat('m1', 'sys', [{ role: 'user', text: 'やあ' }])).toBe('はい');
+    await webChat('m1', 'sys', [{ role: 'user', text: 'もう一度' }]);
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect((create.mock.calls[0] as unknown[])[0]).toMatchObject({ messages: [{ role: 'system', content: 'sys' }, { role: 'user', content: 'やあ' }] });
+  });
+  it('needs no consent, key or network when the model runs in the app', () => {
+    const s = { ...DEFAULT_ASSISTANT, useAi: true, provider: { kind: 'webllm' as const, baseUrl: WEB_BASE_URL, model: 'm1' } };
+    expect(aiBlockedReason(s, '', false)).toBeNull();
+  });
+});

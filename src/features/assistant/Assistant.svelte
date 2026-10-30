@@ -9,7 +9,7 @@
   import { DEFAULT_ASSISTANT, clearAssistantData, loadAssistant, saveApiKey, saveAssistantSettings, saveHistory } from './store';
   import ModelPicker from '../models/ModelPicker.svelte';
   import { buildRoleplayReport, type SessionReport, type TurnResult } from './report';
-  import type { AssistMode, AssistantSettings, ChatMessage, Level, RoleplayState, Style } from './types';
+  import type { AssistMode, AssistantSettings, ChatMessage, Level, ProviderConfig, RoleplayState, Style } from './types';
 
   let { db, onSessionEnd }: { db: DB; onSessionEnd?: (r: SessionReport) => unknown } = $props();
 
@@ -86,6 +86,11 @@
     const { label: _l, ...p } = PROVIDER_PRESETS[key];
     settings.provider = p;
     settings.consent = undefined; // a new destination always needs a fresh opt-in
+  }
+
+  function pickModel(p: ProviderConfig) {
+    settings.provider = p;
+    if (hostOf(p.baseUrl) !== settings.consent?.host) settings.consent = undefined;
   }
 
   function setBaseUrl(v: string) {
@@ -171,6 +176,10 @@
     <p class="muted">Mặc định AI tắt. Không có AI, trợ lý vẫn giúp được bằng nội dung có sẵn trên máy, không cần mạng.</p>
     <label><input type="checkbox" bind:checked={settings.useAi} /> Dùng AI để trả lời thông minh hơn</label>
     {#if settings.useAi}
+      <h3>Chọn model AI</h3>
+      <ModelPicker provider={settings.provider} ramGb={settings.deviceRamGb} onSelect={pickModel} onRam={(gb) => (settings.deviceRamGb = gb)} />
+      {#if settings.provider.kind !== 'webllm'}
+      <h3>Nâng cao: dịch vụ khác</h3>
       <label>Dịch vụ
         <select onchange={(e) => choosePreset(e.currentTarget.value)}>
           {#each Object.entries(PROVIDER_PRESETS) as [k, p]}
@@ -180,11 +189,6 @@
       </label>
       <label>Địa chỉ <input value={settings.provider.baseUrl} oninput={(e) => setBaseUrl(e.currentTarget.value)} /></label>
       <label>Tên mô hình <input bind:value={settings.provider.model} /></label>
-      {#if isLocalHost(host) && settings.provider.kind === 'openai-compatible'}
-        <h3>Chọn model AI chạy trên máy</h3>
-        <ModelPicker baseUrl={settings.provider.baseUrl} current={settings.provider.model} ramGb={settings.deviceRamGb}
-          onSelect={(m) => (settings.provider.model = m.ollama)} onRam={(gb) => (settings.deviceRamGb = gb)} />
-      {/if}
       <label>Khoá API {isLocalHost(host) ? '(không cần với máy của bạn)' : ''}
         <input type="password" autocomplete="off" bind:value={apiKey} onchange={() => saveApiKey(db, apiKey)} />
       </label>
@@ -196,6 +200,7 @@
         </label>
         <p class="muted">Không bao giờ gửi: thẻ SRS, tiến độ, thư viện manga/anime, khoá API của bạn cho bên thứ ba. Chưa tích ô này thì không có gì rời khỏi máy.</p>
       </div>
+      {/if}
     {/if}
     <button class="btn soft" onclick={wipe}>Xoá hết dữ liệu trợ lý (chat, khoá API, đồng ý)</button>
   {/if}
