@@ -23,6 +23,8 @@ export function grantConsent(s: AssistantSettings, now = new Date()): AssistantS
 /** Returns null when AI may be used, otherwise a Vietnamese reason why offline mode is used. */
 export function aiBlockedReason(s: AssistantSettings, apiKey: string, online: boolean): string | null {
   if (!s.useAi) return 'AI đang tắt, dùng chế độ offline.';
+  // A model running inside the app sends nothing anywhere: no consent, network or key needed.
+  if (s.provider.kind === 'webllm' || s.provider.kind === 'llamacpp') return null;
   if (!hasConsent(s)) return 'Bạn chưa đồng ý gửi tin nhắn cho dịch vụ AI nên dùng chế độ offline.';
   if (!online) return 'Không có mạng, đang dùng chế độ offline.';
   const needsKey = s.provider.kind === 'anthropic' || !isLocalHost(hostOf(s.provider.baseUrl));

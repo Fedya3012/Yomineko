@@ -4,12 +4,13 @@
   import Badge from '../../lib/Badge.svelte';
   import { PERSONAS, STYLE_LABELS, getPersona, PHRASES } from './personas';
   import { SCENARIOS } from './scenarios';
+  import { SIMPLE_GRADING_LABEL } from './grade';
   import { PROVIDER_PRESETS, hostOf, isLocalHost } from './ai';
   import { grantConsent, hasConsent, respond, startRoleplay } from './assistant';
   import { DEFAULT_ASSISTANT, clearAssistantData, loadAssistant, saveApiKey, saveAssistantSettings, saveHistory } from './store';
   import ModelPicker from '../models/ModelPicker.svelte';
   import { buildRoleplayReport, type SessionReport, type TurnResult } from './report';
-  import type { AssistMode, AssistantSettings, ChatMessage, Level, RoleplayState, Style } from './types';
+  import type { AssistMode, AssistantSettings, ChatMessage, Level, ProviderConfig, RoleplayState, Style } from './types';
 
   let { db, onSessionEnd }: { db: DB; onSessionEnd?: (r: SessionReport) => unknown } = $props();
 
@@ -88,6 +89,11 @@
     settings.consent = undefined; // a new destination always needs a fresh opt-in
   }
 
+  function pickModel(p: ProviderConfig) {
+    settings.provider = p;
+    if (hostOf(p.baseUrl) !== settings.consent?.host) settings.consent = undefined;
+  }
+
   function setBaseUrl(v: string) {
     settings.provider.baseUrl = v;
     if (hostOf(v) !== settings.consent?.host) settings.consent = undefined;
@@ -132,6 +138,7 @@
         {/each}
       </div>
       {#if !roleplay}<p class="muted">Chọn một tình huống để bắt đầu luyện nói.</p>{/if}
+      {#if !(settings.useAi && consented)}<p class="muted"><span class="chip butter">{SIMPLE_GRADING_LABEL}</span> Ở chế độ offline, app chỉ so câu bạn nói với câu mẫu. Bật AI để được nhận xét kỹ hơn.</p>{/if}
     {/if}
 
     <div class="log" bind:this={log} role="log" aria-live="polite">
@@ -171,6 +178,10 @@
     <p class="muted">Mặc định AI tắt. Không có AI, trợ lý vẫn giúp được bằng nội dung có sẵn trên máy, không cần mạng.</p>
     <label><input type="checkbox" bind:checked={settings.useAi} /> Dùng AI để trả lời thông minh hơn</label>
     {#if settings.useAi}
+      <h3>Chọn model AI</h3>
+      <ModelPicker provider={settings.provider} ramGb={settings.deviceRamGb} onSelect={pickModel} onRam={(gb) => (settings.deviceRamGb = gb)} />
+      {#if settings.provider.kind !== 'webllm' && settings.provider.kind !== 'llamacpp'}
+      <h3>Nâng cao: dịch vụ khác</h3>
       <label>Dịch vụ
         <select onchange={(e) => choosePreset(e.currentTarget.value)}>
           {#each Object.entries(PROVIDER_PRESETS) as [k, p]}
@@ -180,11 +191,6 @@
       </label>
       <label>Địa chỉ <input value={settings.provider.baseUrl} oninput={(e) => setBaseUrl(e.currentTarget.value)} /></label>
       <label>Tên mô hình <input bind:value={settings.provider.model} /></label>
-      {#if isLocalHost(host) && settings.provider.kind === 'openai-compatible'}
-        <h3>Chọn model AI chạy trên máy</h3>
-        <ModelPicker baseUrl={settings.provider.baseUrl} current={settings.provider.model} ramGb={settings.deviceRamGb}
-          onSelect={(m) => (settings.provider.model = m.ollama)} onRam={(gb) => (settings.deviceRamGb = gb)} />
-      {/if}
       <label>Khoá API {isLocalHost(host) ? '(không cần với máy của bạn)' : ''}
         <input type="password" autocomplete="off" bind:value={apiKey} onchange={() => saveApiKey(db, apiKey)} />
       </label>
@@ -196,6 +202,7 @@
         </label>
         <p class="muted">Không bao giờ gửi: thẻ SRS, tiến độ, thư viện manga/anime, khoá API của bạn cho bên thứ ba. Chưa tích ô này thì không có gì rời khỏi máy.</p>
       </div>
+      {/if}
     {/if}
     <button class="btn soft" onclick={wipe}>Xoá hết dữ liệu trợ lý (chat, khoá API, đồng ý)</button>
   {/if}
