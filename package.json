@@ -43,6 +43,7 @@
     "@tauri-apps/plugin-opener": "^2.5.0",
     "@tesseract.js-data/jpn": "^1.0.0",
     "@tesseract.js-data/jpn_vert": "^1.0.0",
+    "@wllama/wllama": "^3.8.1",
     "fflate": "^0.8.3",
     "idb": "^8.0.4",
     "libarchive.js": "^2.0.2",

@@ -87,3 +87,26 @@ describe('in-app model (WebLLM)', () => {
     expect(aiBlockedReason(s, '', false)).toBeNull();
   });
 });
+
+import { cpuChat, cpuModelUrl, setCpuEngineFactory } from './wllama';
+describe('llama.cpp in-app engine (Android / no WebGPU)', () => {
+  it('only small models have a CPU build', () => {
+    expect(cpuModelUrl(MODELS.find((m) => m.id === 'qwen3-1.7b')!)).toMatch(/\.gguf$/);
+    expect(cpuModelUrl(MODELS.find((m) => m.id === 'qwen3-4b')!)).toBeUndefined();
+    expect(MODELS.filter((m) => m.gguf).every((m) => m.sizeGb <= 1.2)).toBe(true);
+  });
+  it('loads once, strips thinking and needs no consent or network', async () => {
+    const chat = vi.fn(async () => '<think>x</think>こんにちは');
+    const factory = vi.fn(async () => ({ chat, unload: async () => {} }));
+    setCpuEngineFactory(factory);
+    expect(await cpuChat('u', 'sys', [{ role: 'user', text: 'hi' }])).toBe('こんにちは');
+    await cpuChat('u', 'sys', [{ role: 'user', text: 'again' }]);
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(chat.mock.calls[0][0][0]).toEqual({ role: 'system', content: 'sys' });
+    expect(aiBlockedReason({ ...DEFAULT_ASSISTANT, useAi: true, provider: { kind: 'llamacpp', baseUrl: 'llamacpp://device', model: 'u' } }, '', false)).toBeNull();
+  });
+  it('rejects empty answers', async () => {
+    setCpuEngineFactory(async () => ({ chat: async () => '<think>only</think>', unload: async () => {} }));
+    await expect(cpuChat('u2', 's', [{ role: 'user', text: 'hi' }])).rejects.toThrow('rỗng');
+  });
+});

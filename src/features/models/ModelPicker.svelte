@@ -3,6 +3,7 @@
   import type { ProviderConfig } from '../assistant/types';
   import { FIT_LABEL, MODELS, detectRamGb, fitFor, suggestFor, type Fit, type ModelInfo } from './catalog';
   import { deleteModel, isInstalled, listInstalled, pullModel } from './ollama';
+  import { CPU_BASE_URL, cpuModelUrl, deleteCpuModel, isCpuModelCached, loadCpuModel } from './wllama';
   import { WEB_BASE_URL, deleteWebModel, hasShaderF16, isWebModelCached, loadWebModel, supportsWebGpu, webModelId } from './webllm';
 
   const OLLAMA_URL = 'http://localhost:11434/v1';
@@ -13,8 +14,10 @@
   } = $props();
 
   const webOk = supportsWebGpu();
+  // Without WebGPU (e.g. the Android WebView) the in-app engine is llama.cpp on the CPU, limited to the models that have a GGUF build.
+  const cpu = !webOk;
   // Start on the tab matching the saved choice; after that the user switches tabs themselves.
-  let engine = $state<'app' | 'ollama'>(untrack(() => (provider.kind === 'webllm' || (webOk && provider.kind !== 'openai-compatible') ? 'app' : 'ollama')));
+  let engine = $state<'app' | 'ollama'>(untrack(() => (provider.kind === 'webllm' || provider.kind === 'llamacpp' || (provider.kind !== 'openai-compatible' && (webOk || MODELS.some((m) => m.gguf))) ? 'app' : 'ollama')));
   const ollamaUrl = $derived(provider.kind === 'openai-compatible' && /localhost|127\.0\.0\.1/.test(provider.baseUrl) ? provider.baseUrl : OLLAMA_URL);
 
   let installed = $state<string[]>([]);
@@ -34,9 +37,9 @@
     if (engine === 'ollama') {
       try { installed = await listInstalled(ollamaUrl); reachable = true; } catch { installed = []; reachable = false; }
     } else {
-      f16 = await hasShaderF16();
+      f16 = cpu ? false : await hasShaderF16();
       const next: Record<string, boolean> = {};
-      for (const m of MODELS) { const id = webModelId(m, f16); if (id) next[m.id] = await isWebModelCached(id); }
+      for (const m of MODELS) { const id = appTag(m); if (id) next[m.id] = cpu ? await isCpuModelCached(id) : await isWebModelCached(id); }
       cached = next;
     }
   }
@@ -49,7 +52,8 @@
       if (engine === 'ollama') {
         await pullModel(ollamaUrl, m.ollama, (p) => { if (p.total) progress[m.id] = Math.round((p.done / p.total) * 100); });
       } else {
-        await loadWebModel(webModelId(m, f16)!, (f) => (progress[m.id] = Math.round(f * 100)));
+        const onP = (f: number) => (progress[m.id] = Math.round(f * 100));
+        if (cpu) await loadCpuModel(appTag(m)!, onP); else await loadWebModel(appTag(m)!, onP);
       }
     } catch (e) { error = `Không tải được ${m.name}: ${msg(e)}`; }
     delete progress[m.id];
@@ -58,18 +62,19 @@
 
   async function remove(m: ModelInfo) {
     error = '';
-    try { engine === 'ollama' ? await deleteModel(ollamaUrl, m.ollama) : await deleteWebModel(webModelId(m, f16)!); }
+    try { engine === 'ollama' ? await deleteModel(ollamaUrl, m.ollama) : await (cpu ? deleteCpuModel(appTag(m)!) : deleteWebModel(appTag(m)!)); }
     catch (e) { error = `Không xoá được ${m.name}: ${msg(e)}`; }
     await refresh();
   }
 
   function use(m: ModelInfo) {
-    if (engine === 'app') onSelect({ kind: 'webllm', baseUrl: WEB_BASE_URL, model: webModelId(m, f16)! });
+    if (engine === 'app') onSelect(cpu ? { kind: 'llamacpp', baseUrl: CPU_BASE_URL, model: appTag(m)! } : { kind: 'webllm', baseUrl: WEB_BASE_URL, model: appTag(m)! });
     else onSelect({ kind: 'openai-compatible', baseUrl: ollamaUrl, model: m.ollama });
   }
 
-  const tagOf = (m: ModelInfo) => (engine === 'app' ? webModelId(m, f16) : m.ollama);
-  const available = (m: ModelInfo) => (engine === 'app' ? !!webModelId(m, f16) : true);
+  const appTag = (m: ModelInfo) => (cpu ? cpuModelUrl(m) : webModelId(m, f16));
+  const tagOf = (m: ModelInfo) => (engine === 'app' ? appTag(m) : m.ollama);
+  const available = (m: ModelInfo) => (engine === 'app' ? !!appTag(m) : true);
   const have = (m: ModelInfo) => (engine === 'app' ? cached[m.id] : isInstalled(installed, m.ollama));
 </script>
 
@@ -79,12 +84,12 @@
     <button class="btn" class:soft={engine !== 'ollama'} role="radio" aria-checked={engine === 'ollama'} onclick={() => setEngine('ollama')}>Qua Ollama</button>
   </div>
   <p class="muted">
-    {#if engine === 'app'}Model tải một lần rồi chạy offline ngay trong app bằng card đồ hoạ (WebGPU), không cần cài gì thêm.
+    {#if engine === 'app' && cpu}Model tải một lần rồi chạy offline ngay trong app bằng bộ xử lý của máy (CPU), không cần cài gì thêm. Chỉ có các model nhỏ, trả lời chậm hơn card đồ hoạ.
+    {:else if engine === 'app'}Model tải một lần rồi chạy offline ngay trong app bằng card đồ hoạ (WebGPU), không cần cài gì thêm.
     {:else}Model chạy bằng Ollama cài trên máy bạn (ollama.com). Hợp với Windows và máy tính mạnh.{/if}
     Xếp từ nhẹ/yếu đến nặng/mạnh.
   </p>
-  {#if engine === 'app' && !webOk}<p class="warn" role="status">Trình duyệt này chưa hỗ trợ WebGPU nên chưa chạy model trong app được. Hãy dùng Chrome hoặc Edge mới, hoặc chọn "Qua Ollama".</p>{/if}
-  <label>RAM của máy (GB)
+    <label>RAM của máy (GB)
     <input type="number" min="1" max="128" step="1" value={ram ?? ''} placeholder="Chưa rõ, hãy nhập"
       onchange={(e) => { const v = e.currentTarget.valueAsNumber; onRam(Number.isFinite(v) && v > 0 ? v : undefined); }} />
   </label>
@@ -98,7 +103,7 @@
   <ul>
     {#each MODELS as m (m.id)}
       {@const fit = fitFor(m, ram)}
-      {@const active = engine === 'app' ? provider.kind === 'webllm' && provider.model === tagOf(m) : provider.kind !== 'webllm' && provider.model === m.ollama}
+      {@const active = engine === 'app' ? (provider.kind === 'webllm' || provider.kind === 'llamacpp') && provider.model === tagOf(m) : provider.kind !== 'webllm' && provider.kind !== 'llamacpp' && provider.model === m.ollama}
       <li class:active>
         <div class="top">
           <strong>{m.name}</strong>
@@ -118,7 +123,7 @@
             <button class="btn" disabled={active} onclick={() => use(m)}>{active ? 'Đang dùng' : 'Dùng model này'}</button>
             <button class="btn soft" onclick={() => remove(m)}>Xoá khỏi máy</button>
           {:else}
-            <button class="btn" disabled={fit === 'no' || (engine === 'ollama' ? reachable === false : !webOk)} onclick={() => download(m)}>Tải về ({m.sizeGb} GB)</button>
+            <button class="btn" disabled={fit === 'no' || (engine === 'ollama' && reachable === false)} onclick={() => download(m)}>Tải về ({m.sizeGb} GB)</button>
           {/if}
         </div>
       </li>
