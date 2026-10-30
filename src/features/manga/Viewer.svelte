@@ -395,7 +395,7 @@
   .hide-chrome .bar { display: none; }
   .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; width: 100%; }
   .tools { justify-content: center; }
-  .slider { flex: 1; min-width: 6rem; accent-color: var(--accent); }
+  .slider { flex: 1; min-width: 6rem; min-height: 44px; accent-color: var(--accent); }
   .chk { display: inline-flex; gap: var(--space-1); align-items: center; font-size: var(--text-sm); }
   select { min-height: 44px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 0 var(--space-2); }
   .stage { flex: 1; min-height: 0; position: relative; overflow: hidden; touch-action: none; display: grid; place-items: center; user-select: none; cursor: grab; }

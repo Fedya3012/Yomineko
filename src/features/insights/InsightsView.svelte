@@ -160,6 +160,7 @@
   .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
   .stat { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
   .stat .num { margin-left: auto; }
-  select { min-height: 44px; }
+  .row:has(> strong) { flex-wrap: nowrap; justify-content: space-between; }
+  .row > strong { flex: 1; text-align: center; }
   ul { padding-left: 1.2rem; }
 </style>
