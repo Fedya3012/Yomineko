@@ -35,7 +35,8 @@ jobs:
         with: { node-version: 22, cache: npm }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
-      - uses: android-actions/setup-android@v3
+      # The ubuntu runner already ships the Android SDK + build-tools (ANDROID_HOME); setup-android failed with
+      # "Failed to find package 'tools'", so it is not used.
       - name: Use the release tag as the app version
         if: startsWith(github.ref, 'refs/tags/v')
         run: node scripts/set-version.mjs "${GITHUB_REF_NAME}"
