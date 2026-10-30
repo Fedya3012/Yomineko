@@ -388,7 +388,7 @@
 </div>
 
 <style>
-  .viewer { position: fixed; inset: 0; display: flex; flex-direction: column; background: var(--bg-sunken); z-index: 20; }
+  .viewer { position: fixed; inset: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); display: flex; flex-direction: column; background: var(--bg-sunken); z-index: 20; }
   .bar { margin: var(--space-2); padding: var(--space-2) var(--space-3); display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
   .top .title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .count { font-variant-numeric: tabular-nums; }

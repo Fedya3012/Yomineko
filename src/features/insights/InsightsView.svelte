@@ -158,6 +158,8 @@
 <style>
   .text { white-space: pre-wrap; background: var(--surface-2, var(--surface)); padding: var(--space-3); border-radius: var(--radius-md, 12px); font: inherit; }
   .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+  .stat { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .stat .num { margin-left: auto; }
   select { min-height: 44px; }
   ul { padding-left: 1.2rem; }
 </style>

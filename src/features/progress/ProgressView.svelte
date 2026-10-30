@@ -37,7 +37,7 @@
       <div class="card stat">
         <span class="muted">Chuỗi ngày học</span>
         <strong class="num">{ov.streak.current} <small>ngày</small></strong>
-        <span class="chip butter">Kỷ lục {ov.streak.longest} · Băng đóng còn {ov.streak.freezesLeft}</span>
+        <span class="chips"><span class="chip butter">Kỷ lục {ov.streak.longest}</span> <span class="chip butter">Băng đóng còn {ov.streak.freezesLeft}</span></span>
       </div>
       <div class="card stat">
         <span class="muted">Mục tiêu hôm nay</span>
@@ -125,6 +125,7 @@
 <style>
   .stack { display: grid; gap: var(--space-4); }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-3); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-1); }
   .stat { display: grid; gap: var(--space-1); align-content: start; background: var(--surface-2); }
   .num { font-size: var(--text-xl); color: var(--accent-strong); }
   .num.small { font-size: var(--text-lg); }

@@ -180,7 +180,7 @@
 {/if}
 
 <style>
-  .backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / .4); display: grid; place-items: end center; z-index: 50; }
+  .backdrop { position: fixed; inset: 0; padding-bottom: env(safe-area-inset-bottom); background: rgb(0 0 0 / .4); display: grid; place-items: end center; z-index: 50; }
   .sheet { width: min(640px, 100%); max-height: 88dvh; overflow-y: auto; border-radius: var(--radius) var(--radius) 0 0; }
   @media (min-width: 700px) { .backdrop { place-items: center; } .sheet { border-radius: var(--radius); } }
   .top { display: flex; justify-content: space-between; }
