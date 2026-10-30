@@ -96,7 +96,7 @@ describe('llama.cpp in-app engine (Android / no WebGPU)', () => {
     expect(MODELS.filter((m) => m.gguf).every((m) => m.sizeGb <= 1.2)).toBe(true);
   });
   it('loads once, strips thinking and needs no consent or network', async () => {
-    const chat = vi.fn(async () => '<think>x</think>こんにちは');
+    const chat = vi.fn(async (_m: { role: string; content: string }[]) => '<think>x</think>こんにちは');
     const factory = vi.fn(async () => ({ chat, unload: async () => {} }));
     setCpuEngineFactory(factory);
     expect(await cpuChat('u', 'sys', [{ role: 'user', text: 'hi' }])).toBe('こんにちは');
