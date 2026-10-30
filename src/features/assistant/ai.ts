@@ -3,7 +3,7 @@ import { getScenario } from './scenarios';
 import type { AssistMode, AssistantSettings, ChatMessage, ProviderConfig, ProviderKind, RoleplayState } from './types';
 
 export const PROVIDER_PRESETS: Record<string, ProviderConfig & { label: string }> = {
-  ollama: { label: 'Máy tính của bạn (Ollama, miễn phí)', kind: 'openai-compatible', baseUrl: 'http://localhost:11434/v1', model: 'qwen2.5:3b' },
+  ollama: { label: 'Máy tính của bạn (Ollama, miễn phí)', kind: 'openai-compatible', baseUrl: 'http://localhost:11434/v1', model: 'qwen3:1.7b' },
   anthropic: { label: 'Claude (cần khoá API)', kind: 'anthropic', baseUrl: 'https://api.anthropic.com', model: 'claude-haiku-5-5' },
   openai: { label: 'Dịch vụ tương thích OpenAI (cần khoá API)', kind: 'openai-compatible', baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o-mini' }
 };

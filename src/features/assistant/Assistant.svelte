@@ -7,6 +7,7 @@
   import { PROVIDER_PRESETS, hostOf, isLocalHost } from './ai';
   import { grantConsent, hasConsent, respond, startRoleplay } from './assistant';
   import { DEFAULT_ASSISTANT, clearAssistantData, loadAssistant, saveApiKey, saveAssistantSettings, saveHistory } from './store';
+  import ModelPicker from '../models/ModelPicker.svelte';
   import { buildRoleplayReport, type SessionReport, type TurnResult } from './report';
   import type { AssistMode, AssistantSettings, ChatMessage, Level, RoleplayState, Style } from './types';
 
@@ -179,6 +180,11 @@
       </label>
       <label>Địa chỉ <input value={settings.provider.baseUrl} oninput={(e) => setBaseUrl(e.currentTarget.value)} /></label>
       <label>Tên mô hình <input bind:value={settings.provider.model} /></label>
+      {#if isLocalHost(host) && settings.provider.kind === 'openai-compatible'}
+        <h3>Chọn model AI chạy trên máy</h3>
+        <ModelPicker baseUrl={settings.provider.baseUrl} current={settings.provider.model} ramGb={settings.deviceRamGb}
+          onSelect={(m) => (settings.provider.model = m.ollama)} onRam={(gb) => (settings.deviceRamGb = gb)} />
+      {/if}
       <label>Khoá API {isLocalHost(host) ? '(không cần với máy của bạn)' : ''}
         <input type="password" autocomplete="off" bind:value={apiKey} onchange={() => saveApiKey(db, apiKey)} />
       </label>
