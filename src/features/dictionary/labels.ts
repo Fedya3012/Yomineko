@@ -17,6 +17,19 @@ export function posLabel(code: string): string {
 /** Collapse duplicate labels ("vs-i" + "vs-s") for display. */
 export const posLabels = (codes: string[]) => [...new Set(codes.map(posLabel))];
 
+// Usage tags Jitendex puts on senses (JMdict misc / field / dialect codes). Unknown codes are shown as-is.
+const TAGS: Record<string, string> = {
+  uk: 'thường viết bằng kana', abbr: 'viết tắt', arch: 'cổ', col: 'khẩu ngữ', fam: 'thân mật', hon: 'kính ngữ',
+  hum: 'khiêm nhường', pol: 'lịch sự', sl: 'tiếng lóng', vulg: 'thô tục', derog: 'miệt thị', obs: 'lỗi thời',
+  obsc: 'ít người biết', rare: 'hiếm', poet: 'thơ ca', id: 'thành ngữ', 'on-mim': 'từ tượng thanh/tượng hình',
+  yoji: 'thành ngữ 4 chữ', proverb: 'tục ngữ', male: 'lời nam', fem: 'lời nữ', chn: 'ngôn ngữ trẻ em', joc: 'đùa vui',
+  food: 'ẩm thực', med: 'y học', comp: 'tin học', math: 'toán học', law: 'luật', mus: 'âm nhạc', sports: 'thể thao',
+  baseb: 'bóng chày', sumo: 'sumo', Buddh: 'Phật giáo', Shinto: 'Thần đạo', geol: 'địa chất', bot: 'thực vật',
+  zool: 'động vật', anat: 'giải phẫu', chem: 'hoá học', physics: 'vật lý', econ: 'kinh tế', ling: 'ngôn ngữ học',
+  tsb: 'phương ngữ Tosa', kyb: 'phương ngữ Kyoto', ksb: 'phương ngữ Kansai', osb: 'phương ngữ Osaka'
+};
+export const tagLabel = (code: string) => TAGS[code] ?? code;
+
 export const jlptLabel = (n: number) => `N${n}`;
 export function freqLabel(common: boolean, rank?: number): string | null {
   if (rank) return rank <= 2000 ? `Rất thường gặp · #${rank}` : `Thường gặp · #${rank}`;

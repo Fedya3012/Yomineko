@@ -10,12 +10,32 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [{ "title": "Yomineko 読み猫", "width": 1000, "height": 760, "minWidth": 380, "minHeight": 560 }],
-    "security": { "csp": null }
+    "windows": [
+      {
+        "title": "Yomineko 読み猫",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
   }
 }

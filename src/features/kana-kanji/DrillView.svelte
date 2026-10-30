@@ -30,6 +30,7 @@
   let shownAt = 0;
   let timeLeft = $state(FAST_MS);
   let timer: ReturnType<typeof setInterval> | undefined;
+  let nextTimer: ReturnType<typeof setTimeout> | undefined;
   let error = $state('');
   let weakIds = $state<Set<string>>(new Set());
 
@@ -63,13 +64,13 @@
     picked = choiceId ?? '';
     const correct = choiceId !== null && isCorrect(current, choiceId);
     answers = [...answers, { id: current.target.id, correct, ms: Math.round(performance.now() - shownAt) }];
-    setTimeout(() => {
+    nextTimer = setTimeout(() => {
       index++;
       if (index < questions.length) show();
       else weakIds = new Set(summarizeDrill(answers).weak);
     }, correct ? 450 : 1100);
   }
-  onDestroy(() => clearInterval(timer));
+  onDestroy(() => { clearInterval(timer); clearTimeout(nextTimer); });
 </script>
 
 {#if !questions.length || finished}

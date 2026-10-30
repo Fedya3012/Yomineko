@@ -30,6 +30,8 @@ Nội dung học (từ điển, bộ kanji, bài học...) nằm trong **gói n�
 - Muốn đăng nội dung mới: xem **[Hướng dẫn đăng gói nội dung](docs/HUONG-DAN-XUAT-BAN-GOI.md)** (hoặc nhờ Claude làm giúp).
 - Chi tiết kỹ thuật: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+**Từ điển Jitendex (tuỳ chọn):** mở **Từ điển → Từ điển Jitendex → Kiểm tra gói Jitendex → Cài** (khoảng 27 MB, tải một lần rồi dùng offline). Sau đó cửa sổ tra từ có thanh chọn nguồn nghĩa: *JMdict*, *Jitendex* hoặc *Cả hai*; Jitendex chia nghĩa theo loại từ, có ghi chú cách dùng và câu ví dụ cho từng nghĩa. Jitendex © Stephen Kraus, giấy phép **CC BY-SA 4.0**, dựng trên JMdict (EDRDG) và câu ví dụ Tatoeba (CC BY 2.0 FR); thông tin này cũng nằm trong mục *Giấy phép & ghi công dữ liệu* của app. Gói được dựng lại mỗi lần web được đăng (`scripts/build-jitendex-pack.mjs`).
+
 **Về bản quyền:** app *không* kèm sẵn manga, anime hay giáo trình có bản quyền. Bạn tự nạp file của mình. Gói nội dung chỉ dùng dữ liệu mở (JMdict, KANJIDIC, Jitendex...), luôn ghi rõ giấy phép.
 
 ## Học theo giáo trình (Minna no Nihongo, Genki...)
@@ -72,3 +74,7 @@ Bản Windows cần thêm [Rust](https://rustup.rs): `npm run tauri build`. Thô
 ## Tình trạng
 
 Đây là **bộ khung**: giao diện, màu sáng/tối, furigana, kho dữ liệu offline, định dạng gói nội dung, và quy trình build tự động. Các tính năng (SRS, từ điển, kana/kanji, manga, anime, tiến độ) sẽ được làm ở các nhánh riêng, dựa trên bộ khung này.
+
+
+## Cộng đồng (nhóm học, thử thách, xếp hạng)
+Tuỳ chọn, tắt mặc định, chạy offline bằng file xuất/nhập. Xem [docs/CONG-DONG.md](docs/CONG-DONG.md), có cả phần "muốn có máy chủ thật thì cần gì".

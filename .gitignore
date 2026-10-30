@@ -9,3 +9,7 @@ android
 public/ocr
 public/vendor
 dist-packs
+
+# Real dictionary packs are generated at deploy time (scripts/fetch-dict-packs.sh), never committed
+packs-src/jmdict-*/
+packs-src/kanjidic/

@@ -1,0 +1,22 @@
+/* Shared look for the community screens. Colours come only from tokens.css, so dark mode follows automatically. */
+.cm-stack { display: grid; gap: var(--space-4); }
+.cm-stack > * { min-width: 0; }
+.cm-muted { color: var(--text-muted); margin: 0; }
+.cm-h { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.cm-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.cm-field { display: grid; gap: var(--space-1); flex: 1 1 12rem; font-weight: 700; }
+.cm-field input, .cm-field select, .cm-field textarea, .cm-input {
+  width: 100%; min-height: 44px; padding: .5rem .8rem; background: var(--surface); color: var(--text);
+  border: 2px solid var(--border-strong); border-radius: var(--radius-sm); font-weight: 400;
+}
+.cm-field textarea { min-height: 6rem; font-family: var(--font-mono); font-size: var(--text-sm); }
+.cm-check { display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-1) 0; }
+.cm-check input { width: 1.2rem; height: 1.2rem; margin-top: .25rem; accent-color: var(--accent); flex: none; }
+.cm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.cm-note { padding: var(--space-3); border-radius: var(--radius-sm); background: var(--info-soft); color: var(--text); border: 2px solid var(--info); }
+.cm-note.ok { background: var(--success-soft); border-color: var(--success); }
+.cm-note.bad { background: var(--warn-soft); border-color: var(--warn); }
+.cm-avatar {
+  flex: none; display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-strong); border: 2px solid var(--ink); font-weight: 800;
+}
