@@ -13,7 +13,7 @@ Vào **Trợ lý → Cài đặt**. Có 4 thú cưng (Mochi, Kon, Shiba, Usagi) 
 Không cần mạng, không cần tài khoản, không tốn tiền. Trợ lý dùng nội dung viết sẵn:
 - ~16 bài ngữ pháp cơ bản;
 - kiểm tra các lỗi hay gặp (nhầm を/が, thêm です sau động từ, thừa い/な...);
-- 4 tình huống nhập vai có gợi ý và câu mẫu.
+- 4 tình huống nhập vai có gợi ý và câu mẫu. Offline chỉ **"chấm đơn giản"**: so câu bạn nói với câu mẫu (cần giống đủ nhiều, nói mỗi từ "はい" là chưa đạt). Nó không hiểu ngữ pháp thật; bật AI để được nhận xét kỹ hơn.
 
 Chế độ này **không thông minh bằng AI** (không hiểu mọi câu), nhưng luôn dùng được.
 

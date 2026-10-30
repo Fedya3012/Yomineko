@@ -4,6 +4,7 @@
   import Badge from '../../lib/Badge.svelte';
   import { PERSONAS, STYLE_LABELS, getPersona, PHRASES } from './personas';
   import { SCENARIOS } from './scenarios';
+  import { SIMPLE_GRADING_LABEL } from './grade';
   import { PROVIDER_PRESETS, hostOf, isLocalHost } from './ai';
   import { grantConsent, hasConsent, respond, startRoleplay } from './assistant';
   import { DEFAULT_ASSISTANT, clearAssistantData, loadAssistant, saveApiKey, saveAssistantSettings, saveHistory } from './store';
@@ -137,6 +138,7 @@
         {/each}
       </div>
       {#if !roleplay}<p class="muted">Chọn một tình huống để bắt đầu luyện nói.</p>{/if}
+      {#if !(settings.useAi && consented)}<p class="muted"><span class="chip butter">{SIMPLE_GRADING_LABEL}</span> Ở chế độ offline, app chỉ so câu bạn nói với câu mẫu. Bật AI để được nhận xét kỹ hơn.</p>{/if}
     {/if}
 
     <div class="log" bind:this={log} role="log" aria-live="polite">
