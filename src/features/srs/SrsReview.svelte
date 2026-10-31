@@ -4,7 +4,7 @@
   import { DEFAULT_PARAMS, formatInterval, newCard, previewIntervals, type Rating } from './fsrs';
   import { chooseType, makeQuestion, type Question } from './questions';
   import { ReviewSession } from './session';
-  import { deleteState, dayKey, loadCards, loadSettings, loadStates, loadStats, saveState, saveStats } from './store';
+  import { deleteState, dayKey, loadCards, loadLearned, loadSettings, loadStates, loadStats, saveState, saveStats } from './store';
   import type { CardContent } from './types';
   import { canSpeak, speak } from './tts';
   import { loadBoost } from '../insights/store';
@@ -34,7 +34,7 @@
       saveState: async (s) => { await saveState(db, s); },
       deleteState: (id) => deleteState(db, id),
       saveStats: async (day, s) => { await saveStats(db, day, s); }
-    }, { now: t, quick, boost: await loadBoost(db, t) });
+    }, { now: t, quick, boost: await loadBoost(db, t), learned: await loadLearned(db) });
     startedAt = t;
     total = session.remaining;
     next();

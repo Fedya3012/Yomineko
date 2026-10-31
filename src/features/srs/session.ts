@@ -2,7 +2,7 @@
 // (storage is injected as `Persist`), so it is easy to test.
 import { DEFAULT_PARAMS, newCard, review, type Rating } from './fsrs';
 import { dayKey } from './store';
-import type { CardContent, CardState, DayStats, SrsSettings } from './types';
+import type { CardContent, CardState, DayStats, LearnedSet, SrsSettings } from './types';
 
 export const UNDO_WINDOW_MS = 6000;
 export const QUICK_SESSION_MS = 5 * 60_000;
@@ -21,17 +21,25 @@ export interface QueueInput {
   cards: CardContent[]; states: Map<string, CardState>; settings: SrsSettings; stats: DayStats; now: number;
   /** Optional cardId -> weakness score (from insights). Weak due cards are asked first. */
   boost?: Map<string, number>;
+  /** When given, a never-seen kana/kanji card is only offered once that letter is marked as learned. */
+  learned?: LearnedSet;
+}
+
+/** A new card may be introduced only if the learner has already studied it (or added it on purpose). */
+export function isIntroduced(card: CardContent, learned?: LearnedSet): boolean {
+  if (!learned || !card.ref) return true;
+  return (card.ref.collection === 'kana' ? learned.kana : learned.kanji).has(card.ref.id);
 }
 
 /** Due cards first (oldest due first), then new cards up to today's allowance. */
-export function buildQueue({ cards, states, settings, stats, now, boost }: QueueInput): string[] {
+export function buildQueue({ cards, states, settings, stats, now, boost, learned }: QueueInput): string[] {
   const known = new Set(cards.map((c) => c.id));
   const due = [...states.values()]
     .filter((s) => known.has(s.cardId) && s.due <= now && (s.buriedUntil ?? 0) <= now)
     .sort((a, b) => (boost?.get(b.cardId) ?? 0) - (boost?.get(a.cardId) ?? 0) || a.due - b.due)
     .map((s) => s.cardId);
   const allowance = Math.max(0, settings.newPerDay - stats.newCards);
-  const fresh = cards.filter((c) => !states.has(c.id)).slice(0, allowance).map((c) => c.id);
+  const fresh = cards.filter((c) => !states.has(c.id) && isIntroduced(c, learned)).slice(0, allowance).map((c) => c.id);
   return [...due, ...fresh];
 }
 
@@ -61,10 +69,10 @@ export class ReviewSession {
     private settings: SrsSettings,
     private stats: DayStats,
     private persist: Persist,
-    opts: { now: number; quick?: boolean; boost?: Map<string, number> }
+    opts: { now: number; quick?: boolean; boost?: Map<string, number>; learned?: LearnedSet }
   ) {
     this.byId = new Map(cards.map((c) => [c.id, c]));
-    this.queue = buildQueue({ cards, states, settings, stats, now: opts.now, boost: opts.boost });
+    this.queue = buildQueue({ cards, states, settings, stats, now: opts.now, boost: opts.boost, learned: opts.learned });
     if (opts.quick) this.deadline = opts.now + QUICK_SESSION_MS;
   }
 

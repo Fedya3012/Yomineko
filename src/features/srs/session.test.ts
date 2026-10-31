@@ -24,6 +24,33 @@ const start = async (opts: { now?: number; quick?: boolean; settings?: Partial<t
     await loadStats(db, dayKey(now)), persistTo(db), { now, quick: opts.quick });
 };
 
+describe('only learned content', () => {
+  const kana: CardContent[] = [
+    { id: 'k1', word: 'あ', reading: 'あ', meaning: 'a', ref: { collection: 'kana', id: 'hira:あ' } },
+    { id: 'k2', word: 'い', reading: 'い', meaning: 'i', ref: { collection: 'kana', id: 'hira:い' } },
+    { id: 'j1', word: '一', reading: 'いち', meaning: 'một', ref: { collection: 'kanji', id: '一' } },
+    { id: 'own', word: '猫', reading: 'ねこ', meaning: 'mèo' }
+  ];
+  const run = (learned: { kana: string[]; kanji: string[] }, states = new Map()) =>
+    buildQueue({ cards: kana, states, settings: DEFAULT_SETTINGS, stats: emptyStats(), now: T0, learned: { kana: new Set(learned.kana), kanji: new Set(learned.kanji) } });
+
+  it('a brand-new learner gets no kana or kanji cards, only cards they added themselves', () => {
+    expect(run({ kana: [], kanji: [] })).toEqual(['own']);
+  });
+  it('a partly-learned learner gets only the letters they marked', () => {
+    expect(run({ kana: ['hira:あ'], kanji: [] })).toEqual(['k1', 'own']);
+    expect(run({ kana: ['hira:あ'], kanji: ['一'] })).toEqual(['k1', 'j1', 'own']);
+  });
+  it('a card already reviewed stays in the schedule', () => {
+    const st = new Map([['k2', { cardId: 'k2', due: T0 - 1 } as never]]);
+    expect(run({ kana: [], kanji: [] }, st)).toEqual(['k2', 'own']);
+  });
+  it('counts follow the same rule', () => {
+    const c = countQueue({ cards: kana, states: new Map(), settings: DEFAULT_SETTINGS, stats: emptyStats(), now: T0, learned: { kana: new Set(), kanji: new Set() } });
+    expect(c).toEqual({ due: 0, fresh: 1 });
+  });
+});
+
 describe('queue', () => {
   it('limits new cards per day', () => {
     const q = buildQueue({ cards, states: new Map(), settings: { ...DEFAULT_SETTINGS, newPerDay: 2 }, stats: emptyStats(), now: T0 });
