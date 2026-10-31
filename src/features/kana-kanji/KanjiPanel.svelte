@@ -2,6 +2,7 @@
   import type { DB } from '../../lib/db';
   import type { Kanji } from './types';
   import { KNOWN_KEY, formatKun, getKnown, getPractice, groupByRadical, recordPractice, setKnown, type PracticeRecord } from './model';
+  import Segmented from '../../lib/ui/Segmented.svelte';
   import { canSpeak, speak } from './speech';
   import StrokeAnimator from './StrokeAnimator.svelte';
   import WritingPad from './WritingPad.svelte';
@@ -13,8 +14,11 @@
   let practice = $state<Record<string, PracticeRecord>>({});
   let step = $state<'watch' | 'write'>('watch');
 
-  const groups = $derived(groupByRadical(kanji));
-  const knownCount = $derived(kanji.filter((k) => known.has(k.id)).length);
+  type GradeFilter = '1' | '2' | 'all';
+  let grade = $state<GradeFilter>('1');
+  const shown = $derived(grade === 'all' ? kanji : kanji.filter((k) => String(k.grade) === grade));
+  const groups = $derived(groupByRadical(shown));
+  const knownCount = $derived(shown.filter((k) => known.has(k.id)).length);
 
   $effect(() => {
     getKnown(db, KNOWN_KEY).then((s) => (known = s));
@@ -81,7 +85,8 @@
   </section>
 {:else}
   <section class="card">
-    <p class="muted">Kanji lớp 1, gom theo bộ thủ (phần chung giúp đoán nghĩa). Đã thuộc {knownCount}/{kanji.length}.</p>
+    <Segmented bind:value={grade} label="Chọn lớp kanji" options={[['1', 'Lớp 1'], ['2', 'Lớp 2'], ['all', 'Tất cả']]} />
+    <p class="muted">Kanji {grade === 'all' ? 'lớp 1 và 2' : `lớp ${grade}`}, gom theo bộ thủ (phần chung giúp đoán nghĩa). Đã thuộc {knownCount}/{shown.length}.</p>
     {#each groups as g (g.radical.char)}
       <h3 class="rad"><span class="jp" lang="ja">{g.radical.char}</span> Bộ {g.radical.name || g.radical.char} <span class="chip">{g.kanji.length}</span></h3>
       <div class="grid">
@@ -98,7 +103,7 @@
 {/if}
 
 <style>
-  .muted { color: var(--text-muted); margin: 0 0 var(--space-2); }
+  .muted { color: var(--text-muted); margin: var(--space-2) 0; }
   h3 { margin: 0 0 var(--space-2); font-size: var(--text-md); color: var(--accent-strong); }
   .rad { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-4) 0 var(--space-2); }
   .rad .jp { font-size: var(--text-lg); }
