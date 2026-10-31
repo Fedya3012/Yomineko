@@ -20,6 +20,6 @@
 
 <style>
   .seg { display: flex; gap: 4px; padding: 4px; background: var(--bg-sunken); border-radius: var(--radius-pill); border: 2px solid var(--border-strong); }
-  button { flex: 1; min-height: 40px; border: 0; background: transparent; border-radius: var(--radius-pill); font-weight: 700; color: var(--text-muted); padding: 0 var(--space-3); }
+  button { flex: 1; min-height: 44px; border: 0; background: transparent; border-radius: var(--radius-pill); font-weight: 700; color: var(--text-muted); padding: 0 var(--space-3); }
   button.on { background: var(--surface); color: var(--accent-strong); box-shadow: var(--shadow); }
 </style>

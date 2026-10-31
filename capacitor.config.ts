@@ -5,6 +5,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'app.yomineko',
   appName: 'Yomineko',
-  webDir: 'dist'
+  webDir: 'dist',
+  // Android 15+ draws apps edge-to-edge; this keeps the page out from under the status and navigation bars.
+  android: { adjustMarginsForEdgeToEdge: 'force' }
 };
 export default config;
