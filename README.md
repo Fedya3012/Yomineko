@@ -17,6 +17,7 @@ Chạy được trên **Windows (.exe)**, **Android (.apk)** và **trình duyệ
 
 1. **Bật web (GitHub Pages):** repo → *Settings* → *Pages* → mục *Source* chọn **GitHub Actions**.
 2. **Tạo khoá ký APK** (để Obtainium cập nhật được). Nhờ Claude làm giúp: *"Tạo khoá ký Android cho Yomineko"*. Claude sẽ hướng dẫn thêm 3 "Secrets" vào *Settings → Secrets and variables → Actions*: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`. Nếu chưa làm, APK vẫn cài được nhưng **không cập nhật đè** được lên bản sau.
+   Cách làm (chỉ 1 lần): vào tab **Actions** → **Create Android signing key** → **Run workflow**. Khi chạy xong, mở lần chạy đó, tải mục **android-signing-key** ở cuối trang (giải nén ra `secrets.txt` và `yomineko-release.jks`). Chép 3 dòng trong `secrets.txt` vào 3 Secrets cùng tên (*Settings → Secrets and variables → Actions → New repository secret*). **Cất file `.jks` + `secrets.txt` ở nơi an toàn** (mất khoá = người dùng phải gỡ app cài lại), rồi xoá khỏi thư mục Tải về. Từ giờ, bản gắn tag `v*` bắt buộc phải có khoá, không còn APK "khoá tạm".
 3. **Phát hành bản mới:** nhờ Claude "tạo release v0.1.0" (thực chất là đặt một thẻ tên `v0.1.0`). GitHub tự build ra .exe, .apk, .zip web trong khoảng 15–20 phút.
 
 ## Dùng Obtainium (Android)
