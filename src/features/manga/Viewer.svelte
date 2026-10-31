@@ -11,7 +11,8 @@
   import { buildSpreads, arrowToStep, screenOrder, spreadIndexOf } from './spreads';
   import { dragToRegion, isWidePage, locate, spreadContentSize } from './spreadMath';
   import type { Book } from './types';
-  import { addWordToSrs } from '../srs/bridge';
+  import { dict, loadDictionary } from '../dictionary/state.svelte';
+  import WordEntry from '../dictionary/WordEntry.svelte';
   import { clampPan, clampScale, FIT_VIEW, fitSize, toggleZoom, viewToContent, zoomAt, type View } from './zoom';
 
   let { book, db, onClose }: { book: Book; db: DB; onClose: () => void } = $props();
@@ -245,21 +246,15 @@
 
   async function showMeaning(page: number, block: OcrBlock, index: number) {
     words ??= await loadWordIndex(db);
+    if (!dict.index) await loadDictionary(db);
     const result = lookupAt(words, block, index);
     picked = { page, block, result };
+    openedId = undefined;
   }
 
-  let cardMsg = $state('');
-  async function makeCard() {
-    const r = picked?.result; const e = r?.entries[0];
-    if (!picked || !r || !e) return;
-    const added = await addWordToSrs(db, {
-      wordId: e.id, word: e.kanji ?? e.reading, reading: e.reading, meaning: e.meaning,
-      sentence: picked.block.text, blank: r.surface, kind: 'manga', origin: book.title
-    });
-    cardMsg = added ? `Đã thêm “${e.kanji ?? e.reading}” vào thẻ ôn.` : 'Từ này đã có trong thẻ ôn rồi.';
-  }
-  $effect(() => { picked; cardMsg = ''; });
+  /** A related word opened inside the sheet; undefined = the word that was tapped. */
+  let openedId = $state<string | undefined>();
+  const entryId = $derived(openedId ?? picked?.result.entries[0]?.id);
 
   const toggleOcr = () => (ocrOn ? (ocrOn = false, picked = undefined) : scanSpread());
 
@@ -321,14 +316,15 @@
         <ruby class="jp word" lang="ja">{picked.result.surface}<rt>{picked.result.entries[0]?.kanji ? picked.result.entries[0].reading : ''}</rt></ruby>
         <button class="btn soft" onclick={() => (picked = undefined)} aria-label="Đóng">✕</button>
       </div>
-      {#if picked.result.entries.length}
+      {#if entryId && dict.index?.get(entryId)}
+        {#if openedId}<p><button class="btn soft" onclick={() => (openedId = undefined)}>← Về chữ vừa chạm</button></p>{/if}
+        <WordEntry wordId={entryId} context={{ sentence: picked.block.text, kind: 'manga', origin: book.title, surface: picked.result.surface }} onOpen={(id) => (openedId = id)} />
+      {:else if picked.result.entries.length}
         <ul class="meanings">
           {#each picked.result.entries as e (e.id)}
             <li><span class="jp" lang="ja">{e.kanji ?? e.reading}{e.kanji ? `（${e.reading}）` : ''}</span> — {e.meaning}</li>
           {/each}
         </ul>
-        <p class="card-row"><button class="btn" onclick={makeCard}>+ Tạo thẻ ôn</button>
-          {#if cardMsg}<span role="status" class="muted small">{cardMsg}</span>{/if}</p>
       {:else}
         <p class="muted">Chưa có nghĩa của “{picked.result.surface}” trong từ điển offline. Hãy cài gói từ điển (JMdict) để xem nghĩa đầy đủ.</p>
       {/if}
@@ -388,14 +384,14 @@
 </div>
 
 <style>
-  .viewer { position: fixed; inset: 0; display: flex; flex-direction: column; background: var(--bg-sunken); z-index: 20; }
+  .viewer { position: fixed; inset: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); display: flex; flex-direction: column; background: var(--bg-sunken); z-index: 20; }
   .bar { margin: var(--space-2); padding: var(--space-2) var(--space-3); display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
   .top .title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .count { font-variant-numeric: tabular-nums; }
   .hide-chrome .bar { display: none; }
   .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; width: 100%; }
   .tools { justify-content: center; }
-  .slider { flex: 1; min-width: 6rem; accent-color: var(--accent); }
+  .slider { flex: 1; min-width: 6rem; min-height: 44px; accent-color: var(--accent); }
   .chk { display: inline-flex; gap: var(--space-1); align-items: center; font-size: var(--text-sm); }
   select { min-height: 44px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 0 var(--space-2); }
   .stage { flex: 1; min-height: 0; position: relative; overflow: hidden; touch-action: none; display: grid; place-items: center; user-select: none; cursor: grab; }
@@ -412,8 +408,7 @@
   .err { color: var(--accent-strong); margin: 0; }
   .small { font-size: var(--text-sm); margin: 0; }
   /* in the flow (not floating) so the page shrinks above it and the highlighted word stays visible */
-  .sheet { margin: 0 var(--space-2); max-height: 40vh; overflow: auto; padding: var(--space-3) var(--space-4); }
-  .card-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: var(--space-2) 0; }
+  .sheet { margin: 0 var(--space-2); max-height: 55vh; overflow: auto; padding: var(--space-3) var(--space-4); }
   .sheet-head { display: flex; justify-content: space-between; align-items: center; }
   .word { font-size: calc(2.2rem * var(--font-scale)); color: var(--accent-strong); }
   .meanings { margin: var(--space-2) 0; padding-left: 1.2rem; }

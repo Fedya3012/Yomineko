@@ -8,7 +8,13 @@ export interface CardContent {
   meaning: string;     // Vietnamese
   /** Optional sentence for fill-in-the-blank. `blank` must appear inside `ja`. */
   example?: { ja: string; blank: string; vi?: string };
+  /** Set on cards that ship inside the kana/kanji packs: the letter this card is about. Such a card is only
+   *  asked once the learner has marked that letter as learned. Cards without `ref` were added on purpose. */
+  ref?: { collection: 'kana' | 'kanji'; id: string };
 }
+
+/** Letters the learner has marked as learned (kana ids and kanji ids). */
+export interface LearnedSet { kana: Set<string>; kanji: Set<string> }
 
 export type QuestionType = 'meaning' | 'audio' | 'handwrite' | 'blank';
 export const ALL_TYPES: QuestionType[] = ['meaning', 'audio', 'handwrite', 'blank'];

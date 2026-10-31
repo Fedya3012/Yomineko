@@ -1,7 +1,8 @@
 // Reads/writes SRS data. Learner progress goes ONLY to the `userdata` store (see docs/ARCHITECTURE.md),
 // so installing or removing content packs can never erase it.
 import { getUserData, listCollection, setUserData, type DB } from '../../lib/db';
-import { DEFAULT_SETTINGS, emptyStats, type CardContent, type CardState, type DayStats, type SrsSettings } from './types';
+import { getKnown, KANA_KNOWN_KEY, KNOWN_KEY } from '../kana-kanji/model';
+import { DEFAULT_SETTINGS, emptyStats, type CardContent, type CardState, type DayStats, type LearnedSet, type SrsSettings } from './types';
 
 const STATE_PREFIX = 'srs.state:';
 export const stateKey = (cardId: string) => STATE_PREFIX + cardId;
@@ -33,3 +34,9 @@ export async function loadStats(db: DB, day: string): Promise<DayStats> {
   return { ...emptyStats(), ...(await getUserData<Partial<DayStats>>(db, statsKey(day))) };
 }
 export const saveStats = (db: DB, day: string, s: DayStats) => setUserData(db, statsKey(day), s);
+
+/** Which kana and kanji the learner has marked as learned; the review only asks about those. */
+export async function loadLearned(db: DB): Promise<LearnedSet> {
+  const [kana, kanji] = await Promise.all([getKnown(db, KANA_KNOWN_KEY), getKnown(db, KNOWN_KEY)]);
+  return { kana, kanji };
+}

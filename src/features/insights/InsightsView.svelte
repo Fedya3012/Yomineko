@@ -158,6 +158,9 @@
 <style>
   .text { white-space: pre-wrap; background: var(--surface-2, var(--surface)); padding: var(--space-3); border-radius: var(--radius-md, 12px); font: inherit; }
   .row { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
-  select { min-height: 44px; }
+  .stat { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .stat .num { margin-left: auto; }
+  .row:has(> strong) { flex-wrap: nowrap; justify-content: space-between; }
+  .row > strong { flex: 1; text-align: center; }
   ul { padding-left: 1.2rem; }
 </style>

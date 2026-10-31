@@ -4,13 +4,14 @@ import { getUserData, listCollection, setUserData, type DB } from '../../lib/db'
 import { installPack } from '../../lib/packs/install';
 import type { Card, Kana, Kanji, Script } from './types';
 
-export const PACK_IDS = ['kana-core', 'kanji-grade1'] as const;
+export const PACK_IDS = ['kana-core', 'kanji-grade1', 'kanji-grade2'] as const;
 
-/** Cài hai gói đi kèm app nếu máy chưa có (hoặc đang cũ hơn). Các bản mới hơn tải từ catalog sau này. */
+/** Cài các gói đi kèm app nếu máy chưa có (hoặc đang cũ hơn). Các bản mới hơn tải từ catalog sau này. */
 export async function ensureContentInstalled(db: DB): Promise<void> {
   const bundled: Record<string, () => Promise<{ default: unknown }>> = {
     'kana-core': () => import('../../../packs-src/kana-core/v1.json'),
-    'kanji-grade1': () => import('../../../packs-src/kanji-grade1/v1.json')
+    'kanji-grade1': () => import('../../../packs-src/kanji-grade1/v1.json'),
+    'kanji-grade2': () => import('../../../packs-src/kanji-grade2/v1.json')
   };
   for (const id of PACK_IDS) {
     if (await db.get('packs', id)) continue;
@@ -27,8 +28,10 @@ export async function loadKana(db: DB, script?: Script): Promise<Kana[]> {
     .sort((a, b) => KANA_ORDER.indexOf(a.row) - KANA_ORDER.indexOf(b.row) || a.id.localeCompare(b.id, 'ja'));
 }
 
-export async function loadKanji(db: DB): Promise<Kanji[]> {
-  return (await listCollection(db, 'kanji')) as unknown as Kanji[];
+/** Tất cả kanji đã cài, lớp thấp trước. Truyền `grade` để chỉ lấy một lớp. */
+export async function loadKanji(db: DB, grade?: number): Promise<Kanji[]> {
+  const all = (await listCollection(db, 'kanji')) as unknown as Kanji[];
+  return all.filter((k) => !grade || k.grade === grade).sort((a, b) => a.grade - b.grade);
 }
 
 export interface RadicalGroup { radical: Kanji['radical']; kanji: Kanji[] }

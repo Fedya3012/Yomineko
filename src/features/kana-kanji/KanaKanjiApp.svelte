@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Màn hình chính của mô-đun "Kana & Kanji". Tự mở kho offline và cài hai gói nội dung đi kèm nếu chưa có.
+  // Màn hình chính của mô-đun "Kana & Kanji". Tự mở kho offline và cài các gói nội dung đi kèm nếu chưa có.
   import { onMount } from 'svelte';
   import { openDatabase, type DB } from '../../lib/db';
   import { ensureContentInstalled, loadKana, loadKanji } from './model';

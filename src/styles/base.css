@@ -37,13 +37,19 @@ button { cursor: pointer; }
   border: 2px solid var(--ink); border-radius: var(--radius-pill); padding: .6rem 1.2rem;
   background: var(--accent); color: var(--on-accent); font-weight: 800; box-shadow: var(--shadow-sm);
   min-height: 44px; /* WCAG 2.5.8 target size */
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  margin: 0 var(--space-2) var(--space-2) 0; /* buttons that wrap onto a second line must not touch */
 }
+.row > .btn, .bar > .btn { margin: 0; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select { min-height: 44px; }
+input[type="checkbox"], input[type="radio"] { width: 1.4rem; height: 1.4rem; accent-color: var(--ink); }
+label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; }
 .btn:active { transform: translate(2px, 2px); box-shadow: none; }
 .btn.alt { background: var(--secondary); color: var(--on-secondary); }
 .btn.soft { background: var(--accent-soft); color: var(--accent-strong); }
 .btn.ghost { background: transparent; color: var(--text); border: 2px solid var(--border-strong); }
 .chip {
-  display: inline-block; padding: .15rem .7rem; border-radius: var(--radius-pill);
+  display: inline-block; white-space: nowrap; padding: .15rem .7rem; border-radius: var(--radius-pill);
   background: var(--info-soft); color: var(--info); border: 1.5px solid currentColor; font-size: var(--text-sm); font-weight: 700;
 }
 :root[data-theme="dark"] .chip { background: var(--info-soft); color: var(--info); }
@@ -59,3 +65,5 @@ button { cursor: pointer; }
 :root[data-theme="dark"] .chip.pink { background: var(--accent-soft); color: var(--accent-strong); }
 /* Blob: organic soft shape for illustration backdrops */
 .blob { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
+input[type="range"] { min-height: 44px; }
+li a, .muted a { display: inline-block; padding-block: .6rem; }

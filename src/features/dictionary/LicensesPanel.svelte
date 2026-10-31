@@ -21,5 +21,6 @@
 <style>
   summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; }
   ul { padding-left: 1.2rem; display: grid; gap: var(--space-2); }
+  li a { display: inline-block; padding-block: .6rem; }
   .muted { color: var(--text-muted); }
 </style>
