@@ -61,6 +61,10 @@ jobs:
           UNSIGNED=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
           if [ -z "$KEYSTORE_B64" ]; then
+            if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+              echo "::error::Missing signing key. A tagged release must be signed with the real key, or users could not update. See README 'Ký APK'."
+              exit 1
+            fi
             echo "::warning::No signing key set. Using a throwaway key: this APK installs, but can NOT be updated over a later build. See README 'Ký APK'."
             keytool -genkeypair -keystore tmp.jks -alias tmp -keyalg RSA -keysize 2048 -validity 3650 -storepass tmppass -keypass tmppass -dname "CN=Yomineko"
             KEYSTORE_PASSWORD=tmppass; KEY_ALIAS=tmp; echo tmp.jks > ks.path

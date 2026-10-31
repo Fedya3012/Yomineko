@@ -1,0 +1,31 @@
+# One-time helper: creates the Android signing key and packs it into a small download.
+# Run it once from the Actions tab ("Run workflow"). Then follow README "Ký APK".
+# The password is random and never printed in the log; the key is only in the private artifact (kept 1 day).
+name: Create Android signing key
+on: workflow_dispatch
+permissions: { contents: read }
+
+jobs:
+  create-key:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: 21 }
+      - name: Generate keystore
+        run: |
+          PASS=$(openssl rand -hex 16)
+          echo "::add-mask::$PASS"
+          keytool -genkeypair -keystore yomineko-release.jks -alias yomineko -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass "$PASS" -keypass "$PASS" -dname "CN=Yomineko, O=Yomineko"
+          mkdir out
+          cp yomineko-release.jks out/
+          {
+            echo "ANDROID_KEY_ALIAS=yomineko"
+            echo "ANDROID_KEYSTORE_PASSWORD=$PASS"
+            echo "ANDROID_KEYSTORE_BASE64=$(base64 -w0 yomineko-release.jks)"
+          } > out/secrets.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-signing-key
+          path: out/
+          retention-days: 1
