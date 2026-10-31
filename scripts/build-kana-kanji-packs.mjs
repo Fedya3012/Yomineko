@@ -1,12 +1,14 @@
 // Tạo hai gói nội dung từ dữ liệu mở:
 //   packs-src/kana-core/v1.json         : hiragana + katakana (nét viết từ KanjiVG)
 //   packs-src/kanji-grade1/v1.json      : 80 kanji lớp 1 (KANJIDIC + KanjiVG + nội dung tự viết)
+//   packs-src/kanji-grade2/v1.json      : 160 kanji lớp 2 (cùng nguồn, gói riêng để tải/cập nhật độc lập)
 // Dùng:  node scripts/build-kana-kanji-packs.mjs [thư-mục-cache]
 // Cần mạng lần đầu; các file tải về được lưu vào thư mục cache để chạy lại không tải nữa.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { CURATED } from './kanji-curated.mjs';
+import { CURATED_GRADE2 } from './kanji-curated-grade2.mjs';
 
 const CACHE = process.argv[2] ?? join(process.env.TMPDIR ?? '/tmp', 'yomineko-kanji-cache');
 const OUT = 'packs-src';
@@ -105,14 +107,21 @@ const RADICAL_NAMES = {
   小: 'Tiểu', 山: 'Sơn', 川: 'Xuyên', 工: 'Công', 干: 'Can', 止: 'Chỉ', 手: 'Thủ', 文: 'Văn', 日: 'Nhật', 月: 'Nguyệt',
   木: 'Mộc', 气: 'Khí', 水: 'Thủy', 火: 'Hỏa', 犬: 'Khuyển', 玉: 'Ngọc', 王: 'Vương', 生: 'Sinh', 田: 'Điền', 白: 'Bạch',
   目: 'Mục', 石: 'Thạch', 穴: 'Huyệt', 立: 'Lập', 竹: 'Trúc', 糸: 'Mịch', 耳: 'Nhĩ', 艹: 'Thảo', 虫: 'Trùng', 見: 'Kiến',
-  貝: 'Bối', 赤: 'Xích', 足: 'Túc', 車: 'Xa', 金: 'Kim', 雨: 'Vũ', 青: 'Thanh', 音: 'Âm', 乙: 'Ất', 丿: 'Phiệt'
+  貝: 'Bối', 赤: 'Xích', 足: 'Túc', 車: 'Xa', 金: 'Kim', 雨: 'Vũ', 青: 'Thanh', '音': 'Âm', '乙': 'Ất', '丿': 'Phiệt',
+  '刀': 'Đao', '丶': 'Chủ', '扌': 'Thủ đứng', '又': 'Hựu', '弓': 'Cung', '心': 'Tâm', '戸': 'Hộ', '方': 'Phương', '牛': 'Ngưu', '父': 'Phụ',
+  '毛': 'Mao', '冫': 'Băng', '匕': 'Chủy', '巾': 'Cân', '广': 'Nghiễm', '毋': 'Vô', '用': 'Dụng', '矢': 'Thỉ', '亠': 'Đầu', '⺌': 'Tiểu',
+  '氵': 'Thủy đứng', '米': 'Mễ', '羽': 'Vũ', '耂': 'Lão', '肉': 'Nhục', '自': 'Tự', '色': 'Sắc', '行': 'Hành', '西': 'Tây', '士': 'Sĩ',
+  '彡': 'Sam', '礻': 'Thị', '角': 'Giác', '言': 'Ngôn', '谷': 'Cốc', '走': 'Tẩu', '⻌': 'Sước', '里': 'Lý', '麦': 'Mạch', '長': 'Trường',
+  '刂': 'Đao đứng', '彳': 'Xích', '灬': 'Hỏa', '禾': 'Hòa', '食': 'Thực', '首': 'Thủ', '夂': 'Trĩ', '高': 'Cao', '攵': 'Phộc', '舟': 'Chu',
+  '魚': 'Ngư', '鳥': 'Điểu', '黄': 'Hoàng', '黒': 'Hắc', '馬': 'Mã', '門': 'Môn', '欠': 'Khiếm', '頁': 'Hiệt', '風': 'Phong', '斤': 'Cân',
+  '寸': 'Thốn', '厂': 'Hán'
 };
 
-async function buildKanji() {
+async function buildKanji(grade, curated, count) {
   const data = JSON.parse(await cached('kanji.json', KANJI_JSON));
-  const chars = Object.keys(data).filter((k) => data[k].grade === 1);
-  const missing = chars.filter((c) => !CURATED[c]);
-  const extra = Object.keys(CURATED).filter((c) => !chars.includes(c));
+  const chars = Object.keys(data).filter((k) => data[k].grade === grade);
+  const missing = chars.filter((c) => !curated[c]);
+  const extra = Object.keys(curated).filter((c) => !chars.includes(c));
   if (missing.length || extra.length) throw new Error(`Thiếu nội dung: ${missing.join('')} | thừa: ${extra.join('')}`);
 
   const kanji = [];
@@ -120,7 +129,7 @@ async function buildKanji() {
     const k = data[char];
     const { strokes, radical } = parseKanjiVG(await cached(`${hex(char)}.svg`, `${KANJIVG}/${hex(char)}.svg`));
     if (strokes.length !== k.strokes) throw new Error(`${char}: KanjiVG ${strokes.length} nét, KANJIDIC ${k.strokes} nét`);
-    const [vi, mnemonic, ja, reading, viSentence] = CURATED[char];
+    const [vi, mnemonic, ja, reading, viSentence] = curated[char];
     kanji.push({
       id: char, char, grade: k.grade, jlpt: k.jlpt_new ? `N${k.jlpt_new}` : null,
       vi, meaningsEn: k.meanings, onyomi: k.readings_on, kunyomi: k.readings_kun,
@@ -129,7 +138,7 @@ async function buildKanji() {
     });
   }
   const cards = kanji.map((k) => ({
-    id: `card:kanji:${k.id}`, deck: 'kanji-grade1', type: 'kanji', front: k.char,
+    id: `card:kanji:${k.id}`, deck: `kanji-grade${grade}`, type: 'kanji', front: k.char,
     back: `${k.vi} — ${k.onyomi.join('、')} / ${k.kunyomi.join('、')}`, ref: { collection: 'kanji', id: k.id },
     // Các trường SRS đọc: cách đọc ưu tiên Kun (bỏ dấu "." và "-"), không có thì On
     word: k.char, reading: (k.kunyomi[0] ?? k.onyomi[0] ?? '').replace(/[.-]/g, ''), meaning: k.vi,
@@ -137,7 +146,7 @@ async function buildKanji() {
   }));
   return {
     manifest: {
-      format: 1, id: 'kanji-grade1', kind: 'kanji', title: 'Kanji lớp 1 (80 chữ)', version: 1,
+      format: 1, id: `kanji-grade${grade}`, kind: 'kanji', title: `Kanji lớp ${grade} (${count} chữ)`, version: 1,
       license: {
         name: 'CC BY-SA 3.0 / 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/',
         attribution:
@@ -148,7 +157,7 @@ async function buildKanji() {
     },
     upserts: {
       kanji,
-      decks: [{ id: 'kanji-grade1', title: 'Kanji lớp 1', kind: 'kanji' }],
+      decks: [{ id: `kanji-grade${grade}`, title: `Kanji lớp ${grade}`, kind: 'kanji' }],
       cards
     }
   };
@@ -156,7 +165,7 @@ async function buildKanji() {
 
 await mkdir(CACHE, { recursive: true });
 await mkdir(OUT, { recursive: true });
-for (const [file, pack] of [['kana-core', await buildKana()], ['kanji-grade1', await buildKanji()]]) {
+for (const [file, pack] of [['kana-core', await buildKana()], ['kanji-grade1', await buildKanji(1, CURATED, 80)], ['kanji-grade2', await buildKanji(2, CURATED_GRADE2, 160)]]) {
   await mkdir(join(OUT, file), { recursive: true });
   const path = join(OUT, file, 'v1.json');
   await writeFile(path, JSON.stringify(pack));

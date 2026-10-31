@@ -3,13 +3,14 @@
 Mã: `src/features/kana-kanji/`. Mở từ thẻ "Kana & Kanji" ở trang chủ (`KanaKanjiApp.svelte`).
 
 ## Nội dung (gói, dữ liệu mở)
-Tạo bằng `node scripts/build-kana-kanji-packs.mjs` (cần mạng lần đầu), kết quả là `packs-src/kana-core/v1.json` và `packs-src/kanji-grade1/v1.json` (theo cách đăng gói trong `docs/HUONG-DAN-XUAT-BAN-GOI.md`):
+Tạo bằng `node scripts/build-kana-kanji-packs.mjs` (cần mạng lần đầu), kết quả là `packs-src/kana-core/v1.json`, `packs-src/kanji-grade1/v1.json` và `packs-src/kanji-grade2/v1.json` (theo cách đăng gói trong `docs/HUONG-DAN-XUAT-BAN-GOI.md`):
 | Gói | Chứa | Nguồn / giấy phép |
 |---|---|---|
 | `kana-core` | collection `kana` (hiragana + katakana, kể cả chữ đục, 142 chữ), `decks`, `cards` | nét viết: KanjiVG, CC BY-SA 3.0 |
 | `kanji-grade1` | collection `kanji` (80 chữ lớp 1), `decks`, `cards` | cách đọc/nghĩa: KANJIDIC (EDRDG, CC BY-SA 4.0, qua bản JSON của David Gouveia); nét: KanjiVG; nghĩa tiếng Việt, truyện gợi nhớ, câu ví dụ: Yomineko tự viết (`scripts/kanji-curated.mjs`) |
+| `kanji-grade2` | collection `kanji` (160 chữ lớp 2), `decks`, `cards` | cách đọc/nghĩa: KANJIDIC (EDRDG, CC BY-SA 4.0, qua bản JSON của David Gouveia); nét: KanjiVG; nghĩa tiếng Việt, truyện gợi nhớ, câu ví dụ: Yomineko tự viết (`scripts/kanji-curated-grade2.mjs`) |
 
-Muốn thêm kanji lớp 2, 3...: thêm mục vào `kanji-curated.mjs`, đổi điều kiện `grade === 1` trong script, rồi **không sửa v1**: thêm file `v2.json` (version 2) để người dùng nhận bản cập nhật nhỏ. Không bao giờ nhét dữ liệu có bản quyền vào gói.
+Muốn thêm lớp 3, 4...: mỗi lớp là một gói riêng. Tạo `scripts/kanji-curated-gradeN.mjs`, thêm một dòng `buildKanji(N, ...)` ở cuối `build-kana-kanji-packs.mjs`, rồi thêm id gói vào `PACK_IDS` và `bundled` trong `model.ts`. Màn Kanji có bộ lọc lớp, nhớ thêm nút cho lớp mới. Không bao giờ nhét dữ liệu có bản quyền vào gói.
 
 ## Nối với SRS
 - Thẻ nằm trong collection `cards` (`{ id, deck, type: 'kana'|'kanji', front, back, ref: { collection, id } }`), bộ thẻ trong `decks`.

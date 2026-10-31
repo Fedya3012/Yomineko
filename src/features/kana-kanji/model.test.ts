@@ -10,6 +10,7 @@ import {
 import { scoreStroke } from './scoring';
 import kanaPack from '../../../packs-src/kana-core/v1.json';
 import kanjiPack from '../../../packs-src/kanji-grade1/v1.json';
+import kanji2Pack from '../../../packs-src/kanji-grade2/v1.json';
 
 let db: DB;
 let n = 0;
@@ -20,16 +21,20 @@ describe('gói nội dung đi kèm', () => {
     await ensureContentInstalled(db);
     expect((await loadKana(db, 'hiragana')).length).toBe(71);
     expect((await loadKana(db, 'katakana')).length).toBe(71);
-    expect((await loadKanji(db)).length).toBe(80);
+    expect((await loadKanji(db, 1)).length).toBe(80);
+    expect((await loadKanji(db, 2)).length).toBe(160);
+    expect((await loadKanji(db)).length).toBe(240);
   });
   it('cài lần hai không lỗi và không nhân đôi dữ liệu', async () => {
     await ensureContentInstalled(db);
     await ensureContentInstalled(db);
-    expect((await loadKanji(db)).length).toBe(80);
+    expect((await loadKanji(db)).length).toBe(240);
   });
   it('ghi rõ giấy phép và ghi công (KanjiVG, KANJIDIC)', () => {
     expect(kanaPack.manifest.license.attribution).toMatch(/KanjiVG/);
     expect(kanjiPack.manifest.license.attribution).toMatch(/KANJIDIC/);
+    expect(kanji2Pack.manifest.license.attribution).toMatch(/KANJIDIC/);
+    expect(kanji2Pack.manifest.license.attribution).toMatch(/KanjiVG/);
   });
   it('mỗi chữ có đủ nội dung để học', async () => {
     await ensureContentInstalled(db);
@@ -57,7 +62,7 @@ describe('gói nội dung đi kèm', () => {
     await ensureContentInstalled(db);
     const cards = (await listCollection(db, 'cards')) as { id: string; ref: { collection: string; id: string }; deck: string }[];
     const decks = new Set(((await listCollection(db, 'decks')) as { id: string }[]).map((d) => d.id));
-    expect(cards.length).toBe(142 + 80);
+    expect(cards.length).toBe(142 + 80 + 160);
     for (const c of cards as unknown as { word: string; reading: string; meaning: string; example?: { ja: string; blank: string } }[]) {
       expect(c.word && c.reading && c.meaning).toBeTruthy();
       if (c.example) expect(c.example.ja).toContain(c.example.blank);
@@ -72,7 +77,7 @@ describe('gói nội dung đi kèm', () => {
 describe('groupByRadical', () => {
   it('gom đúng bộ và xếp nhóm đông lên trước', async () => {
     await ensureContentInstalled(db);
-    const groups = groupByRadical(await loadKanji(db));
+    const groups = groupByRadical(await loadKanji(db, 1));
     expect(groups.reduce((s, g) => s + g.kanji.length, 0)).toBe(80);
     const wood = groups.find((g) => g.radical.char === '木')!;
     expect(wood.kanji.map((k) => k.char).sort()).toEqual(['森', '本', '村', '林', '校', '木'].sort());
