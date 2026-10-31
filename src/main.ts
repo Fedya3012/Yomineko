@@ -6,6 +6,8 @@ import '@fontsource/dela-gothic-one/400.css';
 import '@fontsource/dm-mono/latin-500.css';
 import '@fontsource/zen-maru-gothic/500.css';
 import '@fontsource/zen-maru-gothic/700.css';
+import '@fontsource/noto-sans-jp/japanese-500.css';
+import '@fontsource/noto-serif-jp/japanese-500.css';
 import './styles/base.css';
 import { mount } from 'svelte';
 import App from './App.svelte';
